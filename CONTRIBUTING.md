@@ -46,4 +46,4 @@ Le menu contient les options suivantes :
 
 7. Utiliser la description pour décrire ce qui a été changé et pourquoi cela l'a été fait ainsi, tout en sachant qu'il n'est pas toujours obligé de fournir une description si le changement est très simple
 
-Ce sont plus des conseils que des règles, mais vous remarquerez qu'ils ont tendance a être suivis sur tous les projets open source, certains sont plus importants que d'autres bien sûr (par exemple bien séparer le sujet/titre de la description) alors que sur d'autres ont peut être un peu plus flexibles (ce n'est pas un drame si la limite de 72 caractères est dépassée dans la description, par exemple).
+Ce sont plus des conseils que des règles, mais vous remarquerez qu'ils ont tendance a être suivis sur tous les projets open source, certains sont plus importants que d'autres bien sûr (par exemple bien séparer le sujet/titre de la description) alors que sur d'autres on peut être un peu plus flexibles (ce n'est pas un drame si la limite de 72 caractères est dépassée dans la description, par exemple).
