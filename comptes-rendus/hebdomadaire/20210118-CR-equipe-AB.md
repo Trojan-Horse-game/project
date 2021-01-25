@@ -21,11 +21,11 @@
         - Recommandations concernant issues, merge requests et branches de travail
 - Décisions et explications concernant les technologies à utiliser
     - Validation de l'utilisation du C++ pour notre backend
-        - Build system : Utilisation de CMake plutôt que Make (outil avec un plus haut niveau d'abstraction offrant une meilleure intégration avec un certain nombre d'IDEs, utilisé dans de nombreux projets et avec lequel certains membres ont déjà eu un peu d'expérience)
+        - Build system : Utilisation de CMake plutôt que Make (outil avec un plus haut niveau d'abstraction offrant une meilleure intégration avec un certain nombre d'IDEs, utilisé dans de nombreux projets et avec lequel certains membres ont un peu d'expérience)
     - Utilisation de TypeScript + Electron pour le frontend (simplifie le multiplateforme et permet la réutilisation du code pour le jeu en application web)
     - Partage de divers liens pour l'apprentissage des technologies que nous utiliserons
     - De nombreux membres ont exprimé leur enthousiasme par rapport au fait d'apprendre des technologies qui seront utiles plus tard dans nos études ou dans le monde professionnel
-- Réflection sur le cahier des charges ("faut il un y préciser le thème que nous adopterons dans notre jeu ?") -> questions à nos professeurs lors de la séance du 26 janvier
+- Réflection sur le cahier des charges ("faut il y préciser le thème que nous adopterons dans notre jeu ?") -> questions à nos professeurs lors de la séance du 26 janvier
 - Timesheet :
     - Commencer à rapidement à la remplir
     - Quel outil utiliser ?
@@ -41,7 +41,7 @@ Clockify.me nous semble être un bon outil pour le remplissage de nos timesheets
 - Création d'un logo pour notre groupe
 - Première utilisation de l'outil Doodle pour voter pour un créneau de réunion
         
-
+        
 ## La semaine prochaine (semaine du 25/01/2021)
 - Adoption généralisée de Clockify.me (présentation lors de la séance du 26 janvier)
 - Répartition des tâches (ou des thèmes comme DevOps, design, frontend, backend...)
