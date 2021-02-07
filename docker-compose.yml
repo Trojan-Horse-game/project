@@ -1,0 +1,18 @@
+version: "3.9"
+
+services:
+  db:
+    image: postgres
+    environment:
+      - POSTGRES_DB=postgres
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+  backend:
+    build: .
+    ports:
+      - "3000:3000"
+    command: "sleep infinity"
+    volumes:
+      - ".:/projet-integrateur"
+    depends_on:
+      - db
