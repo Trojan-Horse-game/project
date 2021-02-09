@@ -1,0 +1,31 @@
+html,
+body {
+  height: 100%;
+}
+
+#app {
+  background-color: #537895;
+  background-image: linear-gradient(315deg, #09203f 0%, #537895 74%);
+  color: #fff;
+}
+
+#logo img {
+  width: 450px;
+  height: auto;
+}
+
+#logo {
+  width: -webkit-max-content;
+  width: -moz-max-content;
+  width: max-content;
+}
+
+.v-btn {
+  background-color: #09203f !important;
+  color: #fff !important;
+}
+
+a {
+  text-decoration: none;
+}
+/*# sourceMappingURL=index.css.map */
