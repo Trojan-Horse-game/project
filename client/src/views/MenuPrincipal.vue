@@ -16,3 +16,5 @@ export default {};
 </script>
 
 <style lang="css" scoped src="../assets/scss/menuPrincipal.css"></style>
+
+<style lang="scss" scoped></style>
