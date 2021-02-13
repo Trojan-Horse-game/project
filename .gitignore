@@ -8,4 +8,6 @@ client/node_modules
 client/package-lock.json
 client/dist
 
-node_modules
+client/dist
+server/package-lock.json
+server/jet-logger.log
