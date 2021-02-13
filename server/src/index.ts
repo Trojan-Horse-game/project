@@ -8,6 +8,7 @@ const rl = readline.createInterface({
   output: process.stdout,
   terminal: false,
 });
+const regexPseudo = /^[a-zA-Z0-9]{2,32}$/;
 
 // Output une question et attend un input
 function demander(quest: string): Promise<string> {
@@ -41,8 +42,8 @@ async function demanderNbJoueurs(): Promise<number> {
 async function demanderPseudo(n: number): Promise<string> {
   let pseudo = await demander("Pseudo du joueur " + n + " ?");
 
-  if (pseudo.length > 32) {
-    console.log("Pseudo trop long !\n");
+  if (!regexPseudo.test(pseudo)) {
+    console.log("Pseudo incorrect, 2 à 32 caractères alphanumériques !\n");
     return demanderPseudo(n);
   }
   return pseudo;
@@ -57,12 +58,12 @@ async function demanderEspece(pseudo: string): Promise<number> {
   );
 
   espece = await demander("Espece de " + pseudo + " ?");
-  if ("Hutex".match(espece)) return Espece.Hutex;
-  else if ("Sonyas".match(espece)) return Espece.Sonyas;
-  else if ("Spectre".match(espece)) return Espece.Spectre;
-  else if ("Totox".match(espece)) return Espece.Totox;
-  else if ("Ulysse".match(espece)) return Espece.Ulysse;
-  else if ("Xmars".match(espece)) return Espece.Xmars;
+  if ("Hutex" === espece) return Espece.Hutex;
+  else if ("Sonyas" === espece) return Espece.Sonyas;
+  else if ("Spectre" === espece) return Espece.Spectre;
+  else if ("Totox" === espece) return Espece.Totox;
+  else if ("Ulysse" === espece) return Espece.Ulysse;
+  else if ("Xmars" === espece) return Espece.Xmars;
 
   console.log("Mauvaise espèce sélectionnée !\n");
   return demanderEspece(pseudo);
@@ -123,6 +124,7 @@ let serveur = app.listen(port, async () => {
   exit(0);
 });
 
+// -------------------------------- A mettre dans un, voire d'autres fichiers ----------------------------------------
 const enum Espece {
   Hutex = 1,
   Sonyas,
