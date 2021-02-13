@@ -68,13 +68,40 @@ class Partie {
   joueurEnCours: number = 0;
 
   // Création du deck
-  /* constructor() {
-    for (let i = 0; i < 5; i++) {
-      for (let j = 0; j < 5; j++) {
-        this.pioche.push(new Generateur(1))
+  constructor() {
+    let tmp = [Couleur.Air, Couleur.Eau, Couleur.Energie, Couleur.Radiation];
+    let i = 0;
+    let j = 0;
+
+    for (i = 0; i < 4; i++) {
+      for (j = 0; j < 5; j++) {
+        this.pioche.push(new Generateur(tmp[i]));
       }
     }
-  } */
+    this.pioche.push(new Generateur(Couleur.Joker));
+
+    for (i = 0; i < 4; i++) {
+      for (j = 0; j < 5; j++) {
+        this.pioche.push(new Virus(tmp[i]));
+      }
+    }
+    this.pioche.push(new Virus(Couleur.Joker));
+
+    for (i = 0; i < 4; i++) {
+      for (j = 0; j < 5; j++) {
+        this.pioche.push(new PareFeu(tmp[i]));
+      }
+    }
+    this.pioche.push(new PareFeu(Couleur.Joker));
+
+    for (i = 0; i < 4; i++) {
+      for (j = 0; j < 5; j++) {
+        this.pioche.push(new ActionSpe(tmp[i]));
+      }
+    }
+    this.pioche.push(new ActionSpe(Couleur.Joker));
+    //Virus,Parefeu, ActionSpe
+  }
 }
 
 enum Espece {
@@ -100,7 +127,7 @@ class Joueur {
 
 class CaseBase {
   etat: number;
-  couleur: number;
+  couleur: Couleur;
 
   constructor(etat: number, couleur: number) {
     this.etat = etat;
@@ -108,7 +135,7 @@ class CaseBase {
   }
 }
 
-enum Espece {
+enum Couleur {
   Eau = 1,
   Energie,
   Radiation,
@@ -117,14 +144,14 @@ enum Espece {
 }
 
 interface Carte {
-  couleur: number;
+  couleur: Couleur;
   action(): void;
 }
 
 class Generateur implements Carte {
-  couleur: number;
+  couleur: Couleur;
 
-  constructor(couleur: number) {
+  constructor(couleur: Couleur) {
     this.couleur = couleur;
   }
 
@@ -134,9 +161,9 @@ class Generateur implements Carte {
 }
 
 class Virus implements Carte {
-  couleur: number;
+  couleur: Couleur;
 
-  constructor(couleur: number) {
+  constructor(couleur: Couleur) {
     this.couleur = couleur;
   }
 
