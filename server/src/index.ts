@@ -43,6 +43,10 @@ async function lancerPartie(): Promise<void> {
   log.info(nbJoueurs + " participent à la partie");
 
   //Créer objet partie
+
+  //Tour par tour
+
+  //finir partie
 }
 
 // Démarre le server
@@ -56,3 +60,111 @@ let serveur = app.listen(port, async () => {
   });
   exit(0);
 });
+
+class Partie {
+  joueurs: Joueur[] = [];
+  defausse: Carte[] = [];
+  pioche: Carte[] = [];
+  joueurEnCours: number = 0;
+
+  // Création du deck
+  /* constructor() {
+    for (let i = 0; i < 5; i++) {
+      for (let j = 0; j < 5; j++) {
+        this.pioche.push(new Generateur(1))
+      }
+    }
+  } */
+}
+
+enum Espece {
+  Hutex = 1,
+  Sonyas,
+  Xmars,
+  Spectre,
+  Ulysse,
+  Totox,
+}
+
+class Joueur {
+  pseudo: string;
+  espece: Espece;
+  main: Carte[] = [];
+  base: CaseBase[] = [];
+
+  constructor(pseudo: string, espece: Espece) {
+    this.espece = espece;
+    this.pseudo = pseudo;
+  }
+}
+
+class CaseBase {
+  etat: number;
+  couleur: number;
+
+  constructor(etat: number, couleur: number) {
+    this.etat = etat;
+    this.couleur = couleur;
+  }
+}
+
+enum Espece {
+  Eau = 1,
+  Energie,
+  Radiation,
+  Air,
+  Joker,
+}
+
+interface Carte {
+  couleur: number;
+  action(): void;
+}
+
+class Generateur implements Carte {
+  couleur: number;
+
+  constructor(couleur: number) {
+    this.couleur = couleur;
+  }
+
+  action(): void {
+    //TODO
+  }
+}
+
+class Virus implements Carte {
+  couleur: number;
+
+  constructor(couleur: number) {
+    this.couleur = couleur;
+  }
+
+  action(): void {
+    //TODO
+  }
+}
+
+class PareFeu implements Carte {
+  couleur: number;
+
+  constructor(couleur: number) {
+    this.couleur = couleur;
+  }
+
+  action(): void {
+    //TODO
+  }
+}
+
+class ActionSpe implements Carte {
+  couleur: number;
+
+  constructor(couleur: number) {
+    this.couleur = couleur;
+  }
+
+  action(): void {
+    //TODO
+  }
+}
