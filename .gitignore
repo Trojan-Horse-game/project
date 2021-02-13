@@ -3,11 +3,8 @@
 server/node_modules
 server/package-lock.json
 server/dist
+server/jet-logger.log
 
 client/node_modules
 client/package-lock.json
 client/dist
-
-client/dist
-server/package-lock.json
-server/jet-logger.log
