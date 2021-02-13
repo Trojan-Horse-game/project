@@ -48,6 +48,9 @@ async function lancerPartie(): Promise<void> {
 
   //finir partie
 }
+//TODO : private/protected si possible
+//Création de partie
+//"Jouage" d'un tour
 
 // Démarre le server
 const port = Number(process.env.PORT || 3000);
@@ -69,42 +72,60 @@ class Partie {
 
   // Création du deck
   constructor() {
-    let tmp = [Couleur.Air, Couleur.Eau, Couleur.Energie, Couleur.Radiation];
-    let i = 0;
-    let j = 0;
+    let distrib: number[][] = [
+      [5, Couleur.Air],
+      [5, Couleur.Eau],
+      [5, Couleur.Energie],
+      [5, Couleur.Radiation],
+      [1, Couleur.Joker],
+    ];
 
-    for (i = 0; i < 4; i++) {
-      for (j = 0; j < 5; j++) {
-        this.pioche.push(new Generateur(tmp[i]));
+    let construct = (couleur: Couleur) => {
+      return new Generateur(couleur);
+    };
+    this.ajouterSerieDeck(construct, distrib);
+
+    distrib[0][0] = 4;
+    distrib[1][0] = 4;
+    distrib[2][0] = 4;
+    distrib[3][0] = 4;
+    construct = (couleur: Couleur) => {
+      return new Virus(couleur);
+    };
+    this.ajouterSerieDeck(construct, distrib);
+
+    distrib[4][0] = 4;
+    construct = (couleur: Couleur) => {
+      return new PareFeu(couleur);
+    };
+    this.ajouterSerieDeck(construct, distrib);
+
+    distrib[0][0] = 1; //Distraction nucléaire
+    distrib[1][0] = 1; //Usurpation d’identité
+    distrib[2][0] = 3; //Échange forcé
+    distrib[3][0] = 3; //Emprunt à durée indéfinie
+    distrib[4][0] = 2; //Nettoyage des systèmes
+    construct = (couleur: Couleur) => {
+      return new ActionSpe(couleur);
+    };
+    this.ajouterSerieDeck(construct, distrib);
+  }
+
+  ajouterSerieDeck(
+    construct: (couleur: Couleur) => Carte,
+    distrib: number[][]
+  ) {
+    let i: number = 0;
+    let j: number = 0;
+    for (i = 0; i < 5; i++) {
+      for (j = 0; j < distrib[i][0]; j++) {
+        this.pioche.push(construct(distrib[i][1]));
       }
     }
-    this.pioche.push(new Generateur(Couleur.Joker));
-
-    for (i = 0; i < 4; i++) {
-      for (j = 0; j < 5; j++) {
-        this.pioche.push(new Virus(tmp[i]));
-      }
-    }
-    this.pioche.push(new Virus(Couleur.Joker));
-
-    for (i = 0; i < 4; i++) {
-      for (j = 0; j < 5; j++) {
-        this.pioche.push(new PareFeu(tmp[i]));
-      }
-    }
-    this.pioche.push(new PareFeu(Couleur.Joker));
-
-    for (i = 0; i < 4; i++) {
-      for (j = 0; j < 5; j++) {
-        this.pioche.push(new ActionSpe(tmp[i]));
-      }
-    }
-    this.pioche.push(new ActionSpe(Couleur.Joker));
-    //Virus,Parefeu, ActionSpe
   }
 }
 
-enum Espece {
+const enum Espece {
   Hutex = 1,
   Sonyas,
   Xmars,
@@ -135,11 +156,11 @@ class CaseBase {
   }
 }
 
-enum Couleur {
-  Eau = 1,
+const enum Couleur {
+  Air = 1,
+  Eau,
   Energie,
   Radiation,
-  Air,
   Joker,
 }
 
