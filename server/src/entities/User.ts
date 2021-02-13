@@ -11,8 +11,6 @@ class User implements IUser {
     public email: string;
 
     constructor(nameOrUser: string | IUser, email?: string, id?: number) {
-        if (typeof nameOrUser === 'string') {
-            this.name = nameOrUser;
             this.email = email || '';
             this.id = id || -1;
         } else {

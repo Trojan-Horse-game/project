@@ -14,6 +14,6 @@ services:
       - "8080:8080"
     command: "sleep infinity"
     volumes:
-      - ".:/projet-integrateur"
+      - "..:/projet-integrateur"
     depends_on:
       - db

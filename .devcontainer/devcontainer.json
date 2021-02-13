@@ -1,6 +1,6 @@
 {
 	"name": "DockerEnv",
-	"dockerComposeFile": "../docker-compose.yml",
+	"dockerComposeFile": "../config/docker-compose.yml",
 	"service": "backend",
 	"workspaceFolder": "/projet-integrateur",
 	// Set *default* container specific settings.json values on container create.

@@ -2,7 +2,6 @@ FROM node
 
 WORKDIR /projet-integrateur/
 
-RUN npm install
 RUN apt update
 RUN apt -y install vim
 
