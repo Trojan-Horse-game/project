@@ -13,7 +13,6 @@ const rl = readline.createInterface({
 function demander(quest: string): Promise<number> {
   return new Promise((res) =>
     rl.question(quest + "\n", (ans) => {
-      rl.close();
       res(Number(ans));
     })
   );
@@ -34,6 +33,7 @@ async function demanderNbJoueurs(): Promise<number> {
       console.log("Nombre de joueurs trop grand ! (Maximum 6)");
     else joueursSet = true;
   }
+  console.log("Test");
   return nbJoueurs;
 }
 
