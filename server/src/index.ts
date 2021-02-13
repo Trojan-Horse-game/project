@@ -10,10 +10,10 @@ const rl = readline.createInterface({
 });
 
 // Output une question et attend un input
-function demander(quest: string): Promise<number> {
+function demander(quest: string): Promise<string> {
   return new Promise((res) =>
     rl.question(quest + "\n", (ans) => {
-      res(Number(ans));
+      res(ans);
     })
   );
 }
@@ -24,7 +24,7 @@ async function demanderNbJoueurs(): Promise<number> {
   let nbJoueurs: number = 0;
 
   while (!joueursSet) {
-    nbJoueurs = await demander("Combien de joueurs participeront ?");
+    nbJoueurs = Number(await demander("Combien de joueurs participeront ?"));
 
     if (isNaN(nbJoueurs)) console.log("Veuillez entrer un nombre valide !");
     else if (nbJoueurs < 2)
@@ -33,24 +33,83 @@ async function demanderNbJoueurs(): Promise<number> {
       console.log("Nombre de joueurs trop grand ! (Maximum 6)");
     else joueursSet = true;
   }
-  console.log("Test");
   return nbJoueurs;
+}
+
+// TODO : décider d'une longueur de pseudo max
+// Demande le pseudo du joueur
+async function demanderPseudo(n: number): Promise<string> {
+  let pseudo = await demander("Pseudo du joueur " + n + " ?");
+
+  if (pseudo.length > 32) {
+    console.log("Pseudo trop long !\n");
+    return demanderPseudo(n);
+  }
+  return pseudo;
+}
+
+// TODO ? Ne pas permettre à un joueur de prendre une espèce déjà prise
+// Demande une espèce au joueur
+async function demanderEspece(pseudo: string): Promise<number> {
+  let espece: string;
+  console.log(
+    "Les espèces disponibles sont Hutex, Sonyas, Spectre, Totox, Ulysse, Xmars"
+  );
+
+  espece = await demander("Espece de " + pseudo + " ?");
+  if ("Hutex".match(espece)) return Espece.Hutex;
+  else if ("Sonyas".match(espece)) return Espece.Sonyas;
+  else if ("Spectre".match(espece)) return Espece.Spectre;
+  else if ("Totox".match(espece)) return Espece.Totox;
+  else if ("Ulysse".match(espece)) return Espece.Ulysse;
+  else if ("Xmars".match(espece)) return Espece.Xmars;
+
+  console.log("Mauvaise espèce sélectionnée !\n");
+  return demanderEspece(pseudo);
+}
+
+// Convertit l'enum Espece en string correspondant
+function especeToString(espece: Espece): string {
+  if (espece == Espece.Hutex) return "Hutex";
+  else if (espece == Espece.Sonyas) return "Sonyas";
+  else if (espece == Espece.Spectre) return "Spectre";
+  else if (espece == Espece.Totox) return "Totox";
+  else if (espece == Espece.Ulysse) return "Ulysse";
+  else if (espece == Espece.Xmars) return "Xmars";
+  return "Unkown";
 }
 
 // Lance la partie en interraction dans la console
 async function lancerPartie(): Promise<void> {
+  let partie: Partie;
+  let i: number = 0;
+  let pseudo: string;
+  let espece: Espece;
   let nbJoueurs: number = await demanderNbJoueurs();
-  log.info(nbJoueurs + " participent à la partie");
 
-  //Créer objet partie
+  console.log(nbJoueurs + " joueurs participent à la partie");
+  log.info(nbJoueurs + " joueurs participent à la partie");
+
+  partie = new Partie();
+  for (i = 1; i <= nbJoueurs; i++) {
+    pseudo = await demanderPseudo(i);
+    espece = await demanderEspece(pseudo);
+    partie.ajouterJoueur(pseudo, espece);
+
+    console.log(pseudo + " joue les " + especeToString(espece));
+    log.info(pseudo + " joue les " + especeToString(espece));
+  }
+  // Ajouter joueurs tour à tour
+  // Init partie
 
   //Tour par tour
 
   //finir partie
+
+  //TODO : private/protected si possible
+  // Initialisation de partie
+  //"Jouage" d'un tour
 }
-//TODO : private/protected si possible
-//Création de partie
-//"Jouage" d'un tour
 
 // Démarre le server
 const port = Number(process.env.PORT || 3000);
@@ -63,6 +122,23 @@ let serveur = app.listen(port, async () => {
   });
   exit(0);
 });
+
+const enum Espece {
+  Hutex = 1,
+  Sonyas,
+  Xmars,
+  Spectre,
+  Ulysse,
+  Totox,
+}
+
+const enum Couleur {
+  Air = 1,
+  Eau,
+  Energie,
+  Radiation,
+  Joker,
+}
 
 class Partie {
   joueurs: Joueur[] = [];
@@ -111,6 +187,7 @@ class Partie {
     this.ajouterSerieDeck(construct, distrib);
   }
 
+  // Ajoute une série de carte au deck (Virus, générateur, ...)
   ajouterSerieDeck(
     construct: (couleur: Couleur) => Carte,
     distrib: number[][]
@@ -123,15 +200,11 @@ class Partie {
       }
     }
   }
-}
 
-const enum Espece {
-  Hutex = 1,
-  Sonyas,
-  Xmars,
-  Spectre,
-  Ulysse,
-  Totox,
+  // Ajoute un joueur à la partie
+  ajouterJoueur(pseudo: string, espece: Espece) {
+    this.joueurs.push(new Joueur(pseudo, espece));
+  }
 }
 
 class Joueur {
@@ -154,14 +227,6 @@ class CaseBase {
     this.etat = etat;
     this.couleur = couleur;
   }
-}
-
-const enum Couleur {
-  Air = 1,
-  Eau,
-  Energie,
-  Radiation,
-  Joker,
 }
 
 interface Carte {
