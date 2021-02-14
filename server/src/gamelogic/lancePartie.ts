@@ -58,6 +58,8 @@ async function demanderEspece(pseudo: string): Promise<number> {
   );
 
   espece = await demander("Espece de " + pseudo + " ?");
+
+  
   if ("Hutex" === espece) return Espece.Hutex;
   else if ("Sonyas" === espece) return Espece.Sonyas;
   else if ("Spectre" === espece) return Espece.Spectre;
@@ -107,16 +109,35 @@ function afficherMain(joueur: Joueur): void {
 
 // Demande une action au joueur
 async function demanderAction(): Promise<string> {
-  let action: string;
+  let action: string | undefined ;
 
-  console.log("\nVos actions possibles sont les suivantes :");
-  console.log("Défausser\nPoser une carte\nAbandonner");
+  console.log("\nVos actions possibles sont les suivantes, Veuillez choisir un numéro :");
+  console.log("1 => Défausser\n 2 => Poser une carte\n 3 => Abandonner");
+  while(!action){
+    action = await demander("Quelle action voulez vous faire ?");
 
-  action = await demander("Quelle action voulez vous faire ?");
-  // TODO : Vérifier que l'action existe
+  // On etudie l'action souhaitez par le joueur
+  
+    switch(action) {
+      case "1":
+        action = "Defausser";
+        break;
+      case "2":
+        action = "Poser";
+        break;
+      case "3":
+        action = "Abandon";
+        break;
+      default:
+        action = "";
+        console.log("Veuillez entrer un chiffre parmi ce qui sont proposés!");
+     
+      break;
+  }
+} 
+  
   return action;
 }
-
 // Afficher la main du joueur, demande un action, réalise l'action
 async function jouerUnTour(partie: Partie) {
   afficherMain(partie.joueurs[partie.joueurEnCours]);
