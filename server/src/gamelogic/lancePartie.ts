@@ -2,6 +2,7 @@ import readline from "readline";
 import log from "@shared/Logger";
 import { Espece, Joueur } from "./Joueurs";
 import { Partie } from "./Partie";
+import { StringDecoder } from "string_decoder";
 
 const rl = readline.createInterface({
   input: process.stdin,
@@ -49,7 +50,7 @@ async function demanderPseudo(n: number): Promise<string> {
   return pseudo;
 }
 
-// TODO : Ne pas permettre à un joueur de prendre une espèce déjà prise
+
 // Demande une espèce au joueur
 async function demanderEspece(pseudo: string): Promise<number> {
   let espece: string;
@@ -72,15 +73,33 @@ async function demanderEspece(pseudo: string): Promise<number> {
 }
 
 async function ajouterJoueur(partie: Partie, nbJoueurs: number) {
-  let i: number;
+  let i,j: number;
   let pseudo: string;
-  let espece: Espece;
+  let tabVerif = new Array(); //tableau temporaire pour verfier un joueur de prendre une espèce déjà prise
+  let espece: Espece ;
 
+ 
   for (i = 1; i <= nbJoueurs; i++) {
     pseudo = await demanderPseudo(i);
     espece = await demanderEspece(pseudo);
-    partie.ajouterJoueur(new Joueur(pseudo, espece));
+    let condition = false;
 
+    while(!condition){
+      condition = true;
+      for(j = 0 ; j < tabVerif.length; j++){
+      console.log(especeToString(espece));
+      console.log("la" + j);
+      console.log("ici" + tabVerif[0]);
+        if(especeToString(espece) == tabVerif[j]){
+            console.log("Cette espece est deja pris.\n Veuillez Choisir un autre");
+            espece = await demanderEspece(pseudo);
+            condition = false;
+        }
+      }
+    }
+        
+    partie.ajouterJoueur(new Joueur(pseudo, espece));
+    tabVerif.push(especeToString(espece));
     console.log(pseudo + " joue les " + especeToString(espece));
     log.info(pseudo + " joue les " + especeToString(espece));
   }
