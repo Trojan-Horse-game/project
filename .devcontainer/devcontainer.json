@@ -7,8 +7,15 @@
   "settings": {
     "terminal.integrated.shell.linux": "/bin/zsh",
     "terminal.integrated.cursorBlinking": true,
+    "workbench.iconTheme": "vscode-icons",
     "editor.defaultFormatter": "esbenp.prettier-vscode",
     "[javascript]": {
+      "editor.defaultFormatter": "esbenp.prettier-vscode"
+    },
+    "[typescript]": {
+      "editor.defaultFormatter": "esbenp.prettier-vscode"
+    },
+    "[json]": {
       "editor.defaultFormatter": "esbenp.prettier-vscode"
     },
     "editor.formatOnPaste": true,
@@ -21,7 +28,8 @@
     "eg2.vscode-npm-script",
     "esbenp.prettier-vscode",
     "coenraads.bracket-pair-colorizer-2",
-    "dbaeumer.vscode-eslint"
+    "dbaeumer.vscode-eslint",
+    "vscode-icons-team.vscode-icons"
   ],
   // Use 'forwardPorts' to make a list of ports inside the container available locally.
   "forwardPorts": [3000, 8080]
