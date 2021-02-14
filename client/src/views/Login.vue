@@ -4,28 +4,30 @@
       <img src="logo.png" alt="Logo du jeu" />
     </div>
     <div id="inputs">
-      <v-form :v-model="inputValide"
+      <v-form v-model="validInput"
         ><v-text-field
           color="#fff"
           dark
           label="Adresse mail"
-          :v-model="mail"
-          :rules="reglesMail"/>
+          v-model="mail"
+          :rules="mailRules"/>
         <v-text-field
           :type="'password'"
           color="#fff"
           dark
           label="Mot de passe"
-          :v-model="motDePasse"
-          :rules="reglesMotDePasse"
+          v-model="password"
+          :rules="passwordRules"
       /></v-form>
     </div>
-    <div id="boutons">
+    <div id="buttons">
       <router-link to="/nouveauCompte"> <v-btn>Inscription</v-btn></router-link>
       <router-link
         to="/menuPrincipal"
-        :class="{ 'lien-desactive': !this.inputValide }"
-        ><v-btn :disabled="!this.inputValide">Valider</v-btn></router-link
+        :class="{ 'disabled-link': !this.validInput }"
+        ><v-btn type="submit" :disabled="!this.validInput"
+          >Valider</v-btn
+        ></router-link
       >
     </div>
   </div>
@@ -34,24 +36,24 @@
 <script>
 export default {
   data: () => ({
-    reglesMail: [
+    validInput: false,
+    mail: "",
+    password: "",
+
+    mailRules: [
       (mail) => !!mail || "Adresse mail requise",
       (mail) => {
         const pattern = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
-        return pattern.test(mail) || "Adresse mail invalide";
+        return (mail && pattern.test(mail)) || "Adresse mail invalide";
       }
     ],
 
-    reglesMotDePasse: [
-      (motDePasse) => !!motDePasse || "Mot de passe requis",
-      (motDePasse) =>
-        motDePasse.length >= 8 ||
+    passwordRules: [
+      (password) => !!password || "Mot de passe requis",
+      (password) =>
+        (password && password.length >= 8) ||
         "Le mot de passe doit faire au moins 8 caractères"
-    ],
-
-    inputValide: false,
-    mail: "",
-    motDePasse: ""
+    ]
   })
 };
 </script>

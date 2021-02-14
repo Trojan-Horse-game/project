@@ -6,7 +6,7 @@
 
     <span id="titre">Les Cavaliers de Troie</span>
 
-    <div id="boutons">
+    <div id="buttons">
       <router-link to="nouveauCompte"
         ><v-btn>Créer un nouveau compte</v-btn></router-link
       >

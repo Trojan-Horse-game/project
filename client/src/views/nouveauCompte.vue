@@ -4,34 +4,36 @@
       <img src="logo.png" alt="Logo du jeu" />
     </div>
     <div id="inputs">
-      <v-form :v-model="inputValide"
+      <v-form v-model="validInput"
         ><v-text-field
           color="#fff"
           dark
           label="Nom d'utilisateur"
-          :v-model="nomUtilisateur"
-          :rules="reglesNomUtilisateur"/>
+          v-model="username"
+          :rules="usernameRules"/>
         <v-text-field
           color="#fff"
           dark
           label="Adresse mail"
-          :v-model="mail"
-          :rules="reglesMail"/>
+          v-model="mail"
+          :rules="mailRules"/>
         <v-text-field
           :type="'password'"
           color="#fff"
           dark
           label="Mot de passe"
-          :v-model="motDePasse"
-          :rules="reglesMotDePasse"
+          v-model="password"
+          :rules="passwordRules"
       /></v-form>
     </div>
-    <div id="boutons">
+    <div id="buttons">
       <router-link to="/Login"> <v-btn>Connexion</v-btn></router-link>
       <router-link
         to="/menuPrincipal"
-        :class="{ 'lien-desactive': !this.inputValide }"
-        ><v-btn :disabled="!this.inputValide">Valider</v-btn></router-link
+        :class="{ 'disabled-link': !this.validInput }"
+        ><v-btn type="submit" :disabled="!this.validInput"
+          >Valider</v-btn
+        ></router-link
       >
     </div>
   </div>
@@ -40,35 +42,35 @@
 <script>
 export default {
   data: () => ({
-    reglesMail: [
+    validInput: false,
+    mail: "",
+    password: "",
+    username: "",
+
+    mailRules: [
       (mail) => !!mail || "Adresse mail requise",
       (mail) => {
         const mailPattern = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
-        return mailPattern.test(mail) || "Adresse mail invalide";
+        return (mail && mailPattern.test(mail)) || "Adresse mail invalide";
       }
     ],
 
-    reglesMotDePasse: [
-      (motDePasse) => !!motDePasse || "Mot de passe requis",
-      (motDePasse) =>
-        motDePasse.length >= 8 ||
+    passwordRules: [
+      (password) => !!password || "Mot de passe requis",
+      (password) =>
+        (password && password.length >= 8) ||
         "Le mot de passe doit faire au moins 8 caractères"
     ],
-    reglesNomUtilisateur: [
-      (nomUtilisateur) => !!nomUtilisateur || "Nom utilisateur requis",
-      (nomUtilisateur) => {
+    usernameRules: [
+      (username) => !!username || "Nom utilisateur requis",
+      (username) => {
         const usernamePattern = /^[\w]{2,32}$/;
         return (
-          usernamePattern.test(nomUtilisateur) ||
+          usernamePattern.test(username) ||
           "Le nom d'utilisateur doit être compris entre 2 et 32 caractères et accepte les caractères suivants: A-Z a-z 0-9 _"
         );
       }
-    ],
-
-    inputValide: false,
-    mail: "",
-    motDePasse: "",
-    nomUtilisateur: ""
+    ]
   })
 };
 </script>
