@@ -1,6 +1,7 @@
 import readline from "readline";
-import { Espece, Couleur, Partie } from "./objetPartie";
 import log from "@shared/Logger";
+import { Espece } from "./Joueurs";
+import { Partie } from "./Partie";
 
 const rl = readline.createInterface({
   input: process.stdin,

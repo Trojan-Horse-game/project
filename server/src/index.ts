@@ -2,7 +2,7 @@ import "./pre-start";
 import app from "@server";
 import log from "@shared/Logger";
 import { exit } from "process";
-import { lancerPartie } from "./gamelogic/partie";
+import { lancerPartie } from "./gamelogic/lancePartie";
 
 // Démarre le server
 const port = Number(process.env.PORT || 3000);

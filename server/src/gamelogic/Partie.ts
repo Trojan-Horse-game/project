@@ -1,19 +1,9 @@
-export const enum Espece {
-  Hutex = 1,
-  Sonyas,
-  Xmars,
-  Spectre,
-  Ulysse,
-  Totox,
-}
-
-export const enum Couleur {
-  Air = 1,
-  Eau,
-  Energie,
-  Radiation,
-  Joker,
-}
+import { ActionSpe } from "./ActionSpe";
+import { Carte, Couleur } from "./Carte";
+import { Generateur } from "./Generateur";
+import { Espece, Joueur } from "./Joueurs";
+import { PareFeu } from "./PareFeu";
+import { Virus } from "./Virus";
 
 export class Partie {
   joueurs: Joueur[] = [];
@@ -45,7 +35,7 @@ export class Partie {
     };
     this.ajouterSerieDeck(construct, distrib);
 
-    distrib[4][0] = 4;
+    distrib[4][0] = 4; //TODO
     construct = (couleur: Couleur) => {
       return new PareFeu(couleur);
     };
@@ -79,80 +69,5 @@ export class Partie {
   // Ajoute un joueur à la partie
   ajouterJoueur(pseudo: string, espece: Espece) {
     this.joueurs.push(new Joueur(pseudo, espece));
-  }
-}
-
-class Joueur {
-  pseudo: string;
-  espece: Espece;
-  main: Carte[] = [];
-  base: CaseBase[] = [];
-
-  constructor(pseudo: string, espece: Espece) {
-    this.espece = espece;
-    this.pseudo = pseudo;
-  }
-}
-
-class CaseBase {
-  etat: number;
-  couleur: Couleur;
-
-  constructor(etat: number, couleur: number) {
-    this.etat = etat;
-    this.couleur = couleur;
-  }
-}
-
-interface Carte {
-  couleur: Couleur;
-  action(): void;
-}
-
-class Generateur implements Carte {
-  couleur: Couleur;
-
-  constructor(couleur: Couleur) {
-    this.couleur = couleur;
-  }
-
-  action(): void {
-    //TODO
-  }
-}
-
-class Virus implements Carte {
-  couleur: Couleur;
-
-  constructor(couleur: Couleur) {
-    this.couleur = couleur;
-  }
-
-  action(): void {
-    //TODO
-  }
-}
-
-class PareFeu implements Carte {
-  couleur: number;
-
-  constructor(couleur: number) {
-    this.couleur = couleur;
-  }
-
-  action(): void {
-    //TODO
-  }
-}
-
-class ActionSpe implements Carte {
-  couleur: number;
-
-  constructor(couleur: number) {
-    this.couleur = couleur;
-  }
-
-  action(): void {
-    //TODO
   }
 }
