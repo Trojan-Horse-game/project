@@ -1,5 +1,5 @@
 export const enum Couleur {
-  Air = 1,
+  Air,
   Eau,
   Energie,
   Radiation,

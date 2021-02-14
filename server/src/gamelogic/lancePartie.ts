@@ -77,7 +77,7 @@ async function ajouterJoueur(partie: Partie, nbJoueurs: number) {
   for (i = 1; i <= nbJoueurs; i++) {
     pseudo = await demanderPseudo(i);
     espece = await demanderEspece(pseudo);
-    partie.ajouterJoueur(pseudo, espece);
+    partie.ajouterJoueur(new Joueur(pseudo, espece));
 
     console.log(pseudo + " joue les " + especeToString(espece));
     log.info(pseudo + " joue les " + especeToString(espece));

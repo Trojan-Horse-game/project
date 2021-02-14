@@ -13,7 +13,7 @@ export class Partie {
 
   // Création du deck
   constructor() {
-    let distrib: number[][] = [
+    let distrib: [number, Couleur][] = [
       [5, Couleur.Air],
       [5, Couleur.Eau],
       [5, Couleur.Energie],
@@ -55,7 +55,7 @@ export class Partie {
   // Ajoute une série de carte au deck (Virus, générateur, ...)
   ajouterSerieDeck(
     construct: (couleur: Couleur) => Carte,
-    distrib: number[][]
+    distrib: [number, Couleur][]
   ) {
     let i: number = 0;
     let j: number = 0;
@@ -67,8 +67,8 @@ export class Partie {
   }
 
   // Ajoute un joueur à la partie
-  ajouterJoueur(pseudo: string, espece: Espece) {
-    this.joueurs.push(new Joueur(pseudo, espece));
+  ajouterJoueur(joueur: Joueur) {
+    this.joueurs.push(joueur);
   }
 
   // Initialise le lancement de la partie

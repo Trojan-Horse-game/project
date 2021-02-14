@@ -2,7 +2,7 @@ import { Carte } from "./Carte";
 import { CaseBase } from "./caseBase";
 
 export const enum Espece {
-  Hutex = 1,
+  Hutex,
   Sonyas,
   Xmars,
   Spectre,
