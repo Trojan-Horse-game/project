@@ -1,6 +1,6 @@
 import readline from "readline";
 import log from "@shared/Logger";
-import { Espece } from "./Joueurs";
+import { Espece, Joueur } from "./Joueurs";
 import { Partie } from "./Partie";
 
 const rl = readline.createInterface({
@@ -49,7 +49,7 @@ async function demanderPseudo(n: number): Promise<string> {
   return pseudo;
 }
 
-// TODO ? Ne pas permettre à un joueur de prendre une espèce déjà prise
+// TODO : Ne pas permettre à un joueur de prendre une espèce déjà prise
 // Demande une espèce au joueur
 async function demanderEspece(pseudo: string): Promise<number> {
   let espece: string;
@@ -69,6 +69,21 @@ async function demanderEspece(pseudo: string): Promise<number> {
   return demanderEspece(pseudo);
 }
 
+async function ajouterJoueur(partie: Partie, nbJoueurs: number) {
+  let i: number;
+  let pseudo: string;
+  let espece: Espece;
+
+  for (i = 1; i <= nbJoueurs; i++) {
+    pseudo = await demanderPseudo(i);
+    espece = await demanderEspece(pseudo);
+    partie.ajouterJoueur(pseudo, espece);
+
+    console.log(pseudo + " joue les " + especeToString(espece));
+    log.info(pseudo + " joue les " + especeToString(espece));
+  }
+}
+
 // Convertit l'enum Espece en string correspondant
 function especeToString(espece: Espece): string {
   if (espece == Espece.Hutex) return "Hutex";
@@ -80,37 +95,56 @@ function especeToString(espece: Espece): string {
   return "Unkown";
 }
 
+// Affiche la main d'un joueur au début de son tour
+function afficherMain(joueur: Joueur): void {
+  let i: number;
+
+  console.log("\nC'est à vous " + joueur.pseudo + ", voici vos cartes :");
+  for (i = 0; i < joueur.main.length; i++) {
+    console.log(joueur.main[i].toString());
+  }
+}
+
+// Demande une action au joueur
+async function demanderAction(): Promise<string> {
+  let action: string;
+
+  console.log("\nVos actions possibles sont les suivantes :");
+  console.log("Défausser\nPoser une carte\nAbandonner");
+
+  action = await demander("Quelle action voulez vous faire ?");
+  // TODO : Vérifier que l'action existe
+  return action;
+}
+
+// Afficher la main du joueur, demande un action, réalise l'action
+async function jouerUnTour(partie: Partie) {
+  afficherMain(partie.joueurs[partie.joueurEnCours]);
+  await demanderAction();
+  partie.passer();
+}
+
 // Lance la partie en interraction dans la console
 export async function lancerPartie(): Promise<void> {
   let partie: Partie;
-  let i: number = 0;
-  let pseudo: string;
-  let espece: Espece;
-  let nbJoueurs: number = await demanderNbJoueurs();
+  let nbJoueurs: number;
 
+  nbJoueurs = await demanderNbJoueurs();
   console.log(nbJoueurs + " joueurs participent à la partie");
   log.info(nbJoueurs + " joueurs participent à la partie");
 
   partie = new Partie();
-  for (i = 1; i <= nbJoueurs; i++) {
-    pseudo = await demanderPseudo(i);
-    espece = await demanderEspece(pseudo);
-    partie.ajouterJoueur(pseudo, espece);
+  await ajouterJoueur(partie, nbJoueurs);
+  partie.init();
+  await jouerUnTour(partie);
 
-    console.log(pseudo + " joue les " + especeToString(espece));
-    log.info(pseudo + " joue les " + especeToString(espece));
-  }
-  // Ajouter joueurs tour à tour
-  // Init partie
-  //    Shuffle deck
-  //    Distribuer
-  //    Premier tour
-
+  await jouerUnTour(partie);
+  await jouerUnTour(partie);
+  await jouerUnTour(partie);
   //Tour par tour
 
   //finir partie
 
   //TODO : private/protected si possible
-  // Initialisation de partie
-  //"Jouage" d'un tour
+  //        Fonction disponibles
 }

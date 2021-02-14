@@ -20,4 +20,8 @@ export class Joueur {
     this.espece = espece;
     this.pseudo = pseudo;
   }
+
+  piocher(carte: Carte) {
+    this.main.push(carte);
+  }
 }

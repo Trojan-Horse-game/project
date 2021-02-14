@@ -70,4 +70,56 @@ export class Partie {
   ajouterJoueur(pseudo: string, espece: Espece) {
     this.joueurs.push(new Joueur(pseudo, espece));
   }
+
+  // Initialise le lancement de la partie
+  init() {
+    this.melangePioche();
+    this.distribuer();
+  }
+
+  // Mélange en O(n), shuffle Durstenfeld
+  melangePioche() {
+    for (let i = this.pioche.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [this.pioche[i], this.pioche[j]] = [this.pioche[j], this.pioche[i]];
+    }
+  }
+
+  // Fais piocher 3 cartes à tous les joueurs.
+  distribuer() {
+    let i: number;
+    this.joueurEnCours = 0;
+
+    for (i = 0; i < this.joueurs.length; i++) {
+      this.piocher(3);
+      this.joueurEnCours = (this.joueurEnCours + 1) % this.joueurs.length;
+    }
+  }
+
+  /* Fais piocher le joueur actuel n cartes
+  
+    La fonction les enlèves donc de la pioche
+
+    Si la pioche est vide, on inverse la défausse et la pioche
+    Normalement la défausse ne peut jamais être vide dans ce cas
+  */
+  piocher(n: number) {
+    let i: number;
+    let carte: Carte | undefined;
+
+    for (i = 0; i < n; i++) {
+      carte = this.pioche.pop();
+
+      if (carte === undefined) {
+        [this.pioche, this.defausse] = [this.defausse, this.pioche];
+        carte = this.pioche.pop();
+      }
+
+      this.joueurs[this.joueurEnCours].piocher(<Carte>carte);
+    }
+  }
+
+  passer() {
+    this.joueurEnCours = (this.joueurEnCours + 1) % this.joueurs.length;
+  }
 }
