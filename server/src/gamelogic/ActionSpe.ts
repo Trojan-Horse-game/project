@@ -24,7 +24,7 @@ export class ActionSpe implements Carte {
       case Couleur.Joker:
         return "Nettoyage des systèmes";
       default:
-        //Impossible normalement
+        // Normally never
         return "Action unkown";
     }
   }

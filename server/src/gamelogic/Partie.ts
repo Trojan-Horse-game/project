@@ -11,8 +11,18 @@ export class Partie {
   pioche: Carte[] = [];
   joueurEnCours: number = 0;
 
-  // Création du deck
   constructor() {
+    this.ajouterDeck();
+  }
+
+  /* Add the cards to the deck
+  
+     Use creerSerieDeck to add Generators, Virus, Firewall,
+     ActionSpe card's to the deck
+
+     To add these series of cards, we follow their distribution in number
+  */
+  ajouterDeck() {
     let distrib: [number, Couleur][] = [
       [5, Couleur.Air],
       [5, Couleur.Eau],
@@ -41,18 +51,22 @@ export class Partie {
     };
     this.ajouterSerieDeck(construct, distrib);
 
-    distrib[0][0] = 1; //Distraction nucléaire
-    distrib[1][0] = 1; //Usurpation d’identité
-    distrib[2][0] = 3; //Échange forcé
-    distrib[3][0] = 3; //Emprunt à durée indéfinie
-    distrib[4][0] = 2; //Nettoyage des systèmes
+    distrib[0][0] = 1; // Nuclear distraction
+    distrib[1][0] = 1; // Identity theft
+    distrib[2][0] = 3; // Forced exchange
+    distrib[3][0] = 3; // Indefinite loan
+    distrib[4][0] = 2; // System cleaning
     construct = (couleur: Couleur) => {
       return new ActionSpe(couleur);
     };
     this.ajouterSerieDeck(construct, distrib);
   }
 
-  // Ajoute une série de carte au deck (Virus, générateur, ...)
+  /* Add a serie of cards to the deck
+
+     Use the constructor of a card object to push it to the deck
+     Use also the distribution of card the push the right amount of them
+  */
   ajouterSerieDeck(
     construct: (couleur: Couleur) => Carte,
     distrib: [number, Couleur][]
@@ -66,26 +80,32 @@ export class Partie {
     }
   }
 
-  // Ajoute un joueur à la partie
+  // Add a player to the game
   ajouterJoueur(joueur: Joueur) {
     this.joueurs.push(joueur);
   }
 
-  // Initialise le lancement de la partie
+  /* Initialize the game
+
+     Shuffle the deck and distribute cards to the players
+  */
   init() {
     this.melangePioche();
     this.distribuer();
   }
 
-  // Mélange en O(n), shuffle Durstenfeld
+  /* Shuffle the deck
+  
+     Complexity of O(n), shuffle Durstenfeld
+  */
   melangePioche() {
     for (let i = this.pioche.length - 1; i > 0; i--) {
-      const j = Math.floor(Math.random() * (i + 1));
+      let j = Math.floor(Math.random() * (i + 1));
       [this.pioche[i], this.pioche[j]] = [this.pioche[j], this.pioche[i]];
     }
   }
 
-  // Fais piocher 3 cartes à tous les joueurs.
+  /* Distribute 3 cards to all players */
   distribuer() {
     let i: number;
     this.joueurEnCours = 0;
@@ -96,12 +116,11 @@ export class Partie {
     }
   }
 
-  /* Fais piocher le joueur actuel n cartes
+  /* Make a player draw n cards
   
-    La fonction les enlèves donc de la pioche
+    Delete the cards from the deck after drawing them
 
-    Si la pioche est vide, on inverse la défausse et la pioche
-    Normalement la défausse ne peut jamais être vide dans ce cas
+    If the deck is empty, the Discard deck and the deck are swap.
   */
   piocher(n: number) {
     let i: number;
@@ -119,6 +138,7 @@ export class Partie {
     }
   }
 
+  /* Pass the player's turn */
   passer() {
     this.joueurEnCours = (this.joueurEnCours + 1) % this.joueurs.length;
   }

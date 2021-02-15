@@ -24,7 +24,7 @@ export class PareFeu implements Carte {
       case Couleur.Joker:
         return "Pare-feu joker";
       default:
-        //Impossible normalement
+        // Normally never
         return "Pare-feu unkown";
     }
   }

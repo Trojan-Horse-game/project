@@ -21,6 +21,7 @@ export class Joueur {
     this.pseudo = pseudo;
   }
 
+  /* Add a card to the player's hand */
   piocher(carte: Carte) {
     this.main.push(carte);
   }

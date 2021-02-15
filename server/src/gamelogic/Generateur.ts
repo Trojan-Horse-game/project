@@ -24,7 +24,7 @@ export class Generateur implements Carte {
       case Couleur.Joker:
         return "Générateur joker";
       default:
-        //Impossible normalement
+        // Normally never
         return "Générateur unkown";
     }
   }

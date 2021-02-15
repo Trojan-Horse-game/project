@@ -24,7 +24,7 @@ export class Virus implements Carte {
       case Couleur.Joker:
         return "Virus joker";
       default:
-        //Impossible normalement
+        // Normally never
         return "Virus unkown";
     }
   }

@@ -11,7 +11,7 @@ const rl = readline.createInterface({
 });
 const regexPseudo = /^[a-zA-Z0-9]{2,32}$/;
 
-// Output une question et attend un input
+/* Ask a question to the player and return his answer */
 function demander(quest: string): Promise<string> {
   return new Promise((res) =>
     rl.question(quest + "\n", (ans) => {
@@ -20,7 +20,10 @@ function demander(quest: string): Promise<string> {
   );
 }
 
-// Vérifie que le nombre de joueurs est correct
+/* Ask the number of players
+
+   Ask the number of players until it's between 2 and 6
+*/
 async function demanderNbJoueurs(): Promise<number> {
   let joueursSet: boolean = false;
   let nbJoueurs: number = 0;
@@ -38,8 +41,10 @@ async function demanderNbJoueurs(): Promise<number> {
   return nbJoueurs;
 }
 
-// TODO : décider d'une longueur de pseudo max
-// Demande le pseudo du joueur
+/* Ask a player his pseudo
+
+   Ask the pseudo until it's made of 2 to 32 alphanumerical caracters.
+*/
 async function demanderPseudo(n: number): Promise<string> {
   let pseudo = await demander("Pseudo du joueur " + n + " ?");
 
@@ -50,8 +55,10 @@ async function demanderPseudo(n: number): Promise<string> {
   return pseudo;
 }
 
+/* Ask a player his specie
 
-// Demande une espèce au joueur
+   Ask the specie until it's one of the proposed
+*/
 async function demanderEspece(pseudo: string): Promise<number> {
   let espece: string;
   console.log(
@@ -60,7 +67,6 @@ async function demanderEspece(pseudo: string): Promise<number> {
 
   espece = await demander("Espece de " + pseudo + " ?");
 
-  
   if ("Hutex" === espece) return Espece.Hutex;
   else if ("Sonyas" === espece) return Espece.Sonyas;
   else if ("Spectre" === espece) return Espece.Spectre;
@@ -72,32 +78,37 @@ async function demanderEspece(pseudo: string): Promise<number> {
   return demanderEspece(pseudo);
 }
 
-async function ajouterJoueur(partie: Partie, nbJoueurs: number) {
-  let i,j: number;
-  let pseudo: string;
-  let tabVerif = new Array(); //tableau temporaire pour verfier un joueur de prendre une espèce déjà prise
-  let espece: Espece ;
+/* Add a player to the Game object
 
- 
+   Ask a player his specie and his pseudo then add him to the game
+*/
+async function ajouterJoueur(partie: Partie, nbJoueurs: number) {
+  let i, j: number;
+  let pseudo: string;
+  let tabVerif = new Array();
+  let espece: Espece;
+
   for (i = 1; i <= nbJoueurs; i++) {
     pseudo = await demanderPseudo(i);
     espece = await demanderEspece(pseudo);
     let condition = false;
 
-    while(!condition){
+    while (!condition) {
       condition = true;
-      for(j = 0 ; j < tabVerif.length; j++){
-      console.log(especeToString(espece));
-      console.log("la" + j);
-      console.log("ici" + tabVerif[0]);
-        if(especeToString(espece) == tabVerif[j]){
-            console.log("Cette espece est deja pris.\n Veuillez Choisir un autre");
-            espece = await demanderEspece(pseudo);
-            condition = false;
+      for (j = 0; j < tabVerif.length; j++) {
+        console.log(especeToString(espece));
+        console.log("la" + j);
+        console.log("ici" + tabVerif[0]);
+        if (especeToString(espece) == tabVerif[j]) {
+          console.log(
+            "Cette espece est deja pris.\n Veuillez Choisir un autre"
+          );
+          espece = await demanderEspece(pseudo);
+          condition = false;
         }
       }
     }
-        
+
     partie.ajouterJoueur(new Joueur(pseudo, espece));
     tabVerif.push(especeToString(espece));
     console.log(pseudo + " joue les " + especeToString(espece));
@@ -105,7 +116,7 @@ async function ajouterJoueur(partie: Partie, nbJoueurs: number) {
   }
 }
 
-// Convertit l'enum Espece en string correspondant
+/* Convert a specie to string */
 function especeToString(espece: Espece): string {
   if (espece == Espece.Hutex) return "Hutex";
   else if (espece == Espece.Sonyas) return "Sonyas";
@@ -116,7 +127,7 @@ function especeToString(espece: Espece): string {
   return "Unkown";
 }
 
-// Affiche la main d'un joueur au début de son tour
+/* Display the player's hand at the beginning of its turn */
 function afficherMain(joueur: Joueur): void {
   let i: number;
 
@@ -126,18 +137,23 @@ function afficherMain(joueur: Joueur): void {
   }
 }
 
-// Demande une action au joueur
-async function demanderAction(): Promise<string> {
-  let action: string | undefined ;
+// TODO : Afficher la base du joueur
 
-  console.log("\nVos actions possibles sont les suivantes, Veuillez choisir un numéro :");
+/* Ask what a player wants to do
+
+   A player can discard card, use a card or abandon the game.
+*/
+async function demanderAction(): Promise<string> {
+  let action: string | undefined;
+
+  console.log(
+    "\nVos actions possibles sont les suivantes, Veuillez choisir un numéro :"
+  );
   console.log("1 => Défausser\n 2 => Poser une carte\n 3 => Abandonner");
-  while(!action){
+  while (!action) {
     action = await demander("Quelle action voulez vous faire ?");
 
-  // On etudie l'action souhaitez par le joueur
-  
-    switch(action) {
+    switch (action) {
       case "1":
         action = "Defausser";
         break;
@@ -150,21 +166,28 @@ async function demanderAction(): Promise<string> {
       default:
         action = "";
         console.log("Veuillez entrer un chiffre parmi ce qui sont proposés!");
-     
-      break;
+
+        break;
+    }
   }
-} 
-  
+
   return action;
 }
-// Afficher la main du joueur, demande un action, réalise l'action
+
+/* Play a turn
+
+   Display a player's hand
+   Ask him what action he wants to do
+   Check if the action is valid
+   Realise the action if possible
+*/
 async function jouerUnTour(partie: Partie) {
   afficherMain(partie.joueurs[partie.joueurEnCours]);
   await demanderAction();
   partie.passer();
 }
 
-// Lance la partie en interraction dans la console
+/* Start the game within the terminal */
 export async function lancerPartie(): Promise<void> {
   let partie: Partie;
   let nbJoueurs: number;
