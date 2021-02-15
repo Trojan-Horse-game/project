@@ -1,8 +1,6 @@
 import readline from "readline";
-import log from "@shared/Logger";
 import { Espece, Joueur } from "./Joueurs";
 import { Partie } from "./Partie";
-import { StringDecoder } from "string_decoder";
 
 const rl = readline.createInterface({
   input: process.stdin,
@@ -112,7 +110,6 @@ async function ajouterJoueur(partie: Partie, nbJoueurs: number) {
     partie.ajouterJoueur(new Joueur(pseudo, espece));
     tabVerif.push(especeToString(espece));
     console.log(pseudo + " joue les " + especeToString(espece));
-    log.info(pseudo + " joue les " + especeToString(espece));
   }
 }
 
@@ -194,7 +191,6 @@ export async function lancerPartie(): Promise<void> {
 
   nbJoueurs = await demanderNbJoueurs();
   console.log(nbJoueurs + " joueurs participent à la partie");
-  log.info(nbJoueurs + " joueurs participent à la partie");
 
   partie = new Partie();
   await ajouterJoueur(partie, nbJoueurs);
