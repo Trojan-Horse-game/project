@@ -177,9 +177,32 @@ async function demanderAction(): Promise<string> {
    Check if the action is valid
    Realise the action if possible
 */
+function abandon(partie: Partie) {
+  console.log(
+    "Le joueur:" +
+      partie.joueurs[partie.joueurEnCours].pseudo +
+      " nous as malheursement quitté"
+  );
+  partie.joueurs.splice(partie.joueurEnCours, 1);
+  if (partie.joueurs.length == 1) {
+    console.log(
+      "Felecitation " +
+        partie.joueurs[partie.joueurEnCours].pseudo +
+        " Vous avez remporté la partie! "
+    );
+    return process.exit(1);
+  }
+}
 async function jouerUnTour(partie: Partie) {
+  let action;
   afficherMain(partie.joueurs[partie.joueurEnCours]);
-  await demanderAction();
+  action = await demanderAction();
+  if ("Poser" == action) {
+  } else if ("Defausser" == action) {
+  } else {
+    abandon(partie);
+  }
+
   partie.passer();
 }
 

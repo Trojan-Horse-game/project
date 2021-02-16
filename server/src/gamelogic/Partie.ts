@@ -30,7 +30,6 @@ export class Partie {
       [5, Couleur.Radiation],
       [1, Couleur.Joker],
     ];
-
     let construct = (couleur: Couleur) => {
       return new Generateur(couleur);
     };
@@ -45,7 +44,7 @@ export class Partie {
     };
     this.ajouterSerieDeck(construct, distrib);
 
-    distrib[4][0] = 4; //TODO
+    distrib[4][0] = 4;
     construct = (couleur: Couleur) => {
       return new PareFeu(couleur);
     };
