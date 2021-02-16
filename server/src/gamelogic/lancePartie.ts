@@ -81,7 +81,9 @@ async function demanderEspece(pseudo: string): Promise<number> {
    Ask a player his specie and his pseudo then add him to the game
 */
 async function ajouterJoueur(partie: Partie, nbJoueurs: number) {
-  let i, j: number;
+  let i: number;
+  let j: number;
+  let condition;
   let pseudo: string;
   let tabVerif = new Array();
   let espece: Espece;
@@ -89,18 +91,13 @@ async function ajouterJoueur(partie: Partie, nbJoueurs: number) {
   for (i = 1; i <= nbJoueurs; i++) {
     pseudo = await demanderPseudo(i);
     espece = await demanderEspece(pseudo);
-    let condition = false;
+    condition = false;
 
     while (!condition) {
       condition = true;
       for (j = 0; j < tabVerif.length; j++) {
-        console.log(especeToString(espece));
-        console.log("la" + j);
-        console.log("ici" + tabVerif[0]);
         if (especeToString(espece) == tabVerif[j]) {
-          console.log(
-            "Cette espece est deja pris.\n Veuillez Choisir un autre"
-          );
+          console.log("Cette espece est deja pris.\nVeuillez Choisir un autre");
           espece = await demanderEspece(pseudo);
           condition = false;
         }
@@ -142,14 +139,15 @@ function afficherMain(joueur: Joueur): void {
 */
 async function demanderAction(): Promise<string> {
   let action: string | undefined;
-
+  let condition;
   console.log(
     "\nVos actions possibles sont les suivantes, Veuillez choisir un numéro :"
   );
-  console.log("1 => Défausser\n 2 => Poser une carte\n 3 => Abandonner");
-  while (!action) {
-    action = await demander("Quelle action voulez vous faire ?");
+  console.log("1 => Défausser\n2 => Poser une carte\n3 => Abandonner");
+  action = await demander("Quelle action voulez vous faire ?");
 
+  while (!condition) {
+    condition = true;
     switch (action) {
       case "1":
         action = "Defausser";
@@ -161,9 +159,10 @@ async function demanderAction(): Promise<string> {
         action = "Abandon";
         break;
       default:
-        action = "";
-        console.log("Veuillez entrer un chiffre parmi ce qui sont proposés!");
-
+        action = await demander(
+          "Veuillez entrer un chiffre parmi ce qui sont proposés!"
+        );
+        condition = false;
         break;
     }
   }
