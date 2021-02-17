@@ -1,9 +1,20 @@
 // Required External Modules and Interfaces
-import { Router } from "express";
-import { Request, Response, NextFunction } from "express";
-import { createConnection } from "typeorm";
+import { Server, Socket } from "socket.io";
+import app from "@server";
 
-// Router Definition
-const gamesRouter = Router();
+// TODO : Create locally a game object to save the current games
+// TODO : Link with the game logic
 
-export default gamesRouter;
+const server = require("http").createServer(app);
+const io = require("socket.io")(server);
+
+// join a room
+io.on("connection", (socket: Socket) => {
+  socket.join("some room"); 
+})
+
+// emit to a room
+io.to("some room").emit("some event");
+
+
+
