@@ -86,4 +86,6 @@ usersRouter.delete("/:id", async (req: Request, res: Response) => {
   // TODO : Pouvoir supprimer une entrée de la table user
 })
 
+// TODO : A voir si on veut gérer les amitiés ici ou dans des routes séparées
+
 export default usersRouter

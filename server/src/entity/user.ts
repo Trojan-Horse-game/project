@@ -6,12 +6,12 @@ export class User {
     // TODO : Complete the User model 
 
     @PrimaryGeneratedColumn()
-    id: number;
+    id!: number;
 
     @Column()
-    username: string;
+    username!: string;
 
     @Column()
-    password: string;
+    password!: string;
 
 }
