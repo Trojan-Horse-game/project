@@ -166,30 +166,10 @@ async function askAction(): Promise<string> {
   return action;
 }
 
-// TODO : put this in Game method
-function abandon(game: Game) {
-  console.log(
-    "Le joueur:" +
-      game.players[game.currentPlayer].pseudo +
-      " nous as malheureusement quitté"
-  );
-  game.players.splice(game.currentPlayer, 1);
-  if (game.players.length == 1) {
-    game.inProgress = false;
-    console.log(
-      "Felecitation " +
-        game.players[game.currentPlayer].pseudo +
-        " ! Vous avez remporté la partie! "
-    );
-    return;
-  }
-}
-
 /* Play a turn
 
    Display a player's hand
    Ask him what action he wants to do
-   Check if the action is valid
    Realise the action if possible
 */
 async function playTurn(game: Game) {
@@ -203,11 +183,10 @@ async function playTurn(game: Game) {
     case "Defausser":
       break;
     case "Abandon":
-      abandon(game);
+      game.abandon();
       break;
-    default:
-      game.pass;
   }
+  game.endTurn();
 }
 
 /* Start the game within the terminal */

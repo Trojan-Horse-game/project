@@ -143,8 +143,24 @@ export class Game {
     }
   }
 
-  /* Pass the player's turn */
-  pass() {
+  /* End the player's turn */
+  endTurn() {
     this.currentPlayer = (this.currentPlayer + 1) % this.players.length;
+  }
+  // Make the current player abandon the game
+  abandon() {
+    console.log(
+      "Le joueur:" + this.players[this.currentPlayer].pseudo + " a abbandonné !"
+    );
+    this.players.shift();
+
+    if (this.players.length == 1) {
+      this.inProgress = false;
+      console.log(
+        "Félicitation " +
+          this.players[0].pseudo +
+          " ! Vous avez remporté la partie! "
+      );
+    }
   }
 }
