@@ -1,10 +1,10 @@
-import { Carte, Couleur } from "./Carte";
+import { Card, Color } from "./Card";
 
-export class ActionSpe implements Carte {
-  couleur: Couleur;
+export class ActionSpe implements Card {
+  color: Color;
 
-  constructor(couleur: Couleur) {
-    this.couleur = couleur;
+  constructor(color: Color) {
+    this.color = color;
   }
 
   action(): void {
@@ -12,16 +12,16 @@ export class ActionSpe implements Carte {
   }
 
   toString(): string {
-    switch (this.couleur) {
-      case Couleur.Air:
+    switch (this.color) {
+      case Color.Air:
         return "Distraction nucléaire";
-      case Couleur.Eau:
+      case Color.Water:
         return "Usurpation d’identité";
-      case Couleur.Energie:
+      case Color.Energy:
         return "Échange forcé";
-      case Couleur.Radiation:
+      case Color.Radiation:
         return "Emprunt à durée indéfinie";
-      case Couleur.Joker:
+      case Color.Joker:
         return "Nettoyage des systèmes";
       default:
         // Normally never

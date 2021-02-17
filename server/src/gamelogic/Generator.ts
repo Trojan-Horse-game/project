@@ -1,10 +1,10 @@
-import { Carte, Couleur } from "./Carte";
+import { Card, Color } from "./Card";
 
-export class Generateur implements Carte {
-  couleur: Couleur;
+export class Generator implements Card {
+  color: Color;
 
-  constructor(couleur: Couleur) {
-    this.couleur = couleur;
+  constructor(color: Color) {
+    this.color = color;
   }
 
   action(): void {
@@ -12,16 +12,16 @@ export class Generateur implements Carte {
   }
 
   toString(): string {
-    switch (this.couleur) {
-      case Couleur.Air:
+    switch (this.color) {
+      case Color.Air:
         return "Générateur d'air";
-      case Couleur.Eau:
+      case Color.Water:
         return "Générateur d'eau";
-      case Couleur.Energie:
+      case Color.Energy:
         return "Générateur d'énergie";
-      case Couleur.Radiation:
+      case Color.Radiation:
         return "Générateur de bouclier antiradiation";
-      case Couleur.Joker:
+      case Color.Joker:
         return "Générateur joker";
       default:
         // Normally never

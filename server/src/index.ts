@@ -1,15 +1,15 @@
 import "./pre-start";
 import app from "@server";
 import { exit } from "process";
-import { lancerPartie } from "./gamelogic/lancePartie";
+import { startGame } from "./gamelogic/startGame";
 
-// Démarre le server
+// Start the server
 const port = Number(process.env.PORT || 3000);
-let serveur = app.listen(port, async () => {
+let server = app.listen(port, async () => {
   console.log("Express server started on port: " + port);
-  await lancerPartie();
+  await startGame();
 
-  serveur.close(() => {
+  server.close(() => {
     console.log("Express stopped server");
   });
   exit(0);

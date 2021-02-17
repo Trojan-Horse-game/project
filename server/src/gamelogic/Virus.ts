@@ -1,10 +1,10 @@
-import { Carte, Couleur } from "./Carte";
+import { Color, Card } from "./Card";
 
-export class Virus implements Carte {
-  couleur: Couleur;
+export class Virus implements Card {
+  color: Color;
 
-  constructor(couleur: Couleur) {
-    this.couleur = couleur;
+  constructor(color: Color) {
+    this.color = color;
   }
 
   action(): void {
@@ -12,16 +12,16 @@ export class Virus implements Carte {
   }
 
   toString(): string {
-    switch (this.couleur) {
-      case Couleur.Air:
+    switch (this.color) {
+      case Color.Air:
         return "Virus d'air";
-      case Couleur.Eau:
+      case Color.Water:
         return "Virus d'eau";
-      case Couleur.Energie:
+      case Color.Energy:
         return "Virus d'énergie";
-      case Couleur.Radiation:
+      case Color.Radiation:
         return "Virus de bouclier antiradiation";
-      case Couleur.Joker:
+      case Color.Joker:
         return "Virus joker";
       default:
         // Normally never
