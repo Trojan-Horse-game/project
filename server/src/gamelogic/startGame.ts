@@ -1,6 +1,7 @@
 import readline from "readline";
 import { Species, Player } from "./Players";
 import { Game } from "./Game";
+import { State } from "./BaseSlot";
 
 const rl = readline.createInterface({
   input: process.stdin,
@@ -141,7 +142,8 @@ function displayBase(player: Player): void {
 
   console.log("\nVoici votre base :");
   for (i = 0; i < player.base.length; i++) {
-    console.log(player.base[i].toString());
+    if (player.base[i].state != State.Empty)
+      console.log(player.base[i].toString());
   }
 }
 
