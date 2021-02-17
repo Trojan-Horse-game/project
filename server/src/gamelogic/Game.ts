@@ -1,7 +1,7 @@
 import { ActionSpe } from "./ActionSpe";
 import { Card, Color } from "./Card";
 import { Generator } from "./Generator";
-import { Player } from "./Players";
+import { Player, Species } from "./Players";
 import { Firewall } from "./Firewall";
 import { Virus } from "./Virus";
 
@@ -11,8 +11,17 @@ export class Game {
   deck: Card[] = [];
   currentPlayer: number = 0;
   inProgress: boolean = false;
+  availableSpecies: Species[];
 
   constructor() {
+    this.availableSpecies = [
+      Species.Hutex,
+      Species.Sonyas,
+      Species.Spectre,
+      Species.Totox,
+      Species.Ulysse,
+      Species.Xmars,
+    ];
     this.createDeck();
   }
 
@@ -82,7 +91,9 @@ export class Game {
 
   // Add a player to the game
   addPlayer(player: Player) {
-    if (this.players.length <= 6) {
+    let x = this.availableSpecies.indexOf(player.species);
+    if (this.players.length <= 6 && x != -1) {
+      this.availableSpecies.splice(x, 1);
       this.players.push(player);
     }
   }

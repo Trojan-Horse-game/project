@@ -1,6 +1,6 @@
 import { Color, colorToString } from "./Card";
 
-export const enum State {
+export enum State {
   Empty,
   Generator,
   Virused,

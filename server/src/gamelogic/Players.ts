@@ -1,7 +1,7 @@
 import { Card } from "./Card";
 import { BaseSlot, State } from "./BaseSlot";
 
-export const enum Species {
+export enum Species {
   Hutex,
   Sonyas,
   Xmars,

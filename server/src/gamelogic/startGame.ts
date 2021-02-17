@@ -59,58 +59,42 @@ async function askPseudo(n: number): Promise<string> {
 
    Ask the species until it's one of the proposed
 */
-async function askSpecies(pseudo: string): Promise<number> {
-  let species: string;
-  console.log(
-    "\nLes espèces disponibles sont Hutex, Sonyas, Spectre, Totox, Ulysse, Xmars"
-  ); // TODO : Only print available species
+async function askSpecies(
+  pseudo: string,
+  available: Species[]
+): Promise<number> {
+  let species: number;
+  let i: number;
 
-  species = await ask("Espece de " + pseudo + " ?");
+  console.log("\nLes espèces disponibles sont :");
+  for (i = 0; i < available.length; i++) {
+    console.log(i + " => " + Species[available[i]]);
+  }
+  species = Number(await ask("Espece de " + pseudo + " ?"));
 
-  if ("Hutex" === species) return Species.Hutex;
-  else if ("Sonyas" === species) return Species.Sonyas;
-  else if ("Spectre" === species) return Species.Spectre;
-  else if ("Totox" === species) return Species.Totox;
-  else if ("Ulysse" === species) return Species.Ulysse;
-  else if ("Xmars" === species) return Species.Xmars;
+  for (i = 0; i < available.length; i++) {
+    if (!isNaN(species) && species < available.length && species >= 0)
+      return available[species];
+  }
 
   console.log("Mauvaise espèce sélectionnée !\n");
-  return askSpecies(pseudo);
+  return askSpecies(pseudo, available);
 }
 
 /* Add a player to the Game object
 
-   Ask a player his specie and his pseudo then add him to the game
+   Ask a player his species and his pseudo then add him to the game
 */
 async function addPlayer(game: Game, nPlayers: number) {
   let i: number;
-  let j: number;
-  let condition;
   let pseudo: string;
-  let tabVerif = new Array(); // TODO we should use a property of Game instead
   let species: Species;
 
   for (i = 1; i <= nPlayers; i++) {
     pseudo = await askPseudo(i);
-    species = await askSpecies(pseudo);
-    condition = false;
-
-    // TODO we should put that in the function askSpecies
-    while (!condition) {
-      condition = true;
-      for (j = 0; j < tabVerif.length; j++) {
-        if (speciesToString(species) == tabVerif[j]) {
-          console.log(
-            "Cette espece est deja prise.\nVeuillez en choisir une autre"
-          );
-          species = await askSpecies(pseudo);
-          condition = false;
-        }
-      }
-    }
+    species = await askSpecies(pseudo, game.availableSpecies);
 
     game.addPlayer(new Player(pseudo, species));
-    tabVerif.push(speciesToString(species));
     console.log(pseudo + " joue les " + speciesToString(species));
   }
 }
