@@ -3,6 +3,10 @@ import "reflect-metadata";
 import app from "@server"
 import cors from "cors";
 import path from "path";
+import userRoutes from "./routes/user"
+
+app.use('/api/user', userRoutes);
+app.use('/api/game', gameRoutes);
 
 // Démarre le server
 const port = Number(process.env.PORT || 3000);
