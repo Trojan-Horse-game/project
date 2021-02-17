@@ -1,5 +1,5 @@
 import { Card } from "./Card";
-import { BaseSlot } from "./BaseSlot";
+import { BaseSlot, State } from "./BaseSlot";
 
 export const enum Species {
   Hutex,
@@ -16,10 +16,15 @@ export class Player {
   main: Card[] = [];
   base: BaseSlot[] = [];
 
-  // TODO : construct an empty base
   constructor(pseudo: string, species: Species) {
+    let i: number;
+
     this.species = species;
     this.pseudo = pseudo;
+
+    for (i = 0; i < 5; i++) {
+      this.base.push(new BaseSlot(State.Empty, i));
+    }
   }
 
   /* Add a card to the player's hand */
