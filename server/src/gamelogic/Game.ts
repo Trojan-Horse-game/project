@@ -148,20 +148,23 @@ export class Game {
     this.currentPlayer = (this.currentPlayer + 1) % this.players.length;
   }
 
-  // Make the current player abandon the game
+  /* End the game and display the winner */
+  endGame(winner: Player) {
+    this.inProgress = false;
+    console.log(
+      "Félicitation " + winner.pseudo + " ! Vous avez remporté la partie! "
+    );
+  }
+
+  /* Make the current player abandon the game */
   abandon() {
     console.log(
       "Le joueur " + this.players[this.currentPlayer].pseudo + " a abbandonné !"
     );
-    this.players.shift();
+    this.players.splice(this.currentPlayer, 1);
 
     if (this.players.length == 1) {
-      this.inProgress = false;
-      console.log(
-        "Félicitation " +
-          this.players[0].pseudo +
-          " ! Vous avez remporté la partie! "
-      );
+      this.endGame(this.players[0]);
     }
   }
 }
