@@ -1,4 +1,5 @@
 import "./pre-start";
+import "reflect-metadata";
 import app from "@server"
 import cors from "cors";
 import path from "path";
