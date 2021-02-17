@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-var-requires */
+/* eslint-disable @typescript-eslint/no-unsafe-call */
 import "./pre-start";
 import "reflect-metadata";
 import app from "@server"
@@ -5,7 +7,7 @@ import cors from "cors";
 import path from "path";
 import usersRouter from "./routes/user";
 
-app.use('/api/user', usersRouter);
+app.use('/api/users', usersRouter);
 
 // Démarre le server
 const port = Number(process.env.PORT || 3000);
