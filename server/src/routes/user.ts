@@ -15,9 +15,9 @@ usersRouter.get("/", async (req: Request, res: Response) => {
     let connection = await createConnection()
     console.log("Loading users from the database")
     let users = await connection.manager.find(User)
-    console.log("Loaded users: ", users)
+        res.status(200).json({users : users})
   } catch (error) {
-    console.error(error)
+    res.status(401).json({error: error});
   }
 })
 
@@ -27,9 +27,12 @@ usersRouter.get("/:id", async (req: Request, res: Response) => {
     let connection = await createConnection()
     console.log("Loading users from the database...")
     let user = await connection.manager.findOne(User, req.body.id)
-    console.log("Loaded user: ", user)
+        if (!user) {
+      return res.status(401).json({ error: "Utilisateur non trouvé !" })
+    }
+    res.status(200).json({user_id : user.id, username : user.username})
   } catch (error) {
-    console.error(error)
+    res.status(401).json({error: error});
   }
 })
 
@@ -46,9 +49,9 @@ usersRouter.post("/signup", async (req: Request, res: Response) => {
     user.username = req.body.email
     user.password = hash
     await connection.manager.save(user)
-    console.log("Saved a new user with id: " + user.id)
+    res.status(200).json({ user_id : user.id, username : user.username });
   } catch (error) {
-    console.error(error)
+    res.status(401).json({ error: error });
   }
 })
 
@@ -70,7 +73,7 @@ usersRouter.post("/signin", async (req: Request, res: Response) => {
       })
     })
   } catch (error) {
-    console.error(error)
+    res.status(401).json({ error: error });
   }
 })
 
