@@ -3,7 +3,8 @@ import { Router } from "express";
 import { Request, Response, NextFunction } from "express";
 import { User } from "../entity/user";
 import * as bcrypt from "bcrypt";
-import { Connection, createConnection } from "typeorm";
+import { createConnection } from "typeorm";
+import jwt from "jsonwebtoken";
 
 // Router Definition
 const usersRouter = Router();
@@ -108,7 +109,9 @@ usersRouter.post(
                 }
                 res.status(200).json({
                   userId: user.id,
-                  token: "TOKEN",
+                  token: jwt.sign({ userId: user.id }, "RANDOM_TOKEN_SECRET", {
+                    expiresIn: "24h",
+                  }),
                 });
               })
               .catch((error) => res.status(500).json({ error }));
