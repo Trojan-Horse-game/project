@@ -135,7 +135,15 @@ function displayHand(player: Player): void {
   }
 }
 
-// TODO : diplay player's base
+/* Display the player's base */
+function displayBase(player: Player): void {
+  let i: number;
+
+  console.log("\nVoici votre base :");
+  for (i = 0; i < player.base.length; i++) {
+    console.log(player.base[i].toString());
+  }
+}
 
 /* Ask what a player wants to do
 
@@ -160,7 +168,7 @@ async function askAction(): Promise<string> {
       action = "Abandon";
       break;
     default:
-      console.log("Veuillez entrer un chiffre parmi ce qui sont proposés!");
+      console.log("Veuillez entrer un chiffre parmi ceux qui sont proposés!");
       return askAction();
   }
   return action;
@@ -176,6 +184,8 @@ async function playTurn(game: Game) {
   let action: string;
 
   displayHand(game.players[game.currentPlayer]);
+  displayBase(game.players[game.currentPlayer]);
+
   action = await askAction();
   switch (action) {
     case "Poser":
