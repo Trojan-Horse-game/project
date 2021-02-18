@@ -501,5 +501,12 @@ export async function startGame(): Promise<void> {
   }
 
   //TODO : private/protected si possible
-  //        Fonction disponibles
+  //        Changer Action en plus petites action
+  //        Changer Distraction nucléaire
+  //        Commenter tout
+  //        Compartimenter en fonctions plus petites
+  //        Attendre 2 min avant de faire un truc au joueur?
+  //        virer la discard
+  //        Faire des test
+  //        Vérifier les actions dans le backend
 }

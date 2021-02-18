@@ -53,6 +53,6 @@ export class Player {
       }
     }
     //Never
-    return 0;
+    throw "La couleur " + color + "n'existe pas dans la base de " + this.pseudo;
   }
 }

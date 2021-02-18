@@ -170,9 +170,9 @@ export class Game {
     );
   }
 
-  discardHand(index: number[]) {
+  discardHand(indices: number[]) {
     let i: number;
-    for (i of index) {
+    for (i of indices) {
       this.discard.push(this.players[this.currentPlayer].discardHand(i));
     }
   }
