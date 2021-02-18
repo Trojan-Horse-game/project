@@ -193,7 +193,7 @@ export class Game {
     );
 
     this.discardHand(0, 1, 2);
-    this.discardBase(this.players[this.currentPlayer].base.length);
+    this.discardBase(0, 1, 2, 3, 4);
 
     this.players.splice(this.currentPlayer, 1);
 
