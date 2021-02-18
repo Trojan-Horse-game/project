@@ -1,14 +1,12 @@
 import readline from "readline";
 import { Species, Player } from "./Players";
 import { Game } from "./Game";
-import { State } from "./BaseSlot";
-import { Card, Color } from "./Card";
+import { BaseSlot, State } from "./BaseSlot";
+import { Color } from "./Card";
 import { Action } from "./Action";
 import { Firewall } from "./Firewall";
 import { Virus } from "./Virus";
 import { Generator } from "./Generator";
-import { parse } from "dotenv/types";
-import { throws } from "assert";
 
 const rl = readline.createInterface({
   input: process.stdin,
@@ -120,6 +118,7 @@ function speciesToString(species: Species): string {
 function displayHand(player: Player): void {
   let i: number;
 
+  console.log("");
   for (i = 0; i < player.hand.length; i++) {
     console.log(i + " => " + player.hand[i].toString());
   }
@@ -127,11 +126,23 @@ function displayHand(player: Player): void {
 
 /* Display the player's base */
 function displayBase(player: Player): void {
+  let i = 0;
+  let slot: BaseSlot;
+
+  console.log("");
+  for (slot of player.base) {
+    console.log(i + " => " + slot.toString());
+    i++;
+  }
+}
+
+/* Display the player' pseudos */
+function displayPlayers(players: Player[]): void {
   let i: number;
 
-  for (i = 0; i < player.base.length; i++) {
-    if (player.base[i].state != State.Empty)
-      console.log(player.base[i].toString());
+  console.log("");
+  for (i = 0; i < players.length; i++) {
+    console.log(i + " => " + players[i].pseudo);
   }
 }
 
@@ -171,8 +182,6 @@ async function askAction(): Promise<string> {
 async function askDiscard(player: Player): Promise<number[]> {
   let i: number;
 
-  console.log("");
-
   displayHand(player);
 
   const answer = await ask(
@@ -191,6 +200,40 @@ async function askDiscard(player: Player): Promise<number[]> {
   return indexDiscard;
 }
 
+async function askTarget(players: Player[], quest: string) {
+  let goon = true;
+  let target = 0;
+
+  while (goon) {
+    goon = false;
+    displayPlayers(players);
+    target = Number(await ask(quest));
+    if (isNaN(target) || target < 0 || target > players.length) {
+      console.log("Vous n'avez pas rentré un nombre valide");
+      goon = true;
+    }
+  }
+  return target;
+}
+
+async function askSlotTarget(player: Player, quest: string) {
+  let goon = true;
+  let slotTarget = 0;
+
+  while (goon) {
+    goon = false;
+    displayBase(player);
+
+    slotTarget = Number(await ask(quest));
+
+    if (isNaN(slotTarget) || slotTarget < 0 || slotTarget > 4) {
+      console.log("Vous n'avez pas rentré un nombre valide");
+      goon = true;
+    }
+  }
+  return slotTarget;
+}
+
 function generatorContext(
   players: Player[],
   currentPlayer: number,
@@ -204,39 +247,26 @@ function generatorContext(
 }
 
 async function firewallContext(
-  players: Player[],
-  currentPlayer: number,
+  player: Player,
   action: Action
 ): Promise<Action> {
-  let slotTarget = 0;
-  let goon = true;
+  let slotTarget: number;
 
   if (action.card.color === Color.Joker) {
-    goon = true;
-    while (goon) {
-      goon = false;
-      displayBase(players[currentPlayer]);
-      slotTarget = Number(
-        await ask(
-          "Sur quel générateur voulez vous utiliser votre parefeu joker ?"
-        )
-      );
-      if (isNaN(slotTarget) || slotTarget < 0 || slotTarget > 4) {
-        console.log("Vous n'avez pas rentré un nombre valide");
-        goon = true;
-      }
-    }
+    const quest =
+      "Sur quel générateur voulez vous utiliser votre parefeu joker";
+    slotTarget = await askSlotTarget(player, quest);
   } else {
-    slotTarget = players[currentPlayer].getBase(action.card.color);
+    slotTarget = player.getBase(action.card.color);
   }
 
-  const temp = players[currentPlayer].base[slotTarget].state;
+  const temp = player.base[slotTarget].state;
   if (temp === State.Empty) {
-    throw "Vous ne pouvez pas utiliser un parefeu sur un générateur absent !";
+    throw "Vous ne pouvez pas utiliser un parefeu sur un générateur inexistant !";
   } else if (temp === State.Immunized) {
     throw "Vous ne pouvez pas utiliser un parefeu sur un générateur immunisé !";
   } else {
-    action.addBaseSlot1(slotTarget);
+    action.addSlotTarget1(slotTarget);
   }
   return action;
 }
@@ -245,59 +275,133 @@ async function virusContext(
   players: Player[],
   action: Action
 ): Promise<Action> {
-  let slotTarget = 0;
-  let goon = true;
-  let target = 0;
+  let slotTarget: number;
+  let quest: string;
 
-  while (goon) {
-    goon = false;
-    target = Number(
-      await ask("Sur quel joueur voulez vous lancer votre virus ?")
-    );
-    if (isNaN(target) || target < 0 || target > players.length) {
-      console.log("Vous n'avez pas rentré un nombre valide");
-      goon = true;
-    }
-  }
+  quest = "Sur quel joueur voulez vous lancer votre virus ?";
+  const target = await askTarget(players, quest);
 
   if (action.card.color === Color.Joker) {
-    goon = true;
-    while (goon) {
-      goon = false;
-      displayBase(players[target]);
-      slotTarget = Number(
-        await ask(
-          "Sur quel générateur voulez vous utiliser votre virus joker ?"
-        )
-      );
-      if (isNaN(slotTarget) || slotTarget < 0 || slotTarget > 4) {
-        console.log("Vous n'avez pas rentré un nombre valide");
-        goon = true;
-      }
-    }
+    quest = "Sur quel générateur voulez vous utiliser votre virus joker ?";
+    slotTarget = await askSlotTarget(players[target], quest);
   } else {
     slotTarget = players[target].getBase(action.card.color);
   }
 
   const temp = players[target].base[slotTarget].state;
   if (temp === State.Empty) {
-    throw "Vous ne pouvez pas utiliser un virus sur un générateur absent !";
+    throw "Vous ne pouvez pas utiliser un virus sur un générateur inexistant !";
   } else if (temp === State.Immunized) {
     throw "Vous ne pouvez pas utiliser un virus sur un générateur immunisé !";
   } else {
     action.addTarget1(target);
-    action.addBaseSlot1(slotTarget);
+    action.addSlotTarget1(slotTarget);
   }
   return action;
 }
 
-/* async function actionSpeContext(
+async function actionSpeContext(
   players: Player[],
   currentPlayer: number,
   action: Action
-): Promise<Action> {
+) {
+  let quest: string;
+  let target1: number;
+  let slotTarget1: number;
+  let target2: number;
+  let slotTarget2: number;
+  let tempTargetSlot1: BaseSlot;
+  let tempTargetSlot2: BaseSlot;
+  let tempTargetSlot3: BaseSlot;
+  let tempTargetSlot4: BaseSlot;
+  let tempInd: number;
+
+  switch (action.card.color) {
+    case Color.Air: // Nuclear Distract
+      break;
+
+    case Color.Water: // Identity theft
+      quest = "Avec qui voulez vous échanger d'identité ?";
+      action.addTarget1(await askTarget(players, quest));
+      break;
+
+    case Color.Joker: // System cleaning
+      quest = "Sur qui voulez vous rejeter vos virus ?";
+      action.addTarget1(await askTarget(players, quest));
+      break;
+
+    case Color.Radiation: // Indefinite term loan
+      quest = 'Avec qui voulez vous effectuer un "emprunt" longue durée ?';
+      target1 = await askTarget(players, quest);
+
+      quest = 'Quel générateur voulez vous "emprunter" ?';
+      slotTarget1 = await askSlotTarget(players[target1], quest);
+
+      tempTargetSlot1 = players[target1].base[slotTarget1];
+
+      if (tempTargetSlot1.state === State.Immunized)
+        throw 'Vous ne pouvez "emprunter" un générateur immunisé !';
+      else if (tempTargetSlot1.state === State.Empty)
+        throw 'Vous ne pouvez pas "emprunter" un générateur inexistant !';
+
+      tempInd = players[currentPlayer].getBase(action.card.color);
+      tempTargetSlot2 = players[currentPlayer].base[tempInd];
+      if (tempTargetSlot2.state !== State.Empty)
+        throw 'Vous ne pouvez pas "emprunter" un générateur que vous posséder déjà !';
+
+      action.addTarget1(target1);
+      action.addSlotTarget1(slotTarget1);
+      break;
+
+    case Color.Energy: // Forced exchange
+      quest = "Qui sera la première victime de l'échange ?";
+      target1 = await askTarget(players, quest);
+
+      quest = "Quel générateur sera pris chez lui ?";
+      slotTarget1 = await askSlotTarget(players[target1], quest);
+
+      quest = "Qui sera la seconde victime de l'échange ?";
+      target2 = await askTarget(players, quest);
+
+      quest = "Quel générateur sera pris chez lui ?";
+      slotTarget2 = await askSlotTarget(players[target1], quest);
+
+      tempTargetSlot1 = players[target1].base[slotTarget1];
+      if (tempTargetSlot1.state === State.Immunized)
+        throw "Vous ne pouvez échanger un générateur immunisé !";
+      else if (tempTargetSlot1.state === State.Empty)
+        throw "Vous ne pouvez pas échanger un générateur inexistant !";
+
+      tempTargetSlot2 = players[target2].base[slotTarget2];
+      if (tempTargetSlot2.state === State.Immunized)
+        throw "Vous ne pouvez échanger un générateur immunisé !";
+      else if (tempTargetSlot2.state === State.Empty)
+        throw "Vous ne pouvez pas échanger un générateur inexistant !";
+
+      if (tempTargetSlot1.color !== tempTargetSlot2.color) {
+        tempInd = players[target2].getBase(tempTargetSlot1.color);
+        tempTargetSlot3 = players[target2].base[tempInd];
+
+        tempInd = players[target1].getBase(tempTargetSlot2.color);
+        tempTargetSlot4 = players[target1].base[tempInd];
+
+        if (tempTargetSlot3.state !== State.Empty)
+          throw "Votre échange ne doit pas créer de doublons de générateurs !";
+        else if (tempTargetSlot4.state !== State.Empty)
+          throw "Votre échange ne doit pas créer de doublons de générateurs !";
+      }
+
+      action.addTarget1(target1);
+      action.addSlotTarget1(slotTarget1);
+      action.addTarget1(target2);
+      action.addSlotTarget1(slotTarget2);
+      break;
+
+    default:
+      throw "Une erreur inconnue est survenue !";
+  }
+  return action;
 }
-*/
 
 async function parseAction(
   players: Player[],
@@ -312,21 +416,18 @@ async function parseAction(
   if (action.card instanceof Generator) {
     return generatorContext(players, currentPlayer, action);
   } else if (action.card instanceof Firewall) {
-    return await firewallContext(players, currentPlayer, action);
+    return await firewallContext(players[currentPlayer], action);
   } else if (action.card instanceof Virus) {
     return await virusContext(players, action);
   } else {
-    //return await actionSpeContext(players, currentPlayer, action);
+    return await actionSpeContext(players, currentPlayer, action);
   }
-  return action;
 }
 
 /* TODO : COMMENTER FONCTIONS
 
 */
 async function askCardToUse(player: Player): Promise<number> {
-  console.log("");
-
   displayHand(player);
 
   const indexCard = Number(await ask("Quelle carte voulez-vous poser ?"));
@@ -346,6 +447,7 @@ async function askCardToUse(player: Player): Promise<number> {
 async function playTurn(game: Game) {
   let indexDiscard: number[];
   let indexCard: number;
+  let goon = true;
   const player = game.players[game.currentPlayer];
 
   console.log("\nC'est à vous " + player.pseudo + ", voici vos cartes :");
@@ -354,37 +456,33 @@ async function playTurn(game: Game) {
   console.log("Voici votre base :");
   displayBase(player);
 
-  const action = await askAction();
+  while (goon) {
+    goon = false;
+    const answer = await askAction();
 
-  switch (action) {
-    case "Poser":
-      indexCard = await askCardToUse(player);
-      try {
-        parseAction(game.players, game.currentPlayer, indexCard);
-      } catch (err) {
-        console.log(err); // Redemander action
-      }
-      // Organe uniquement devant joueur
-
-      // Virus sur générateur ennemi ou allié
-      // Pour le joker il faut demander la couleur en plus
-
-      // Parefeu pareil
-
-      // Action Spe
-      // Transplantation = echange baseslot = le plus chiant
-
-      // if ActionSpe, demande contextuel
-      // If joker demande contextuel
-      // Sinon, demande sur quel joueur
-      break;
-    case "Defausser":
-      indexDiscard = await askDiscard(player);
-      game.discardHand(indexDiscard);
-      break;
-    case "Abandon":
-      game.abandon();
-      break;
+    switch (answer) {
+      case "Poser":
+        indexCard = await askCardToUse(player);
+        try {
+          const action = await parseAction(
+            game.players,
+            game.currentPlayer,
+            indexCard
+          );
+          console.log(action);
+        } catch (err) {
+          console.log(err);
+          goon = true;
+        }
+        break;
+      case "Defausser":
+        indexDiscard = await askDiscard(player);
+        game.discardHand(indexDiscard);
+        break;
+      case "Abandon":
+        game.abandon();
+        break;
+    }
   }
   game.endTurn();
 }

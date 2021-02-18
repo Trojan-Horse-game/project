@@ -67,11 +67,11 @@ export class Game {
       return new ActionSpe(color);
     };
 
-    this.addSerieToDeck(construct, 1, Color.Air);
-    this.addSerieToDeck(construct, 1, Color.Water);
-    this.addSerieToDeck(construct, 3, Color.Energy);
-    this.addSerieToDeck(construct, 3, Color.Radiation);
-    this.addSerieToDeck(construct, 2, Color.Joker);
+    this.addSerieToDeck(construct, 1, Color.Air); // Nuclear Distract
+    this.addSerieToDeck(construct, 1, Color.Water); // Identity theft
+    this.addSerieToDeck(construct, 3, Color.Energy); // Forced exchange
+    this.addSerieToDeck(construct, 3, Color.Radiation); // Indefinite term loan
+    this.addSerieToDeck(construct, 2, Color.Joker); // System cleaning
   }
 
   /* Add a type of cards to the deck

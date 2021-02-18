@@ -1,13 +1,12 @@
 import { Card } from "./Card";
-import { Player } from "./Players";
 
 export class Action {
   card: Card;
   indexInHand: number;
   target1?: number;
-  baseSlot1?: number;
+  slotTarget1?: number;
   target2?: number;
-  baseSlot2?: number;
+  slotTarget2?: number;
 
   constructor(card: Card, indexInHand: number) {
     this.card = card;
@@ -22,12 +21,12 @@ export class Action {
     this.target2 = target;
   }
 
-  addBaseSlot1(slot: number) {
-    this.baseSlot1 = slot;
+  addSlotTarget1(slot: number) {
+    this.slotTarget1 = slot;
   }
 
-  addBaseSlot2(slot: number) {
-    this.baseSlot2 = slot;
+  addSlotTarget2(slot: number) {
+    this.slotTarget2 = slot;
   }
 
   // Check if the action is doable
