@@ -31,4 +31,15 @@ export class Player {
   draw(card: Card) {
     this.main.push(card);
   }
+
+  discardHand(i: number): Card {
+    const oldHand = this.main[i];
+    this.main.slice(i, 1);
+    return oldHand;
+  }
+  discardBase(i: number): Card[] {
+    const oldBase = this.base[i].cards;
+    this.base[i].cards = [];
+    return oldBase;
+  }
 }

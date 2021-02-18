@@ -1,4 +1,4 @@
-import { Color } from "./Card";
+import { Card, Color } from "./Card";
 
 export enum State {
   Empty,
@@ -12,6 +12,7 @@ export enum State {
 export class BaseSlot {
   state: State;
   color: Color;
+  cards: Card[] = [];
 
   constructor(state: State, color: number) {
     this.state = state;

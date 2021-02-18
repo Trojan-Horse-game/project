@@ -167,11 +167,34 @@ export class Game {
     );
   }
 
+  discardHand(...index: number[]) {
+    let i: number;
+    for (i of index) {
+      this.discard.push(this.players[this.currentPlayer].discardHand(i));
+    }
+  }
+
+  discardBase(...index: number[]) {
+    let i: number;
+    let oldCard: Card;
+
+    for (i of index) {
+      const toDiscard = this.players[this.currentPlayer].discardBase(i);
+      for (oldCard of toDiscard) {
+        this.discard.push(oldCard);
+      }
+    }
+  }
+
   /* Make the current player abandon the game */
   abandon() {
     console.log(
       "Le joueur " + this.players[this.currentPlayer].pseudo + " a abbandonné !"
     );
+
+    this.discardHand(0, 1, 2);
+    this.discardBase(this.players[this.currentPlayer].base.length);
+
     this.players.splice(this.currentPlayer, 1);
 
     if (this.players.length == 1) {
