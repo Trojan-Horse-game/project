@@ -9,8 +9,8 @@ export class Game {
   players: Player[] = [];
   discard: Card[] = [];
   deck: Card[] = [];
-  currentPlayer: number = 0;
-  inProgress: boolean = false;
+  currentPlayer = 0;
+  inProgress = false;
   availableSpecies: Species[];
 
   constructor() {
@@ -33,7 +33,7 @@ export class Game {
      To add these series of cards, we follow their distribution
   */
   createDeck() {
-    let distrib: [number, Color][] = [
+    const distrib: [number, Color][] = [
       [5, Color.Air],
       [5, Color.Water],
       [5, Color.Energy],
@@ -80,10 +80,10 @@ export class Game {
     construct: (color: Color) => Card,
     distrib: [number, Color][]
   ) {
-    let i: number = 0;
-    let j: number = 0;
-    for (i = 0; i < 5; i++) {
-      for (j = 0; j < distrib[i][0]; j++) {
+    let i = 0;
+    let j = 0;
+    for (i; i < 5; i++) {
+      for (j; j < distrib[i][0]; j++) {
         this.deck.push(construct(distrib[i][1]));
       }
     }
@@ -91,7 +91,7 @@ export class Game {
 
   // Add a player to the game
   addPlayer(player: Player) {
-    let x = this.availableSpecies.indexOf(player.species);
+    const x = this.availableSpecies.indexOf(player.species);
     if (this.players.length <= 6 && x != -1) {
       this.availableSpecies.splice(x, 1);
       this.players.push(player);
@@ -116,7 +116,7 @@ export class Game {
   */
   shuffle() {
     for (let i = this.deck.length - 1; i > 0; i--) {
-      let j = Math.floor(Math.random() * (i + 1));
+      const j = Math.floor(Math.random() * (i + 1));
       [this.deck[i], this.deck[j]] = [this.deck[j], this.deck[i]];
     }
   }

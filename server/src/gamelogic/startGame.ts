@@ -24,8 +24,7 @@ function ask(quest: string): Promise<string> {
    Ask the number of players until it's between 2 and 6
 */
 async function askNumberOfPlayer(): Promise<number> {
-  let nPlayers: number;
-  nPlayers = Number(await ask("\nCombien de joueurs participeront ?"));
+  const nPlayers = Number(await ask("\nCombien de joueurs participeront ?"));
 
   if (isNaN(nPlayers)) {
     console.log("Veuillez entrer un nombre valide !");
@@ -46,7 +45,7 @@ async function askNumberOfPlayer(): Promise<number> {
    Ask the pseudo until it's made of 2 to 32 alphanumerical caracters.
 */
 async function askPseudo(n: number): Promise<string> {
-  let pseudo = await ask("\nPseudo du joueur " + n + " ?");
+  const pseudo = await ask("\nPseudo du joueur " + n + " ?");
 
   if (!regexPseudo.test(pseudo)) {
     console.log("Pseudo incorrect, 2 à 32 caractères alphanumériques !");
@@ -63,14 +62,14 @@ async function askSpecies(
   pseudo: string,
   available: Species[]
 ): Promise<number> {
-  let species: number;
   let i: number;
 
   console.log("\nLes espèces disponibles sont :");
   for (i = 0; i < available.length; i++) {
     console.log(i + " => " + Species[available[i]]);
   }
-  species = Number(await ask("Espece de " + pseudo + " ?"));
+
+  const species = Number(await ask("Espece de " + pseudo + " ?"));
 
   for (i = 0; i < available.length; i++) {
     if (!isNaN(species) && species < available.length && species >= 0)
@@ -167,12 +166,11 @@ async function askAction(): Promise<string> {
    Realise the action if possible
 */
 async function playTurn(game: Game) {
-  let action: string;
-
   displayHand(game.players[game.currentPlayer]);
   displayBase(game.players[game.currentPlayer]);
 
-  action = await askAction();
+  const action = await askAction();
+
   switch (action) {
     case "Poser":
       break;
@@ -187,8 +185,8 @@ async function playTurn(game: Game) {
 
 /* Start the game within the terminal */
 export async function startGame(): Promise<void> {
-  let game: Game = new Game();
-  let nPlayers: number = await askNumberOfPlayer();
+  const game: Game = new Game();
+  const nPlayers: number = await askNumberOfPlayer();
 
   console.log(nPlayers + " joueurs participent à la partie");
   await addPlayer(game, nPlayers);

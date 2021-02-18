@@ -30,7 +30,7 @@
       "plugin:@typescript-eslint/recommended-requiring-type-checking"
     ],
     "parserOptions": {
-      "project": "server/tsconfig.json"
+      "project": "./tsconfig.json"
     },
     "rules": {
       "max-len": [
@@ -39,7 +39,7 @@
           "code": 100
         }
       ],
-      "no-console": 1,
+      "no-console": 0,
       "no-extra-boolean-cast": 0,
       "@typescript-eslint/restrict-plus-operands": 0,
       "@typescript-eslint/explicit-module-boundary-types": 0,
