@@ -33,60 +33,57 @@ export class Game {
      To add these series of cards, we follow their distribution
   */
   createDeck() {
-    const distrib: [number, Color][] = [
-      [5, Color.Air],
-      [5, Color.Water],
-      [5, Color.Energy],
-      [5, Color.Radiation],
-      [1, Color.Joker],
-    ];
     let construct = (color: Color) => {
       return new Generator(color);
     };
-    this.addSerieToDeck(construct, distrib);
 
-    distrib[0][0] = 4;
-    distrib[1][0] = 4;
-    distrib[2][0] = 4;
-    distrib[3][0] = 4;
+    this.addSerieToDeck(construct, 5, Color.Air);
+    this.addSerieToDeck(construct, 5, Color.Water);
+    this.addSerieToDeck(construct, 5, Color.Energy);
+    this.addSerieToDeck(construct, 5, Color.Radiation);
+    this.addSerieToDeck(construct, 1, Color.Joker);
+
     construct = (color: Color) => {
       return new Virus(color);
     };
-    //this.addSerieToDeck(construct, distrib);
 
-    distrib[4][0] = 4;
+    this.addSerieToDeck(construct, 4, Color.Air);
+    this.addSerieToDeck(construct, 4, Color.Water);
+    this.addSerieToDeck(construct, 4, Color.Energy);
+    this.addSerieToDeck(construct, 4, Color.Radiation);
+    this.addSerieToDeck(construct, 1, Color.Joker);
+
     construct = (color: Color) => {
       return new Firewall(color);
     };
-    //this.addSerieToDeck(construct, distrib);
 
-    distrib[0][0] = 1; // Nuclear distraction
-    distrib[1][0] = 1; // Identity theft
-    distrib[2][0] = 3; // Forced exchange
-    distrib[3][0] = 3; // Indefinite loan
-    distrib[4][0] = 2; // System cleaning
+    this.addSerieToDeck(construct, 4, Color.Air);
+    this.addSerieToDeck(construct, 4, Color.Water);
+    this.addSerieToDeck(construct, 4, Color.Energy);
+    this.addSerieToDeck(construct, 4, Color.Radiation);
+    this.addSerieToDeck(construct, 4, Color.Joker);
+
     construct = (color: Color) => {
       return new ActionSpe(color);
     };
-    //this.addSerieToDeck(construct, distrib);
+
+    this.addSerieToDeck(construct, 1, Color.Air);
+    this.addSerieToDeck(construct, 1, Color.Water);
+    this.addSerieToDeck(construct, 3, Color.Energy);
+    this.addSerieToDeck(construct, 3, Color.Radiation);
+    this.addSerieToDeck(construct, 2, Color.Joker);
   }
 
-  /* Add a serie of cards to the deck
+  /* Add a type of cards to the deck
 
      Use the constructor of a card object to push it to the deck
-     Use also the distribution of card the push the right amount of them
+     Push n card of the same type
   */
-  addSerieToDeck(
-    construct: (color: Color) => Card,
-    distrib: [number, Color][]
-  ) {
-    let type: number[];
-    let j = 0;
+  addSerieToDeck(construct: (color: Color) => Card, n: number, color: Color) {
+    let i = 0;
 
-    for (type of distrib) {
-      for (j; j < type[0]; j++) {
-        this.deck.push(construct(type[1]));
-      }
+    for (i; i < n; i++) {
+      this.deck.push(construct(color));
     }
   }
 
@@ -158,7 +155,7 @@ export class Game {
   /* End the player's turn */
   endTurn() {
     const handLength = this.players[this.currentPlayer].hand.length;
-    if (handLength != 2) {
+    if (handLength != 3) {
       this.draw(3 - handLength);
     }
 

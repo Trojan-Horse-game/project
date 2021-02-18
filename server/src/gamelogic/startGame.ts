@@ -231,8 +231,6 @@ export async function startGame(): Promise<void> {
     await playTurn(game);
   }
 
-  //end game
-
   //TODO : private/protected si possible
   //        Fonction disponibles
 }
