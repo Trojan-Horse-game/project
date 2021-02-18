@@ -2,7 +2,6 @@ import readline from "readline";
 import { Species, Player } from "./Players";
 import { Game } from "./Game";
 import { State } from "./BaseSlot";
-import { Console } from "console";
 import { Card } from "./Card";
 
 const rl = readline.createInterface({
