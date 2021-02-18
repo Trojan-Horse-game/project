@@ -2,7 +2,13 @@ import readline from "readline";
 import { Species, Player } from "./Players";
 import { Game } from "./Game";
 import { State } from "./BaseSlot";
-import { Card } from "./Card";
+import { Card, Color } from "./Card";
+import { Action } from "./Action";
+import { Firewall } from "./Firewall";
+import { Virus } from "./Virus";
+import { Generator } from "./Generator";
+import { parse } from "dotenv/types";
+import { throws } from "assert";
 
 const rl = readline.createInterface({
   input: process.stdin,
@@ -114,9 +120,8 @@ function speciesToString(species: Species): string {
 function displayHand(player: Player): void {
   let i: number;
 
-  console.log("\nC'est à vous " + player.pseudo + ", voici vos cartes :");
   for (i = 0; i < player.hand.length; i++) {
-    console.log(player.hand[i].toString());
+    console.log(i + " => " + player.hand[i].toString());
   }
 }
 
@@ -124,7 +129,6 @@ function displayHand(player: Player): void {
 function displayBase(player: Player): void {
   let i: number;
 
-  console.log("\nVoici votre base :");
   for (i = 0; i < player.base.length; i++) {
     if (player.base[i].state != State.Empty)
       console.log(player.base[i].toString());
@@ -164,14 +168,12 @@ async function askAction(): Promise<string> {
 
    Return an array of the index of the cards
 */
-async function askDiscard(cards: Card[]): Promise<number[]> {
+async function askDiscard(player: Player): Promise<number[]> {
   let i: number;
 
   console.log("");
 
-  for (i = 0; i < cards.length; i++) {
-    console.log(i + " => " + cards[i]);
-  }
+  displayHand(player);
 
   const answer = await ask(
     "Veuillez choisir les cartes à défausser en les séparant par une virgule :"
@@ -183,10 +185,156 @@ async function askDiscard(cards: Card[]): Promise<number[]> {
       console.log(
         "Vous n'avez pas rentré que des chiffres valides, exemple : 0, 1, 2"
       );
-      return askDiscard(cards);
+      return askDiscard(player);
     }
   }
   return indexDiscard;
+}
+
+function generatorContext(
+  players: Player[],
+  currentPlayer: number,
+  action: Action
+): Action {
+  const temp = players[currentPlayer].getBase(action.card.color);
+  if (players[currentPlayer].base[temp].state !== State.Empty) {
+    throw "The generator is already placed in your base !";
+  }
+  return action;
+}
+
+async function firewallContext(
+  players: Player[],
+  currentPlayer: number,
+  action: Action
+): Promise<Action> {
+  let slotTarget = 0;
+  let goon = true;
+
+  if (action.card.color === Color.Joker) {
+    goon = true;
+    while (goon) {
+      goon = false;
+      displayBase(players[currentPlayer]);
+      slotTarget = Number(
+        await ask(
+          "Sur quel générateur voulez vous utiliser votre parefeu joker ?"
+        )
+      );
+      if (isNaN(slotTarget) || slotTarget < 0 || slotTarget > 4) {
+        console.log("Vous n'avez pas rentré un nombre valide");
+        goon = true;
+      }
+    }
+  } else {
+    slotTarget = players[currentPlayer].getBase(action.card.color);
+  }
+
+  const temp = players[currentPlayer].base[slotTarget].state;
+  if (temp === State.Empty) {
+    throw "Vous ne pouvez pas utiliser un parefeu sur un générateur absent !";
+  } else if (temp === State.Immunized) {
+    throw "Vous ne pouvez pas utiliser un parefeu sur un générateur immunisé !";
+  } else {
+    action.addBaseSlot1(slotTarget);
+  }
+  return action;
+}
+
+async function virusContext(
+  players: Player[],
+  action: Action
+): Promise<Action> {
+  let slotTarget = 0;
+  let goon = true;
+  let target = 0;
+
+  while (goon) {
+    goon = false;
+    target = Number(
+      await ask("Sur quel joueur voulez vous lancer votre virus ?")
+    );
+    if (isNaN(target) || target < 0 || target > players.length) {
+      console.log("Vous n'avez pas rentré un nombre valide");
+      goon = true;
+    }
+  }
+
+  if (action.card.color === Color.Joker) {
+    goon = true;
+    while (goon) {
+      goon = false;
+      displayBase(players[target]);
+      slotTarget = Number(
+        await ask(
+          "Sur quel générateur voulez vous utiliser votre virus joker ?"
+        )
+      );
+      if (isNaN(slotTarget) || slotTarget < 0 || slotTarget > 4) {
+        console.log("Vous n'avez pas rentré un nombre valide");
+        goon = true;
+      }
+    }
+  } else {
+    slotTarget = players[target].getBase(action.card.color);
+  }
+
+  const temp = players[target].base[slotTarget].state;
+  if (temp === State.Empty) {
+    throw "Vous ne pouvez pas utiliser un virus sur un générateur absent !";
+  } else if (temp === State.Immunized) {
+    throw "Vous ne pouvez pas utiliser un virus sur un générateur immunisé !";
+  } else {
+    action.addTarget1(target);
+    action.addBaseSlot1(slotTarget);
+  }
+  return action;
+}
+
+/* async function actionSpeContext(
+  players: Player[],
+  currentPlayer: number,
+  action: Action
+): Promise<Action> {
+}
+*/
+
+async function parseAction(
+  players: Player[],
+  currentPlayer: number,
+  indexInHand: number
+): Promise<Action> {
+  const action = new Action(
+    players[currentPlayer].hand[indexInHand],
+    indexInHand
+  );
+
+  if (action.card instanceof Generator) {
+    return generatorContext(players, currentPlayer, action);
+  } else if (action.card instanceof Firewall) {
+    return await firewallContext(players, currentPlayer, action);
+  } else if (action.card instanceof Virus) {
+    return await virusContext(players, action);
+  } else {
+    //return await actionSpeContext(players, currentPlayer, action);
+  }
+  return action;
+}
+
+/* TODO : COMMENTER FONCTIONS
+
+*/
+async function askCardToUse(player: Player): Promise<number> {
+  console.log("");
+
+  displayHand(player);
+
+  const indexCard = Number(await ask("Quelle carte voulez-vous poser ?"));
+  if (isNaN(indexCard) || indexCard < 0 || indexCard > 2) {
+    console.log("Vous n'avez pas rentré un chiffre valide !");
+    return askCardToUse(player);
+  }
+  return indexCard;
 }
 
 /* Play a turn
@@ -198,16 +346,24 @@ async function askDiscard(cards: Card[]): Promise<number[]> {
 async function playTurn(game: Game) {
   let indexDiscard: number[];
   let indexCard: number;
+  const player = game.players[game.currentPlayer];
 
-  displayHand(game.players[game.currentPlayer]);
-  displayBase(game.players[game.currentPlayer]);
+  console.log("\nC'est à vous " + player.pseudo + ", voici vos cartes :");
+  displayHand(player);
+
+  console.log("Voici votre base :");
+  displayBase(player);
 
   const action = await askAction();
 
   switch (action) {
     case "Poser":
-      // indexCard = await askCardToPose();
-
+      indexCard = await askCardToUse(player);
+      try {
+        parseAction(game.players, game.currentPlayer, indexCard);
+      } catch (err) {
+        console.log(err); // Redemander action
+      }
       // Organe uniquement devant joueur
 
       // Virus sur générateur ennemi ou allié
@@ -223,7 +379,7 @@ async function playTurn(game: Game) {
       // Sinon, demande sur quel joueur
       break;
     case "Defausser":
-      indexDiscard = await askDiscard(game.players[game.currentPlayer].hand);
+      indexDiscard = await askDiscard(player);
       game.discardHand(indexDiscard);
       break;
     case "Abandon":

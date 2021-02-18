@@ -1,4 +1,4 @@
-import { Card } from "./Card";
+import { Card, Color } from "./Card";
 import { BaseSlot, State } from "./BaseSlot";
 
 export enum Species {
@@ -42,5 +42,17 @@ export class Player {
     const oldBase = this.base[i].cards;
     this.base[i].cards = [];
     return oldBase;
+  }
+
+  getBase(color: Color) {
+    let i: number;
+
+    for (i = 0; i < this.base.length; i++) {
+      if (this.base[i].color === color) {
+        return i;
+      }
+    }
+    //Never
+    return 0;
   }
 }
