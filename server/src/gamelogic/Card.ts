@@ -1,4 +1,4 @@
-export const enum Color {
+export enum Color {
   Air,
   Water,
   Energy,

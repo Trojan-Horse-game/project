@@ -1,11 +1,11 @@
-import { Color, colorToString } from "./Card";
+import { Color } from "./Card";
 
 export enum State {
   Empty,
   Generator,
   Virused,
   Protected,
-  Immuned,
+  Immunized,
 }
 
 /* One slot of a base */
@@ -23,13 +23,13 @@ export class BaseSlot {
       case State.Empty:
         return "Case vide";
       case State.Generator:
-        return "Génerateur " + colorToString(this.color);
+        return "Génerateur " + Color[this.color];
       case State.Virused:
-        return "Génerateur " + colorToString(this.color) + " contaminé !";
+        return "Génerateur ' " + Color[this.color] + " contaminé !";
       case State.Protected:
-        return "Génerateur " + colorToString(this.color) + " protégé !";
-      case State.Immuned:
-        return "Génerateur " + colorToString(this.color) + " immunisé !";
+        return "Génerateur " + Color[this.color] + " protégé !";
+      case State.Immunized:
+        return "Génerateur " + Color[this.color] + " immunisé !";
       default:
         return "unkown";
     }
