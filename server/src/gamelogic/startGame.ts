@@ -197,6 +197,7 @@ async function askDiscard(cards: Card[]): Promise<number[]> {
 */
 async function playTurn(game: Game) {
   let indexDiscard: number[];
+  let indexCard: number;
 
   displayHand(game.players[game.currentPlayer]);
   displayBase(game.players[game.currentPlayer]);
@@ -205,6 +206,21 @@ async function playTurn(game: Game) {
 
   switch (action) {
     case "Poser":
+      // indexCard = await askCardToPose();
+
+      // Organe uniquement devant joueur
+
+      // Virus sur générateur ennemi ou allié
+      // Pour le joker il faut demander la couleur en plus
+
+      // Parefeu pareil
+
+      // Action Spe
+      // Transplantation = echange baseslot = le plus chiant
+
+      // if ActionSpe, demande contextuel
+      // If joker demande contextuel
+      // Sinon, demande sur quel joueur
       break;
     case "Defausser":
       indexDiscard = await askDiscard(game.players[game.currentPlayer].hand);
