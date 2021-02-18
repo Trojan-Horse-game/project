@@ -199,6 +199,7 @@ export class Game {
     this.discardBase([0, 1, 2, 3, 4]);
 
     this.players.splice(this.currentPlayer, 1);
+    this.currentPlayer %= this.players.length;
 
     if (this.players.length == 1) {
       this.endGame(this.players[0]);
