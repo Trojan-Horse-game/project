@@ -52,13 +52,13 @@ export class Game {
     construct = (color: Color) => {
       return new Virus(color);
     };
-    this.addSerieToDeck(construct, distrib);
+    //this.addSerieToDeck(construct, distrib);
 
     distrib[4][0] = 4;
     construct = (color: Color) => {
       return new Firewall(color);
     };
-    this.addSerieToDeck(construct, distrib);
+    //this.addSerieToDeck(construct, distrib);
 
     distrib[0][0] = 1; // Nuclear distraction
     distrib[1][0] = 1; // Identity theft
@@ -68,7 +68,7 @@ export class Game {
     construct = (color: Color) => {
       return new ActionSpe(color);
     };
-    this.addSerieToDeck(construct, distrib);
+    //this.addSerieToDeck(construct, distrib);
   }
 
   /* Add a serie of cards to the deck
@@ -80,11 +80,12 @@ export class Game {
     construct: (color: Color) => Card,
     distrib: [number, Color][]
   ) {
-    let i = 0;
+    let type: number[];
     let j = 0;
-    for (i; i < 5; i++) {
-      for (j; j < distrib[i][0]; j++) {
-        this.deck.push(construct(distrib[i][1]));
+
+    for (type of distrib) {
+      for (j; j < type[0]; j++) {
+        this.deck.push(construct(type[1]));
       }
     }
   }
@@ -156,6 +157,11 @@ export class Game {
 
   /* End the player's turn */
   endTurn() {
+    const handLength = this.players[this.currentPlayer].hand.length;
+    if (handLength != 2) {
+      this.draw(3 - handLength);
+    }
+
     this.currentPlayer = (this.currentPlayer + 1) % this.players.length;
   }
 
@@ -167,14 +173,14 @@ export class Game {
     );
   }
 
-  discardHand(...index: number[]) {
+  discardHand(index: number[]) {
     let i: number;
     for (i of index) {
       this.discard.push(this.players[this.currentPlayer].discardHand(i));
     }
   }
 
-  discardBase(...index: number[]) {
+  discardBase(index: number[]) {
     let i: number;
     let oldCard: Card;
 
@@ -192,8 +198,8 @@ export class Game {
       "Le joueur " + this.players[this.currentPlayer].pseudo + " a abbandonné !"
     );
 
-    this.discardHand(0, 1, 2);
-    this.discardBase(0, 1, 2, 3, 4);
+    this.discardHand([0, 1, 2]);
+    this.discardBase([0, 1, 2, 3, 4]);
 
     this.players.splice(this.currentPlayer, 1);
 

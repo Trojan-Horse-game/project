@@ -2,6 +2,8 @@ import readline from "readline";
 import { Species, Player } from "./Players";
 import { Game } from "./Game";
 import { State } from "./BaseSlot";
+import { Console } from "console";
+import { Card } from "./Card";
 
 const rl = readline.createInterface({
   input: process.stdin,
@@ -114,8 +116,8 @@ function displayHand(player: Player): void {
   let i: number;
 
   console.log("\nC'est à vous " + player.pseudo + ", voici vos cartes :");
-  for (i = 0; i < player.main.length; i++) {
-    console.log(player.main[i].toString());
+  for (i = 0; i < player.hand.length; i++) {
+    console.log(player.hand[i].toString());
   }
 }
 
@@ -159,6 +161,35 @@ async function askAction(): Promise<string> {
   return action;
 }
 
+/* Ask the player the cards he wants to discard
+
+   Return an array of the index of the cards
+*/
+async function askDiscard(cards: Card[]): Promise<number[]> {
+  let i: number;
+
+  console.log("");
+
+  for (i = 0; i < cards.length; i++) {
+    console.log(i + " => " + cards[i]);
+  }
+
+  const answer = await ask(
+    "Veuillez choisir les cartes à défausser en les séparant par une virgule :"
+  );
+
+  const indexDiscard = answer.split(",").map(Number);
+  for (i of indexDiscard) {
+    if (isNaN(i) || i < 0 || i > 2) {
+      console.log(
+        "Vous n'avez pas rentré que des chiffres valides, exemple : 0, 1, 2"
+      );
+      return askDiscard(cards);
+    }
+  }
+  return indexDiscard;
+}
+
 /* Play a turn
 
    Display a player's hand
@@ -166,6 +197,8 @@ async function askAction(): Promise<string> {
    Realise the action if possible
 */
 async function playTurn(game: Game) {
+  let indexDiscard: number[];
+
   displayHand(game.players[game.currentPlayer]);
   displayBase(game.players[game.currentPlayer]);
 
@@ -175,6 +208,8 @@ async function playTurn(game: Game) {
     case "Poser":
       break;
     case "Defausser":
+      indexDiscard = await askDiscard(game.players[game.currentPlayer].hand);
+      game.discardHand(indexDiscard);
       break;
     case "Abandon":
       game.abandon();

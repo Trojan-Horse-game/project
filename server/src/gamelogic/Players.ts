@@ -13,7 +13,7 @@ export enum Species {
 export class Player {
   pseudo: string;
   species: Species;
-  main: Card[] = [];
+  hand: Card[] = [];
   base: BaseSlot[] = [];
 
   constructor(pseudo: string, species: Species) {
@@ -29,12 +29,12 @@ export class Player {
 
   /* Add a card to the player's hand */
   draw(card: Card) {
-    this.main.push(card);
+    this.hand.push(card);
   }
 
   discardHand(i: number): Card {
-    const oldHand = this.main[i];
-    this.main.slice(i, 1);
+    const oldHand = this.hand[i];
+    this.hand.splice(i, 1);
     return oldHand;
   }
 
