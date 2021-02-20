@@ -1,12 +1,18 @@
 import readline from "readline";
 import { Species, Player } from "./Players";
 import { Game } from "./Game";
-import { BaseSlot } from "./BaseSlot";
+import { BaseSlot, State } from "./BaseSlot";
 import { Color } from "./Card";
 import { Action } from "./Action";
 import { Firewall } from "./Firewall";
 import { Virus } from "./Virus";
 import { Generator } from "./Generator";
+
+interface CleaningSystem {
+  srcSlotInd: number;
+  target: Player[];
+  dstSlotInd: number[][];
+}
 
 const rl = readline.createInterface({
   input: process.stdin,
@@ -254,24 +260,133 @@ async function createActionVirus(players: Player[], action: Action) {
   return action;
 }
 
-async function createActionCleaning(players: Player[], action: Action) {
-  /*
-  //Créer une liste de virus jetable associé à une liste de joueurs sur qui il est possible de les jeter
+async function askWhichToClean(player: Player, viruses: CleaningSystem[]) {
+  let goon = true;
+  let virusToClean = 0;
   let i: number;
-  let j: number;
-  let virusToClean: [number, Player[]][] = [];
-  for (i = 0; i < players[currentPlayer].base.length; i++) {
-    if (players[currentPlayer].base[i].state === State.Virused) {
-      // Problème : un virus joker peut se replacer n'importe où
-      // Problème : un virus quelconque peut toujours se poser sur un générateur joker sain
+
+  while (goon) {
+    goon = false;
+
+    console.log("");
+    for (i = 0; i < viruses.length; i++) {
+      console.log(i + " => " + player.base[viruses[i].srcSlotInd].toString);
+    }
+
+    virusToClean = Number(await ask("Quel virus faut-il supprimer ?"));
+
+    if (
+      isNaN(virusToClean) ||
+      virusToClean < 0 ||
+      virusToClean > viruses.length
+    ) {
+      console.log("Vous n'avez pas rentré un nombre valide");
+      goon = true;
     }
   }
-  // Tant qu'il y a dse virus jetables, demander un virus à jeter
-  // demander la cible correspondante et le générateur sur lequel placé
-  // action : n = le nombre de virus jeté (max 5), slotTargetSrc de i à n et targetDst + slotTargetDst de i à n
-  */
-  const quest = "Sur qui voulez vous rejeter vos virus ?";
-  action.addTarget(await askTarget(players, quest));
+  return virusToClean;
+}
+
+async function askWhereToClean(indexes: number[], player: Player) {
+  let goon = true;
+  let virusToClean = 0;
+  let i: number;
+
+  while (goon) {
+    goon = false;
+
+    console.log("");
+    for (i = 0; i < indexes.length; i++) {
+      console.log(i + " => " + player.base[indexes[i]].toString);
+    }
+
+    virusToClean = Number(await ask("Quel générateur recevra votre virus ?"));
+
+    if (
+      isNaN(virusToClean) ||
+      virusToClean < 0 ||
+      virusToClean > indexes.length
+    ) {
+      console.log("Vous n'avez pas rentré un nombre valide");
+      goon = true;
+    }
+  }
+  return virusToClean;
+}
+
+async function createActionCleaning(
+  players: Player[],
+  currentPlayer: number,
+  action: Action
+) {
+  let i: number;
+  let j: number;
+  let w: number;
+  let virusToClean: CleaningSystem[] = [];
+  let candidate: CleaningSystem;
+  let currentSrc: number;
+  let currentTarget: number;
+  let currentDst: number;
+  let slot: BaseSlot;
+  let baseInd: number;
+  let doable: Boolean;
+  let possibleSlot: number[];
+  let quest: string;
+
+  for (i = 0; i < players[currentPlayer].base.length; i++) {
+    slot = players[currentPlayer].base[i];
+    if (slot.state === State.Virused) {
+      j = currentPlayer + (1 % players.length);
+      candidate = { srcSlotInd: i, target: [], dstSlotInd: [[]] };
+      for (j; j !== players.length; j = (j + 1) % players.length) {
+        doable = false;
+        possibleSlot = [];
+        if (slot.cards[1].color === Color.Joker) {
+          for (w = 0; w !== players[j].base.length; j++) {
+            if (players[j].base[w].state === State.Generator) {
+              doable = true;
+              possibleSlot.push(w);
+            }
+          }
+        } else {
+          baseInd = players[j].getBase(Color.Joker);
+          if (players[j].base[baseInd].state === State.Generator) {
+            doable = true;
+            possibleSlot.push(baseInd);
+          }
+
+          baseInd = players[j].getBase(slot.cards[1].color);
+          if (players[j].base[baseInd].state === State.Generator) {
+            doable = true;
+            possibleSlot.push(baseInd);
+          }
+        }
+        if (doable) {
+          candidate.target.push(players[j]);
+          candidate.dstSlotInd.push(possibleSlot);
+        }
+      }
+      if (candidate.target.length > 0) {
+        virusToClean.push(candidate);
+      }
+    }
+  }
+
+  while (virusToClean.length !== 0) {
+    currentSrc = await askWhichToClean(players[currentPlayer], virusToClean);
+
+    quest = "Quel joueur aura l'honneur de recycler vos déchêts ?";
+    currentTarget = await askTarget(virusToClean[currentSrc].target, quest);
+
+    currentDst = await askWhereToClean(
+      virusToClean[currentSrc].dstSlotInd[currentTarget],
+      virusToClean[currentSrc].target[currentTarget]
+    );
+
+    action.addSlotTarget(currentSrc);
+    action.addTarget(currentTarget);
+    action.addSlotTarget(currentDst);
+  }
   return action;
 }
 
@@ -305,20 +420,21 @@ async function createActionLoan(players: Player[], action: Action) {
   action.addSlotTarget(slotTarget1);
 }
 
-async function createActionSpe(players: Player[], action: Action) {
+async function createActionSpe(
+  players: Player[],
+  currentPlayer: number,
+  action: Action
+) {
   let quest: string;
 
   switch (action.card.color) {
-    case Color.Air: // Nuclear Distract
-      break;
-
     case Color.Water: // Identity theft
       quest = "Avec qui voulez vous échanger d'identité ?";
       action.addTarget(await askTarget(players, quest));
       break;
 
     case Color.Joker: // System cleaning
-      await createActionCleaning(players, action);
+      await createActionCleaning(players, currentPlayer, action);
       break;
 
     case Color.Radiation: // Indefinite term loan
@@ -328,9 +444,6 @@ async function createActionSpe(players: Player[], action: Action) {
     case Color.Energy: // Forced exchange
       await createActionExchange(players, action);
       break;
-
-    default:
-      throw "La couleur de la carte n'est pas reconnue !";
   }
   return action;
 }
@@ -348,7 +461,7 @@ async function createAction(
     return await createActionFirewall(player, action);
   else if (action.card instanceof Virus)
     return await createActionVirus(players, action);
-  else return await createActionSpe(players, action);
+  else return await createActionSpe(players, currentPlayer, action);
 }
 
 /* TODO : COMMENTER FONCTIONS
@@ -436,7 +549,8 @@ export async function startGame(): Promise<void> {
 
   //TODO : private/protected si possible
   //        Changer Distraction nucléaire
+  //        Rendre plus propre
   //        Commenter tout
   //        Faire des test
-  //        Faire l'action dans le backend et l'envoyer
+  //        Checker l'action dans le backend et la faire
 }

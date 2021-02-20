@@ -26,9 +26,21 @@ export class BaseSlot {
       case State.Generator:
         return "Génerateur " + Color[this.color];
       case State.Virused:
-        return "Génerateur ' " + Color[this.color] + " contaminé !";
+        return (
+          "Génerateur ' " +
+          Color[this.color] +
+          " contaminé par " +
+          this.cards[1] +
+          " !"
+        );
       case State.Protected:
-        return "Génerateur " + Color[this.color] + " protégé !";
+        return (
+          "Génerateur " +
+          Color[this.color] +
+          " protégé par " +
+          this.cards[1] +
+          " !"
+        );
       case State.Immunized:
         return "Génerateur " + Color[this.color] + " immunisé !";
       default:
