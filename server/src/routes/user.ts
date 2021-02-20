@@ -3,7 +3,7 @@ import { Router } from "express";
 import { Request, Response, NextFunction } from "express"
 import { User } from "../entity/user"
 import * as bcrypt from "bcrypt"
-import { createConnection } from "typeorm"
+import { createConnection , getConnection } from "typeorm"
 import jwt from "jsonwebtoken"
 
 // Router Definition
@@ -79,14 +79,27 @@ usersRouter.post("/signin", async (req: Request, res: Response) => {
 
 // PUT users/:id
 usersRouter.put("/:id", async (req: Request, res: Response) => {
-  return res.json("OK")
-  // TODO : Pouvoir modifier un champ dans la table user
+  
+  await getConnection()
+    .createQueryBuilder()
+    .update(User)
+    .set({ username:"" })
+    .where("id = :id", { id: 1 })
+    .execute();
+    return res.json("OK")
 })
 
 // DELETE users/:id
 usersRouter.delete("/:id", async (req: Request, res: Response) => {
-  return res.json("OK")
-  // TODO : Pouvoir supprimer une entrée de la table user
+  
+  /await getConnection()
+    .createQueryBuilder()
+    .delete("ce qu'on veut supprimer")
+    .from(User)
+    .where("id = :id", { id: 1 })
+    .execute();
+    return res.json("OK")
+  
 })
 
 // TODO : A voir si on veut gérer les amitiés ici ou dans des routes séparées
