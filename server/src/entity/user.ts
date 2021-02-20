@@ -1,9 +1,8 @@
-import {Entity, PrimaryGeneratedColumn, Column} from "typeorm";
+import {Entity, PrimaryGeneratedColumn, Column, OneToMany, ManyToOne} from "typeorm";
 
 @Entity()
 export class User {
-
-    // TODO : Complete the User model 
+ 
 
     @PrimaryGeneratedColumn()
     id!: number;
@@ -13,5 +12,17 @@ export class User {
 
     @Column()
     password!: string;
+
+    @Column()
+    games!: number;
+
+    @Column()    
+    wins!: number;
+
+    @ManyToOne ( ( )  =>  User ,  (user: any)  =>  User . friend_id ) 
+    user : User | undefined ;
+    static friend_id: any;
+    
+
 
 }
