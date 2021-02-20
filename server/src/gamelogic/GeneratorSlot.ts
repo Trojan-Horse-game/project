@@ -13,7 +13,7 @@ export enum State {
    The state property is used to have a fast way of checking
    which cards compose the slot
 */
-export class BaseSlot {
+export class GeneratorSlot {
   state: State;
   color: Color;
   cards: Card[] = [];
@@ -23,7 +23,7 @@ export class BaseSlot {
     this.color = color;
   }
 
-  /* Change l'état du slot en ajoutant un générateur */
+  /* Change slot state by adding a generator */
   addGenerator(generator: Card) {
     this.state = State.Generator;
     this.cards.push(generator);
@@ -33,8 +33,10 @@ export class BaseSlot {
     switch (this.state) {
       case State.Empty:
         return "Case vide";
+
       case State.Generator:
         return "Génerateur " + Color[this.color];
+
       case State.Virused:
         return (
           "Génerateur ' " +
@@ -43,6 +45,7 @@ export class BaseSlot {
           this.cards[1] +
           " !"
         );
+
       case State.Protected:
         return (
           "Génerateur " +
@@ -51,8 +54,10 @@ export class BaseSlot {
           this.cards[1] +
           " !"
         );
+
       case State.Immunized:
         return "Génerateur " + Color[this.color] + " immunisé !";
+
       default:
         return "unkown";
     }

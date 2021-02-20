@@ -1,5 +1,5 @@
 import { Card, Color } from "./Card";
-import { BaseSlot, State } from "./BaseSlot";
+import { GeneratorSlot, State } from "./GeneratorSlot";
 
 export enum Species {
   Hutex,
@@ -15,7 +15,7 @@ export class Player {
   pseudo: string;
   species: Species;
   hand: Card[] = [];
-  base: BaseSlot[] = [];
+  base: GeneratorSlot[] = [];
 
   constructor(pseudo: string, species: Species) {
     let i: number;
@@ -24,7 +24,7 @@ export class Player {
     this.pseudo = pseudo;
 
     for (i = 0; i < 5; i++) {
-      this.base.push(new BaseSlot(State.Empty, i));
+      this.base.push(new GeneratorSlot(State.Empty, i));
     }
   }
 
@@ -72,5 +72,12 @@ export class Player {
       if (this.base[i].state === State.Generator) generatorValid++;
     }
     return generatorValid >= 4;
+  }
+
+  /* Display a player's hand */
+  displayHand(): void {
+    for (let i = 0; i < this.hand.length; i++) {
+      console.log(i + " => " + this.hand[i].toString());
+    }
   }
 }

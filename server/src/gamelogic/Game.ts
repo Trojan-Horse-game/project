@@ -1,17 +1,17 @@
-import { ActionSpe } from "./ActionSpe";
+import { ActionCard } from "./ActionSpe";
 import { Card, Color } from "./Card";
 import { Generator } from "./Generator";
 import { Player, Species } from "./Players";
-import { Firewall } from "./Firewall";
+import { FirewallCard } from "./Firewall";
 import { Virus } from "./Virus";
 import { Action } from "./Action";
-import { BaseSlot, State } from "./BaseSlot";
+import { GeneratorSlot, State } from "./GeneratorSlot";
 
 /* A class representing a game */
 export class Game {
   players: Player[] = [];
   deck: Card[] = [];
-  currentPlayer = 0;
+  currentPlayerIdx = 0;
   inProgress = false;
   availableSpecies: Species[];
 
@@ -25,6 +25,10 @@ export class Game {
       Species.Xmars,
     ];
     this.createDeck();
+  }
+
+  get currentPlayer(): Player {
+    return this.players[this.currentPlayerIdx];
   }
 
   /* Create the deck by adding the cards
@@ -56,7 +60,7 @@ export class Game {
     this.addSerieToDeck(construct, 1, Color.Joker);
 
     construct = (color: Color) => {
-      return new Firewall(color);
+      return new FirewallCard(color);
     };
 
     this.addSerieToDeck(construct, 4, Color.Air);
@@ -66,7 +70,7 @@ export class Game {
     this.addSerieToDeck(construct, 4, Color.Joker);
 
     construct = (color: Color) => {
-      return new ActionSpe(color);
+      return new ActionCard(color);
     };
 
     this.addSerieToDeck(construct, 1, Color.Air); // Nuclear Distract
@@ -108,7 +112,7 @@ export class Game {
   */
   init() {
     if (this.players.length >= 2) {
-      this.shuffle();
+      this.shuffleDeck();
       this.distribute();
       this.inProgress = true;
     }
@@ -118,7 +122,7 @@ export class Game {
   
      Complexity of O(n), shuffle Durstenfeld
   */
-  shuffle() {
+  shuffleDeck() {
     for (let i = this.deck.length - 1; i > 0; i--) {
       const j = Math.floor(Math.random() * (i + 1));
       [this.deck[i], this.deck[j]] = [this.deck[j], this.deck[i]];
@@ -128,11 +132,11 @@ export class Game {
   /* Distribute 3 cards to all players */
   distribute() {
     let i: number;
-    this.currentPlayer = 0;
+    this.currentPlayerIdx = 0;
 
     for (i = 0; i < this.players.length; i++) {
       this.draw(3);
-      this.currentPlayer = (this.currentPlayer + 1) % this.players.length;
+      this.currentPlayerIdx = (this.currentPlayerIdx + 1) % this.players.length;
     }
   }
 
@@ -147,8 +151,10 @@ export class Game {
 
     for (i = 0; i < n; i++) {
       card = this.deck.pop();
-      if (card === undefined) throw "Il n'y a plus de carte dans le deck !";
-      this.players[this.currentPlayer].draw(card);
+      if (card === undefined) {
+        throw "Il n'y a plus de cartes dans le deck !";
+      }
+      this.currentPlayer.draw(card);
     }
   }
 
@@ -157,12 +163,12 @@ export class Game {
      Make the player draw a valid number of cards
   */
   endTurn() {
-    const handLength = this.players[this.currentPlayer].hand.length;
+    const handLength = this.currentPlayer.hand.length;
     if (handLength != 3) {
       this.draw(3 - handLength);
     }
 
-    this.currentPlayer = (this.currentPlayer + 1) % this.players.length;
+    this.currentPlayerIdx = (this.currentPlayerIdx + 1) % this.players.length;
   }
 
   /* Check if someone won
@@ -194,7 +200,7 @@ export class Game {
     let i: number;
     let padd = 0;
     for (i of indices) {
-      this.deck.unshift(this.players[this.currentPlayer].discardHand(i - padd));
+      this.deck.unshift(this.currentPlayer.discardHand(i - padd));
       padd++;
     }
   }
@@ -208,7 +214,7 @@ export class Game {
     let oldCard: Card;
 
     for (i of index) {
-      const toDiscard = this.players[this.currentPlayer].discardBase(i);
+      const toDiscard = this.currentPlayer.discardBase(i);
       for (oldCard of toDiscard) {
         this.deck.unshift(oldCard);
       }
@@ -219,16 +225,14 @@ export class Game {
   
      Discard its hand and its base
   */
-  abandon() {
-    console.log(
-      "Le joueur " + this.players[this.currentPlayer].pseudo + " a abbandonné !"
-    );
+  resign() {
+    console.log("Le joueur " + this.currentPlayer.pseudo + " a abbandonné !");
 
     this.discardHand([0, 1, 2]);
     this.discardBase([0, 1, 2, 3, 4]);
 
-    this.players.splice(this.currentPlayer, 1);
-    this.currentPlayer %= this.players.length;
+    this.players.splice(this.currentPlayerIdx, 1);
+    this.currentPlayerIdx %= this.players.length;
 
     if (this.players.length == 1) {
       this.endGame(this.players[0]);
@@ -244,7 +248,9 @@ export class Game {
     this.checkAction(action);
     action.card.action(this, action);
     winner = this.checkForWinner();
-    if (winner !== undefined) this.endGame(winner);
+    if (winner !== undefined) {
+      this.endGame(winner);
+    }
   }
 
   /* Check if an action is valid
@@ -253,7 +259,8 @@ export class Game {
   */
   checkAction(action: Action) {
     if (action.card instanceof Generator) this.checkActionGenerator(action);
-    else if (action.card instanceof Firewall) this.checkActionFirewall(action);
+    else if (action.card instanceof FirewallCard)
+      this.checkActionFirewall(action);
     else if (action.card instanceof Virus) this.checkActionVirus(action);
     else this.checkActionSpe(action);
   }
@@ -300,11 +307,11 @@ export class Game {
   checkActionCleaning(action: Action) {
     let i: number;
     let slotInd = 0;
-    let dst: BaseSlot;
-    let src: BaseSlot;
+    let dst: GeneratorSlot;
+    let src: GeneratorSlot;
 
     for (i = 0; i < action.target.length; i++) {
-      if (action.target[i] === this.currentPlayer)
+      if (action.target[i] === this.currentPlayerIdx)
         throw "Impossible de rejeter un virus sur soi même !";
 
       if (
@@ -315,7 +322,7 @@ export class Game {
       }
 
       dst = this.players[action.target[i]].base[action.slotTarget[slotInd + 1]];
-      src = this.players[this.currentPlayer].base[action.slotTarget[slotInd]];
+      src = this.currentPlayer.base[action.slotTarget[slotInd]];
       if (src.state !== State.Virused)
         throw "Vous ne pouvez nettoyer un générateur dans un état non infecté !";
 
@@ -342,18 +349,18 @@ export class Game {
   /* Check if a forced exchange action is valid
 
      Check that :
-      - Both the two target and the two slot are specified
+      - Both targets and both slots are specified
       - No immunized or empty generator are part of the exchange
       - No double of an already existing generator are created after the exchange
 
      Throw an error if it doesn't check, return the action if it does
   */
   checkActionExchange(action: Action) {
-    let firstSrc: BaseSlot;
-    let secondSrc: BaseSlot;
-    let baseInd: number;
-    let firstDst: BaseSlot;
-    let secondDst: BaseSlot;
+    let firstSrc: GeneratorSlot;
+    let secondSrc: GeneratorSlot;
+    let baseIdx: number;
+    let firstDst: GeneratorSlot;
+    let secondDst: GeneratorSlot;
 
     if (action.target[0] === undefined)
       throw "Pas de cible pour l'échange forcé !";
@@ -378,11 +385,11 @@ export class Game {
       throw "Vous ne pouvez pas échanger un générateur inexistant !";
 
     if (firstSrc.color !== secondSrc.color) {
-      baseInd = this.players[action.target[1]].getBase(firstSrc.color);
-      firstDst = this.players[action.target[1]].base[baseInd];
+      baseIdx = this.players[action.target[1]].getBase(firstSrc.color);
+      firstDst = this.players[action.target[1]].base[baseIdx];
 
-      baseInd = this.players[action.target[0]].getBase(secondSrc.color);
-      secondDst = this.players[action.target[0]].base[baseInd];
+      baseIdx = this.players[action.target[0]].getBase(secondSrc.color);
+      secondDst = this.players[action.target[0]].base[baseIdx];
 
       if (firstDst.state !== State.Empty)
         throw "Votre échange ne doit pas créer de doublons de générateurs !";
@@ -401,8 +408,8 @@ export class Game {
      Throw an error if it doesn't check, return the action if it does
   */
   checkActionLoan(action: Action) {
-    let loanSrc: BaseSlot;
-    let loanDst: BaseSlot;
+    let loanSrc: GeneratorSlot;
+    let loanDst: GeneratorSlot;
     let baseInd: number;
 
     if (action.target[0] === undefined)
@@ -418,8 +425,8 @@ export class Game {
     if (loanSrc.state === State.Empty)
       throw 'Vous ne pouvez pas "emprunter" un générateur inexistant !';
 
-    baseInd = this.players[this.currentPlayer].getBase(action.card.color);
-    loanDst = this.players[this.currentPlayer].base[baseInd];
+    baseInd = this.currentPlayer.getBase(action.card.color);
+    loanDst = this.currentPlayer.base[baseInd];
     if (loanDst.state !== State.Empty)
       throw 'Vous ne pouvez pas "emprunter" un générateur que vous posséder déjà !';
   }
@@ -494,7 +501,7 @@ export class Game {
     if (action.slotTarget[0] === undefined)
       throw "Pas de générateur cible du parefeu !";
 
-    const temp = this.players[this.currentPlayer].base[action.slotTarget[0]];
+    const temp = this.currentPlayer.base[action.slotTarget[0]];
     if (temp.state === State.Empty)
       throw "Vous ne pouvez pas utiliser un parefeu sur un générateur inexistant !";
 
@@ -529,9 +536,9 @@ export class Game {
      Throw an error if it doesn't check, return the action if it does
   */
   checkActionGenerator(action: Action) {
-    const temp = this.players[this.currentPlayer].getBase(action.card.color);
+    const temp = this.currentPlayer.getBase(action.card.color);
 
-    if (this.players[this.currentPlayer].base[temp].state !== State.Empty)
+    if (this.currentPlayer.base[temp].state !== State.Empty)
       throw "The generator is already placed in your base !";
 
     return action;

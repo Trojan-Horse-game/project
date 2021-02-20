@@ -1,6 +1,6 @@
 import { Color, Card } from "./Card";
 import { Player } from "./Players";
-import { State } from "./BaseSlot";
+import { State } from "./GeneratorSlot";
 import { Action } from "./Action";
 
 /* A class for the virus cards */

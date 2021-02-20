@@ -15,8 +15,8 @@ export class Generator implements Card {
      Discard the generator from the hand of the player
   */
   action(game: Game, action: Action): void {
-    let indx = game.players[game.currentPlayer].getBase(action.card.color);
-    game.players[game.currentPlayer].base[indx].addGenerator(action.card);
+    let indx = game.currentPlayer.getBase(action.card.color);
+    game.currentPlayer.base[indx].addGenerator(action.card);
     game.discardHand([action.indexInHand]);
   }
 

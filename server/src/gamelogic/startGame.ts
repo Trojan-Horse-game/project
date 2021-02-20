@@ -1,10 +1,10 @@
 import readline from "readline";
 import { Species, Player } from "./Players";
 import { Game } from "./Game";
-import { BaseSlot, State } from "./BaseSlot";
+import { GeneratorSlot, State } from "./GeneratorSlot";
 import { Color } from "./Card";
 import { Action } from "./Action";
-import { Firewall } from "./Firewall";
+import { FirewallCard } from "./Firewall";
 import { Virus } from "./Virus";
 import { Generator } from "./Generator";
 
@@ -118,21 +118,10 @@ async function addPlayer(game: Game, nPlayers: number) {
     console.log(pseudo + " joue les " + Species[species]);
   }
 }
-
-/* Display a player's hand */
-function displayHand(player: Player): void {
-  let i: number;
-
-  console.log("");
-  for (i = 0; i < player.hand.length; i++) {
-    console.log(i + " => " + player.hand[i].toString());
-  }
-}
-
 /* Display a player's base */
 function displayBase(player: Player): void {
   let i = 0;
-  let slot: BaseSlot;
+  let slot: GeneratorSlot;
 
   console.log("");
   for (slot of player.base) {
@@ -189,7 +178,7 @@ async function askAction(): Promise<string> {
 async function askDiscard(player: Player): Promise<number[]> {
   let i: number;
 
-  displayHand(player);
+  player.displayHand();
 
   const answer = await ask(
     "Veuillez choisir les cartes à défausser en les séparant par une virgule :"
@@ -363,7 +352,7 @@ function searchVirusToClean(players: Player[], currentPlayer: number) {
   let w: number;
   let virusToClean: CleaningSystem[] = [];
   let candidate: CleaningSystem;
-  let slot: BaseSlot;
+  let slot: GeneratorSlot;
   let baseInd: number;
   let doable: boolean;
   let possibleSlot: number[];
@@ -533,7 +522,7 @@ async function createAction(
   let action = new Action(player.hand[indexInHand], indexInHand);
 
   if (action.card instanceof Generator) return action;
-  else if (action.card instanceof Firewall)
+  else if (action.card instanceof FirewallCard)
     return await createActionFirewall(player, action);
   else if (action.card instanceof Virus)
     return await createActionVirus(players, action);
@@ -545,7 +534,7 @@ async function createAction(
    Return a valid index of a card in the player's hand
 */
 async function askCardToUse(player: Player): Promise<number> {
-  displayHand(player);
+  player.displayHand();
 
   const indexCard = Number(await ask("Quelle carte voulez-vous poser ?"));
   if (isNaN(indexCard) || indexCard < 0 || indexCard > 2) {
@@ -565,11 +554,11 @@ async function playTurn(game: Game) {
   let indexDiscard: number[];
   let indexCard: number;
   let notDone = true;
-  const player = game.players[game.currentPlayer];
+  const player = game.currentPlayer;
   let action: Action;
 
   console.log("\nC'est à vous " + player.pseudo + ", voici vos cartes :");
-  displayHand(player);
+  player.displayHand();
 
   console.log("Voici votre base :");
   displayBase(player);
@@ -583,7 +572,7 @@ async function playTurn(game: Game) {
         indexCard = await askCardToUse(player);
         action = await createAction(
           game.players,
-          game.currentPlayer,
+          game.currentPlayerIdx,
           indexCard
         );
         try {
@@ -601,7 +590,7 @@ async function playTurn(game: Game) {
         break;
 
       case "Abandon":
-        game.abandon();
+        game.resign();
         break;
 
       default:

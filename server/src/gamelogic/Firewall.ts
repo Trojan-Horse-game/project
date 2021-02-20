@@ -1,7 +1,7 @@
 import { Card, Color } from "./Card";
 
 /* A class for the firewall cards */
-export class Firewall implements Card {
+export class FirewallCard implements Card {
   color: Color;
 
   constructor(color: Color) {
