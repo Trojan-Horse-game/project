@@ -11,15 +11,6 @@ body {
   color: #fff;
 }
 
-#logo img {
-  width: 450px;
-  height: auto;
-}
-
-#logo {
-  width: max-content;
-}
-
 .v-btn {
   background-color: $darkBlue !important;
   color: #fff !important;
@@ -31,4 +22,17 @@ a {
 
 a.lienDesactive {
   pointer-events: none;
+}
+
+.error {
+  color: #ff5252;
+}
+
+.titre {
+  font-size: 40px;
+  text-shadow: 1px 2px #000;
+}
+
+.v-label {
+  color: #fff !important;
 }

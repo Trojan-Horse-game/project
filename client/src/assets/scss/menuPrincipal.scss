@@ -6,12 +6,27 @@
   height: 100vh;
 }
 
-#buttons {
+#boutons {
   width: 450px;
   display: flex;
   flex-direction: column;
 }
 
-#buttons .v-btn {
+#boutons div {
+  width: 100%;
+  display: flex;
+}
+
+#boutons-partie {
+  flex-direction: column;
+}
+
+#boutons-partie .v-btn {
   margin: 0px 0px 20px 0px;
+}
+
+#boutons-divers {
+  flex-direction: row;
+  justify-content: space-around;
+  font-size: 32px;
 }

@@ -1,22 +1,25 @@
 <template>
   <div id="container">
-    <div id="logo">
-      <img src="logo.png" alt="Logo du jeu" />
-    </div>
-
-    <span id="titre">Les Cavaliers de Troie</span>
+    <logo title="Les Cavaliers de Troie" />
 
     <div id="buttons">
       <router-link to="nouveauCompte"
-        ><v-btn>Créer un nouveau compte</v-btn></router-link
+        ><v-btn title="Créer un nouveau compte"
+          >Créer un nouveau compte</v-btn
+        ></router-link
       >
-      <router-link to="login"><v-btn>S'identifier</v-btn></router-link>
+      <router-link to="login"
+        ><v-btn title="S'identifier">S'identifier</v-btn></router-link
+      >
     </div>
   </div>
 </template>
 
 <script lang="ts">
-export default {};
+import Logo from "../components/Logo.vue";
+export default {
+  components: { logo: Logo }
+};
 </script>
 
 <style lang="scss">

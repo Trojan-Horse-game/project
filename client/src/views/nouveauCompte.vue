@@ -1,8 +1,6 @@
 <template>
   <div id="container">
-    <div id="logo">
-      <img src="logo.png" alt="Logo du jeu" />
-    </div>
+    <logo title="Inscription" />
     <div id="inputs">
       <v-form v-model="validInput"
         ><v-text-field
@@ -40,7 +38,10 @@
 </template>
 
 <script>
+import Logo from "../components/Logo.vue";
+
 export default {
+  components: { logo: Logo },
   data: () => ({
     validInput: false,
     mail: "",

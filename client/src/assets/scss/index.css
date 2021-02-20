@@ -9,17 +9,6 @@ body {
   color: #fff;
 }
 
-#logo img {
-  width: 450px;
-  height: auto;
-}
-
-#logo {
-  width: -webkit-max-content;
-  width: -moz-max-content;
-  width: max-content;
-}
-
 .v-btn {
   background-color: #09203f !important;
   color: #fff !important;
@@ -29,7 +18,20 @@ a {
   text-decoration: none;
 }
 
-a.disabled-link {
+a.lienDesactive {
   pointer-events: none;
+}
+
+.error {
+  color: #ff5252;
+}
+
+.titre {
+  font-size: 40px;
+  text-shadow: 1px 2px #000;
+}
+
+.v-label {
+  color: #fff !important;
 }
 /*# sourceMappingURL=index.css.map */

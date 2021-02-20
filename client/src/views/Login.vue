@@ -1,60 +1,53 @@
 <template>
   <div id="container">
-    <div id="logo">
-      <img src="logo.png" alt="Logo du jeu" />
-    </div>
+    <logo titre="Connexion" />
     <div id="inputs">
-      <v-form v-model="validInput"
+      <v-form v-model="validInput" @submit.prevent="login()"
         ><v-text-field
           color="#fff"
           dark
-          label="Adresse mail"
-          v-model="mail"
-          :rules="mailRules"/>
+          label="Nom d'utilisateur"
+          v-model="form.username"
+        />
         <v-text-field
           :type="'password'"
           color="#fff"
           dark
           label="Mot de passe"
-          v-model="password"
-          :rules="passwordRules"
-      /></v-form>
-    </div>
-    <div id="buttons">
-      <router-link to="/nouveauCompte"> <v-btn>Inscription</v-btn></router-link>
-      <router-link
-        to="/menuPrincipal"
-        :class="{ 'disabled-link': !this.validInput }"
-        ><v-btn type="submit" :disabled="!this.validInput"
-          >Valider</v-btn
-        ></router-link
+          v-model="form.password"
+        />
+        <p v-if="showError" class="error--text">
+          Le nom utilisateur ou le mot de passe sont incorrects.
+        </p>
+        <div id="buttons">
+          <router-link to="/nouveauCompte">
+            <v-btn title="Inscription">Inscription</v-btn></router-link
+          >
+          <router-link to="/menuPrincipal"
+            ><v-btn title="Valider" type="submit" :disabled="!this.validInput"
+              >Valider</v-btn
+            ></router-link
+          >
+        </div></v-form
       >
     </div>
   </div>
 </template>
 
 <script>
+import Logo from "../components/Logo.vue";
 export default {
+  components: { logo: Logo },
   data: () => ({
     validInput: false,
-    mail: "",
-    password: "",
+    showError: false,
+    form: {
+      username: "",
+      password: ""
+    }
+  }),
 
-    mailRules: [
-      (mail) => !!mail || "Adresse mail requise",
-      (mail) => {
-        const pattern = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
-        return (mail && pattern.test(mail)) || "Adresse mail invalide";
-      }
-    ],
-
-    passwordRules: [
-      (password) => !!password || "Mot de passe requis",
-      (password) =>
-        (password && password.length >= 8) ||
-        "Le mot de passe doit faire au moins 8 caractères"
-    ]
-  })
+  methods: {}
 };
 </script>
 
