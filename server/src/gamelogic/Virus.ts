@@ -11,8 +11,8 @@ export class Virus implements Card {
   }
 
   infect(players: Player[], action: Action): void {
-    var idx = action.target1;
-    var idx2 = action.slotTarget1;
+    var idx = action.target[0];
+    var idx2 = action.slotTarget[0];
     if (idx === undefined || idx2 === undefined)
       throw new Error("Cette cible n'est pas censé être indéfinie...");
 
@@ -34,8 +34,8 @@ export class Virus implements Card {
   }
   //case when a
   deleteFirewall(players: Player[], action: Action): void {
-    var idx = action.target1;
-    var idx2 = action.slotTarget1;
+    var idx = action.target[0];
+    var idx2 = action.slotTarget[0];
     if (idx === undefined || idx2 === undefined)
       throw new Error("Cette cible n'est pas censé être indéfinie...");
 
@@ -53,8 +53,8 @@ export class Virus implements Card {
 
   //case when a generator is infected by a virus and we add another
   deleteGenerator(players: Player[], action: Action): void {
-    var idx = action.target1;
-    var idx2 = action.slotTarget1;
+    var idx = action.target[0];
+    var idx2 = action.slotTarget[0];
     if (idx === undefined || idx2 === undefined)
       throw new Error("Cette cible n'est pas censé être indéfinie...");
 

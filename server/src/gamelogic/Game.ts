@@ -4,10 +4,11 @@ import { Generator } from "./Generator";
 import { Player, Species } from "./Players";
 import { Firewall } from "./Firewall";
 import { Virus } from "./Virus";
+import { Action } from "./Action";
+import { BaseSlot, State } from "./BaseSlot";
 
 export class Game {
   players: Player[] = [];
-  discard: Card[] = [];
   deck: Card[] = [];
   currentPlayer = 0;
   inProgress = false;
@@ -133,8 +134,7 @@ export class Game {
   /* Make a player draw n cards
   
     Delete the cards from the deck after drawing them
-
-    If the deck is empty, the Discard deck and the deck are swap.
+    The deck should never be empty
   */
   draw(n: number) {
     let i: number;
@@ -142,13 +142,8 @@ export class Game {
 
     for (i = 0; i < n; i++) {
       card = this.deck.pop();
-
-      if (card === undefined) {
-        [this.deck, this.discard] = [this.discard, this.deck];
-        card = this.deck.pop();
-      }
-
-      this.players[this.currentPlayer].draw(<Card>card);
+      if (card === undefined) throw "Il n'y a plus de carte dans le deck !";
+      this.players[this.currentPlayer].draw(card);
     }
   }
 
@@ -204,5 +199,140 @@ export class Game {
     if (this.players.length == 1) {
       this.endGame(this.players[0]);
     }
+  }
+
+  checkAction(action: Action) {
+    if (action.card instanceof Generator) this.checkActionGenerator(action);
+    else if (action.card instanceof Firewall) this.checkActionFirewall(action);
+    else if (action.card instanceof Virus) this.checkActionVirus(action);
+    else this.checkActionSpe(action);
+  }
+
+  checkActionSpe(action: Action) {
+    switch (action.card.color) {
+      case Color.Water: // Identity theft
+        if (action.target[0] === undefined)
+          throw "Le vol d'identité n'a pas de cible !";
+        break;
+
+      case Color.Joker: // System cleaning TODO
+        break;
+
+      case Color.Radiation: // Indefinite term loan
+        this.checkActionLoan(action);
+        break;
+
+      case Color.Energy: // Forced exchange
+        this.checkActionExchange(action);
+        break;
+    }
+    return action;
+  }
+
+  checkActionExchange(action: Action) {
+    let firstSrc: BaseSlot;
+    let secondSrc: BaseSlot;
+    let baseInd: number;
+    let firstDst: BaseSlot;
+    let secondDst: BaseSlot;
+
+    if (action.target[0] === undefined)
+      throw "Pas de cible pour l'échange forcé !";
+    if (action.slotTarget[0] === undefined)
+      throw "Pas de générateur ciblé pour le premier joueur de l'échange forcé !";
+    if (action.target[1] === undefined)
+      throw "Pas de seconde cible pour l'échange forcé !";
+    if (action.slotTarget[1] === undefined)
+      throw "Pas de générateur ciblé pour le second joueur de l'échange forcé !";
+
+    firstSrc = this.players[action.target[0]].base[action.slotTarget[0]];
+    if (firstSrc.state === State.Immunized)
+      throw "Vous ne pouvez échanger un générateur immunisé !";
+
+    if (firstSrc.state === State.Empty)
+      throw "Vous ne pouvez pas échanger un générateur inexistant !";
+
+    secondSrc = this.players[action.target[1]].base[action.slotTarget[1]];
+    if (secondSrc.state === State.Immunized)
+      throw "Vous ne pouvez échanger un générateur immunisé !";
+    if (secondSrc.state === State.Empty)
+      throw "Vous ne pouvez pas échanger un générateur inexistant !";
+
+    if (firstSrc.color !== secondSrc.color) {
+      baseInd = this.players[action.target[1]].getBase(firstSrc.color);
+      firstDst = this.players[action.target[1]].base[baseInd];
+
+      baseInd = this.players[action.target[0]].getBase(secondSrc.color);
+      secondDst = this.players[action.target[0]].base[baseInd];
+
+      if (firstDst.state !== State.Empty)
+        throw "Votre échange ne doit pas créer de doublons de générateurs !";
+      if (secondDst.state !== State.Empty)
+        throw "Votre échange ne doit pas créer de doublons de générateurs !";
+    }
+  }
+
+  checkActionLoan(action: Action) {
+    let loanSrc: BaseSlot;
+    let loanDst: BaseSlot;
+    let baseInd: number;
+
+    if (action.target[0] === undefined)
+      throw "Pas de joueur ciblé pour l'emprunt à durée indéterminée !";
+
+    if (action.slotTarget[0] === undefined)
+      throw "Pas de générateur ciblé pour l'emprunt à durée indéterminée !";
+
+    loanSrc = this.players[action.target[0]].base[action.slotTarget[0]];
+    if (loanSrc.state === State.Immunized)
+      throw 'Vous ne pouvez "emprunter" un générateur immunisé !';
+
+    if (loanSrc.state === State.Empty)
+      throw 'Vous ne pouvez pas "emprunter" un générateur inexistant !';
+
+    baseInd = this.players[this.currentPlayer].getBase(action.card.color);
+    loanDst = this.players[this.currentPlayer].base[baseInd];
+    if (loanDst.state !== State.Empty)
+      throw 'Vous ne pouvez pas "emprunter" un générateur que vous posséder déjà !';
+  }
+
+  checkActionVirus(action: Action) {
+    if (action.target[0] === undefined)
+      throw "Le virus n'a pas de joueur cible !";
+
+    if (action.slotTarget[0] === undefined)
+      throw "Le virus n'as pas de générateur cible !";
+
+    const temp = this.players[action.target[0]].base[action.slotTarget[0]];
+    if (temp.state === State.Empty)
+      throw "Vous ne pouvez pas utiliser un virus sur un générateur inexistant !";
+
+    if (temp.state === State.Immunized)
+      throw "Vous ne pouvez pas utiliser un virus sur un générateur immunisé !";
+
+    return action;
+  }
+
+  checkActionFirewall(action: Action) {
+    if (action.slotTarget[0] === undefined)
+      throw "Pas de générateur cible du parefeu !";
+
+    const temp = this.players[this.currentPlayer].base[action.slotTarget[0]];
+    if (temp.state === State.Empty)
+      throw "Vous ne pouvez pas utiliser un parefeu sur un générateur inexistant !";
+
+    if (temp.state === State.Immunized)
+      throw "Vous ne pouvez pas utiliser un parefeu sur un générateur immunisé !";
+
+    return action;
+  }
+
+  checkActionGenerator(action: Action) {
+    const temp = this.players[this.currentPlayer].getBase(action.card.color);
+
+    if (this.players[this.currentPlayer].base[temp].state !== State.Empty)
+      throw "The generator is already placed in your base !";
+
+    return action;
   }
 }

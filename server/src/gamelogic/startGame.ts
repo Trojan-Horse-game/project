@@ -1,7 +1,7 @@
 import readline from "readline";
 import { Species, Player } from "./Players";
 import { Game } from "./Game";
-import { BaseSlot, State } from "./BaseSlot";
+import { BaseSlot } from "./BaseSlot";
 import { Color } from "./Card";
 import { Action } from "./Action";
 import { Firewall } from "./Firewall";
@@ -234,87 +234,79 @@ async function askSlotTarget(player: Player, quest: string) {
   return slotTarget;
 }
 
-function generatorContext(
-  players: Player[],
-  currentPlayer: number,
-  action: Action
-): Action {
-  const temp = players[currentPlayer].getBase(action.card.color);
-  if (players[currentPlayer].base[temp].state !== State.Empty) {
-    throw "The generator is already placed in your base !";
-  }
+async function createActionFirewall(player: Player, action: Action) {
+  const quest = "Sur quel générateur voulez vous utiliser votre parefeu ?";
+  const slotTarget = await askSlotTarget(player, quest);
+
+  action.addSlotTarget(slotTarget);
   return action;
 }
 
-async function firewallContext(
-  player: Player,
-  action: Action
-): Promise<Action> {
-  let slotTarget: number;
-
-  if (action.card.color === Color.Joker) {
-    const quest =
-      "Sur quel générateur voulez vous utiliser votre parefeu joker";
-    slotTarget = await askSlotTarget(player, quest);
-  } else {
-    slotTarget = player.getBase(action.card.color);
-  }
-
-  const temp = player.base[slotTarget].state;
-  if (temp === State.Empty) {
-    throw "Vous ne pouvez pas utiliser un parefeu sur un générateur inexistant !";
-  } else if (temp === State.Immunized) {
-    throw "Vous ne pouvez pas utiliser un parefeu sur un générateur immunisé !";
-  } else {
-    action.addSlotTarget1(slotTarget);
-  }
-  return action;
-}
-
-async function virusContext(
-  players: Player[],
-  action: Action
-): Promise<Action> {
-  let slotTarget: number;
-  let quest: string;
-
-  quest = "Sur quel joueur voulez vous lancer votre virus ?";
+async function createActionVirus(players: Player[], action: Action) {
+  let quest = "Sur quel joueur voulez vous lancer votre virus ?";
   const target = await askTarget(players, quest);
 
-  if (action.card.color === Color.Joker) {
-    quest = "Sur quel générateur voulez vous utiliser votre virus joker ?";
-    slotTarget = await askSlotTarget(players[target], quest);
-  } else {
-    slotTarget = players[target].getBase(action.card.color);
-  }
+  quest = "Sur quel générateur voulez vous utiliser votre virus ?";
+  const slotTarget = await askSlotTarget(players[target], quest);
 
-  const temp = players[target].base[slotTarget].state;
-  if (temp === State.Empty) {
-    throw "Vous ne pouvez pas utiliser un virus sur un générateur inexistant !";
-  } else if (temp === State.Immunized) {
-    throw "Vous ne pouvez pas utiliser un virus sur un générateur immunisé !";
-  } else {
-    action.addTarget1(target);
-    action.addSlotTarget1(slotTarget);
-  }
+  action.addTarget(target);
+  action.addSlotTarget(slotTarget);
   return action;
 }
 
-async function actionSpeContext(
-  players: Player[],
-  currentPlayer: number,
-  action: Action
-) {
+async function createActionCleaning(players: Player[], action: Action) {
+  /*
+  //Créer une liste de virus jetable associé à une liste de joueurs sur qui il est possible de les jeter
+  let i: number;
+  let j: number;
+  let virusToClean: [number, Player[]][] = [];
+  for (i = 0; i < players[currentPlayer].base.length; i++) {
+    if (players[currentPlayer].base[i].state === State.Virused) {
+      // Problème : un virus joker peut se replacer n'importe où
+      // Problème : un virus quelconque peut toujours se poser sur un générateur joker sain
+    }
+  }
+  // Tant qu'il y a dse virus jetables, demander un virus à jeter
+  // demander la cible correspondante et le générateur sur lequel placé
+  // action : n = le nombre de virus jeté (max 5), slotTargetSrc de i à n et targetDst + slotTargetDst de i à n
+  */
+  const quest = "Sur qui voulez vous rejeter vos virus ?";
+  action.addTarget(await askTarget(players, quest));
+  return action;
+}
+
+async function createActionExchange(players: Player[], action: Action) {
+  let quest = "Qui sera la première victime de l'échange ?";
+  let target1 = await askTarget(players, quest);
+
+  quest = "Quel générateur sera pris chez lui ?";
+  let slotTarget1 = await askSlotTarget(players[target1], quest);
+
+  quest = "Qui sera la seconde victime de l'échange ?";
+  let target2 = await askTarget(players, quest);
+
+  quest = "Quel générateur sera pris chez lui ?";
+  let slotTarget2 = await askSlotTarget(players[target1], quest);
+
+  action.addTarget(target1);
+  action.addSlotTarget(slotTarget1);
+  action.addTarget(target2);
+  action.addSlotTarget(slotTarget2);
+}
+
+async function createActionLoan(players: Player[], action: Action) {
+  let quest = 'Avec qui voulez vous effectuer un "emprunt" longue durée ?';
+  let target1 = await askTarget(players, quest);
+
+  quest = 'Quel générateur voulez vous "emprunter" ?';
+  let slotTarget1 = await askSlotTarget(players[target1], quest);
+
+  action.addTarget(target1);
+  action.addSlotTarget(slotTarget1);
+}
+
+async function createActionSpe(players: Player[], action: Action) {
   let quest: string;
-  let target1: number;
-  let slotTarget1: number;
-  let target2: number;
-  let slotTarget2: number;
-  let tempTargetSlot1: BaseSlot;
-  let tempTargetSlot2: BaseSlot;
-  let tempTargetSlot3: BaseSlot;
-  let tempTargetSlot4: BaseSlot;
-  let tempInd: number;
 
   switch (action.card.color) {
     case Color.Air: // Nuclear Distract
@@ -322,106 +314,41 @@ async function actionSpeContext(
 
     case Color.Water: // Identity theft
       quest = "Avec qui voulez vous échanger d'identité ?";
-      action.addTarget1(await askTarget(players, quest));
+      action.addTarget(await askTarget(players, quest));
       break;
 
     case Color.Joker: // System cleaning
-      quest = "Sur qui voulez vous rejeter vos virus ?";
-      action.addTarget1(await askTarget(players, quest));
+      await createActionCleaning(players, action);
       break;
 
     case Color.Radiation: // Indefinite term loan
-      quest = 'Avec qui voulez vous effectuer un "emprunt" longue durée ?';
-      target1 = await askTarget(players, quest);
-
-      quest = 'Quel générateur voulez vous "emprunter" ?';
-      slotTarget1 = await askSlotTarget(players[target1], quest);
-
-      tempTargetSlot1 = players[target1].base[slotTarget1];
-
-      if (tempTargetSlot1.state === State.Immunized)
-        throw 'Vous ne pouvez "emprunter" un générateur immunisé !';
-      else if (tempTargetSlot1.state === State.Empty)
-        throw 'Vous ne pouvez pas "emprunter" un générateur inexistant !';
-
-      tempInd = players[currentPlayer].getBase(action.card.color);
-      tempTargetSlot2 = players[currentPlayer].base[tempInd];
-      if (tempTargetSlot2.state !== State.Empty)
-        throw 'Vous ne pouvez pas "emprunter" un générateur que vous posséder déjà !';
-
-      action.addTarget1(target1);
-      action.addSlotTarget1(slotTarget1);
+      await createActionLoan(players, action);
       break;
 
     case Color.Energy: // Forced exchange
-      quest = "Qui sera la première victime de l'échange ?";
-      target1 = await askTarget(players, quest);
-
-      quest = "Quel générateur sera pris chez lui ?";
-      slotTarget1 = await askSlotTarget(players[target1], quest);
-
-      quest = "Qui sera la seconde victime de l'échange ?";
-      target2 = await askTarget(players, quest);
-
-      quest = "Quel générateur sera pris chez lui ?";
-      slotTarget2 = await askSlotTarget(players[target1], quest);
-
-      tempTargetSlot1 = players[target1].base[slotTarget1];
-      if (tempTargetSlot1.state === State.Immunized)
-        throw "Vous ne pouvez échanger un générateur immunisé !";
-      else if (tempTargetSlot1.state === State.Empty)
-        throw "Vous ne pouvez pas échanger un générateur inexistant !";
-
-      tempTargetSlot2 = players[target2].base[slotTarget2];
-      if (tempTargetSlot2.state === State.Immunized)
-        throw "Vous ne pouvez échanger un générateur immunisé !";
-      else if (tempTargetSlot2.state === State.Empty)
-        throw "Vous ne pouvez pas échanger un générateur inexistant !";
-
-      if (tempTargetSlot1.color !== tempTargetSlot2.color) {
-        tempInd = players[target2].getBase(tempTargetSlot1.color);
-        tempTargetSlot3 = players[target2].base[tempInd];
-
-        tempInd = players[target1].getBase(tempTargetSlot2.color);
-        tempTargetSlot4 = players[target1].base[tempInd];
-
-        if (tempTargetSlot3.state !== State.Empty)
-          throw "Votre échange ne doit pas créer de doublons de générateurs !";
-        else if (tempTargetSlot4.state !== State.Empty)
-          throw "Votre échange ne doit pas créer de doublons de générateurs !";
-      }
-
-      action.addTarget1(target1);
-      action.addSlotTarget1(slotTarget1);
-      action.addTarget1(target2);
-      action.addSlotTarget1(slotTarget2);
+      await createActionExchange(players, action);
       break;
 
     default:
-      throw "Une erreur inconnue est survenue !";
+      throw "La couleur de la carte n'est pas reconnue !";
   }
   return action;
 }
 
-async function parseAction(
+async function createAction(
   players: Player[],
   currentPlayer: number,
   indexInHand: number
-): Promise<Action> {
-  const action = new Action(
-    players[currentPlayer].hand[indexInHand],
-    indexInHand
-  );
+) {
+  let player = players[currentPlayer];
+  let action = new Action(player.hand[indexInHand], indexInHand);
 
-  if (action.card instanceof Generator) {
-    return generatorContext(players, currentPlayer, action);
-  } else if (action.card instanceof Firewall) {
-    return await firewallContext(players[currentPlayer], action);
-  } else if (action.card instanceof Virus) {
-    return await virusContext(players, action);
-  } else {
-    return await actionSpeContext(players, currentPlayer, action);
-  }
+  if (action.card instanceof Generator) return action;
+  else if (action.card instanceof Firewall)
+    return await createActionFirewall(player, action);
+  else if (action.card instanceof Virus)
+    return await createActionVirus(players, action);
+  else return await createActionSpe(players, action);
 }
 
 /* TODO : COMMENTER FONCTIONS
@@ -447,8 +374,9 @@ async function askCardToUse(player: Player): Promise<number> {
 async function playTurn(game: Game) {
   let indexDiscard: number[];
   let indexCard: number;
-  let goon = true;
+  let notDone = true;
   const player = game.players[game.currentPlayer];
+  let action: Action;
 
   console.log("\nC'est à vous " + player.pseudo + ", voici vos cartes :");
   displayHand(player);
@@ -456,32 +384,38 @@ async function playTurn(game: Game) {
   console.log("Voici votre base :");
   displayBase(player);
 
-  while (goon) {
-    goon = false;
+  while (notDone) {
     const answer = await askAction();
 
+    notDone = false;
     switch (answer) {
       case "Poser":
         indexCard = await askCardToUse(player);
+        action = await createAction(
+          game.players,
+          game.currentPlayer,
+          indexCard
+        );
         try {
-          const action = await parseAction(
-            game.players,
-            game.currentPlayer,
-            indexCard
-          );
+          game.checkAction(action);
           console.log(action);
         } catch (err) {
           console.log(err);
-          goon = true;
+          notDone = true;
         }
         break;
+
       case "Defausser":
         indexDiscard = await askDiscard(player);
         game.discardHand(indexDiscard);
         break;
+
       case "Abandon":
         game.abandon();
         break;
+
+      default:
+        notDone = true;
     }
   }
   game.endTurn();
@@ -501,11 +435,8 @@ export async function startGame(): Promise<void> {
   }
 
   //TODO : private/protected si possible
-  //        Changer Action en plus petites action
   //        Changer Distraction nucléaire
   //        Commenter tout
-  //        Compartimenter en fonctions plus petites
-  //        Attendre 2 min avant de faire un truc au joueur?
   //        virer la discard
   //        Faire des test
   //        Vérifier les actions dans le backend
