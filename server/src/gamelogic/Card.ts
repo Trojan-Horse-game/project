@@ -1,3 +1,6 @@
+import { Action } from "./Action";
+import { Game } from "./Game";
+
 export enum Color {
   Air,
   Water,
@@ -13,5 +16,5 @@ export enum Color {
 */
 export interface Card {
   color: Color;
-  action(): void;
+  action(game: Game, action: Action): void;
 }

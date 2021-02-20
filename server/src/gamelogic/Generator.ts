@@ -1,4 +1,6 @@
+import { Action } from "./Action";
 import { Card, Color } from "./Card";
+import { Game } from "./Game";
 
 /* A class for the generator cards */
 export class Generator implements Card {
@@ -8,8 +10,14 @@ export class Generator implements Card {
     this.color = color;
   }
 
-  action(): void {
-    //TODO
+  /* Pose a generator at the right slot of the player's base 
+  
+     Discard the generator from the hand of the player
+  */
+  action(game: Game, action: Action): void {
+    let indx = game.players[game.currentPlayer].getBase(action.card.color);
+    game.players[game.currentPlayer].base[indx].addGenerator(action.card);
+    game.discardHand([action.indexInHand]);
   }
 
   toString(): string {

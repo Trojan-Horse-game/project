@@ -1,3 +1,4 @@
+import { throws } from "assert";
 import { Card, Color } from "./Card";
 
 export enum State {
@@ -21,6 +22,12 @@ export class BaseSlot {
   constructor(state: State, color: number) {
     this.state = state;
     this.color = color;
+  }
+
+  /* Change l'état du slot en ajoutant un générateur */
+  addGenerator(generator: Card) {
+    this.state = State.Generator;
+    this.cards.push(generator);
   }
 
   toString(): string {

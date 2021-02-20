@@ -588,6 +588,7 @@ async function playTurn(game: Game) {
         );
         try {
           game.checkAction(action);
+          game.playAction(action);
         } catch (err) {
           console.log(err);
           notDone = true;
@@ -628,6 +629,6 @@ export async function startGame(): Promise<void> {
   }
 }
 
-//TODO : private/protected si possible
+//TODO : private/protected/static si possible, typer le retour des fonctions maybe
 //        Faire des test
 //        Checker l'action dans le backend et la faire

@@ -220,6 +220,16 @@ export class Game {
     }
   }
 
+  /* Check if an action is valid and realize it */
+  playAction(action: Action) {
+    try {
+      this.checkAction(action);
+      action.card.action(this, action);
+    } catch (err) {
+      throw err;
+    }
+  }
+
   /* Check if an action is valid
 
      Throw an error if it's not, return the action if it is
