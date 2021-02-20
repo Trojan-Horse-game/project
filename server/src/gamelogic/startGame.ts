@@ -516,7 +516,6 @@ async function playTurn(game: Game) {
         );
         try {
           game.checkAction(action);
-          console.log(action);
         } catch (err) {
           console.log(err);
           notDone = true;

@@ -6,6 +6,7 @@ import { Firewall } from "./Firewall";
 import { Virus } from "./Virus";
 import { Action } from "./Action";
 import { BaseSlot, State } from "./BaseSlot";
+import { throws } from "assert";
 
 export class Game {
   players: Player[] = [];
@@ -215,7 +216,8 @@ export class Game {
           throw "Le vol d'identité n'a pas de cible !";
         break;
 
-      case Color.Joker: // System cleaning TODO
+      case Color.Joker: // System cleaning
+        this.checkActionCleaning(action);
         break;
 
       case Color.Radiation: // Indefinite term loan
@@ -227,6 +229,48 @@ export class Game {
         break;
     }
     return action;
+  }
+
+  checkActionCleaning(action: Action) {
+    let i: number;
+    let slotInd = 0;
+    let dst: BaseSlot;
+    let src: BaseSlot;
+
+    for (i = 0; i < action.target.length; i++) {
+      if (action.target[i] === this.currentPlayer)
+        throw "Impossible de rejeter un virus sur soi même !";
+
+      if (
+        action.slotTarget[slotInd] === undefined ||
+        action.slotTarget[slotInd + 1] === undefined
+      ) {
+        throw "Un des générateurs du nettoyage a mal été annoncé !";
+      }
+
+      dst = this.players[action.target[i]].base[action.slotTarget[slotInd + 1]];
+      src = this.players[this.currentPlayer].base[action.slotTarget[slotInd]];
+      if (src.state !== State.Virused)
+        throw "Vous ne pouvez nettoyer un générateur dans un état non infecté !";
+
+      if (dst.state !== State.Generator)
+        throw "Vous ne pouvez rejeter vos déchets sur des générateurs non sains !";
+
+      if (
+        src.cards[1].color !== Color.Joker &&
+        dst.color !== Color.Joker &&
+        src.cards[1].color !== dst.color
+      ) {
+        throw (
+          "Vous ne pouvez rejeter un " +
+          src.cards[1] +
+          " sur un " +
+          dst.cards[0] +
+          " !"
+        );
+      }
+      slotInd += 2;
+    }
   }
 
   checkActionExchange(action: Action) {
