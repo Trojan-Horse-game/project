@@ -1,0 +1,37 @@
+html,
+body {
+  height: 100%;
+}
+
+#app {
+  background-color: #537895;
+  background-image: linear-gradient(315deg, #09203f 0%, #537895 74%);
+  color: #fff;
+}
+
+.v-btn {
+  background-color: #09203f !important;
+  color: #fff !important;
+}
+
+a {
+  text-decoration: none;
+}
+
+a.lienDesactive {
+  pointer-events: none;
+}
+
+.error {
+  color: #ff5252;
+}
+
+.titre {
+  font-size: 40px;
+  text-shadow: 1px 2px #000;
+}
+
+.v-label {
+  color: #fff !important;
+}
+/*# sourceMappingURL=index.css.map */

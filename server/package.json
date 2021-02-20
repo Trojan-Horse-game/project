@@ -15,6 +15,7 @@
     "ext": "ts, html",
     "exec": "ts-node -r tsconfig-paths/register ./src"
   },
+<<<<<<< HEAD
   "_moduleAliases": {
     "@server": "dist/Server"
   },
@@ -40,6 +41,8 @@
       "**/__tests__/*.+(ts|tsx|js)"
     ]
   },
+=======
+>>>>>>> fc0ececa0fef5972bc78321231663eeb69c02ae4
   "eslintConfig": {
     "parser": "@typescript-eslint/parser",
     "plugins": [
@@ -47,12 +50,8 @@
     ],
     "extends": [
       "eslint:recommended",
-      "plugin:@typescript-eslint/recommended",
-      "plugin:@typescript-eslint/recommended-requiring-type-checking"
+      "plugin:@typescript-eslint/recommended"
     ],
-    "parserOptions": {
-      "project": "./tsconfig.json"
-    },
     "rules": {
       "max-len": [
         "error",
@@ -67,7 +66,9 @@
       "@typescript-eslint/no-explicit-any": 0,
       "@typescript-eslint/no-floating-promises": 0,
       "@typescript-eslint/no-unsafe-member-access": 0,
-      "@typescript-eslint/no-unsafe-assignment": 0
+      "@typescript-eslint/no-unsafe-assignment": 0,
+      "@typescript-eslint/no-unused-vars": 0,
+      "@typescript-eslint/no-var-requires": 0
     }
   },
   "eslintIgnore": [
