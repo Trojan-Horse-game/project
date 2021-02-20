@@ -1,5 +1,9 @@
 import { Card, Color } from "./Card";
 
+/* A class for the special action cards
+
+   The color property is used to differentiate every action
+*/
 export class ActionSpe implements Card {
   color: Color;
 

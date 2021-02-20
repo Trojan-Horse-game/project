@@ -1,5 +1,6 @@
 import { Card, Color } from "./Card";
 
+/* A class for the firewall cards */
 export class Firewall implements Card {
   color: Color;
 

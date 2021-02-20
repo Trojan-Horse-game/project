@@ -3,6 +3,7 @@ import { Player } from "./Players";
 import { State } from "./BaseSlot";
 import { Action } from "./Action";
 
+/* A class for the virus cards */
 export class Virus implements Card {
   color: Color;
 

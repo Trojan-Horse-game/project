@@ -10,6 +10,7 @@ export enum Species {
   Totox,
 }
 
+/* A class to represent a player */
 export class Player {
   pseudo: string;
   species: Species;
@@ -32,18 +33,22 @@ export class Player {
     this.hand.push(card);
   }
 
+  /* Discard a card of the player's hand */
   discardHand(i: number): Card {
     const oldHand = this.hand[i];
     this.hand.splice(i, 1);
     return oldHand;
   }
 
+  /* Discard the cards of a slot of the base */
   discardBase(i: number): Card[] {
     const oldBase = this.base[i].cards;
     this.base[i].cards = [];
+    this.base[i].state = State.Empty;
     return oldBase;
   }
 
+  /* Return the index of a base, based on a color */
   getBase(color: Color) {
     let i: number;
 
@@ -52,7 +57,7 @@ export class Player {
         return i;
       }
     }
-    //Never
+    // If we arrive here, something went terribly wrong
     throw "La couleur " + color + "n'existe pas dans la base de " + this.pseudo;
   }
 }

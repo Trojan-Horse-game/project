@@ -6,8 +6,8 @@ import { Firewall } from "./Firewall";
 import { Virus } from "./Virus";
 import { Action } from "./Action";
 import { BaseSlot, State } from "./BaseSlot";
-import { throws } from "assert";
 
+/* A class representing a game */
 export class Game {
   players: Player[] = [];
   deck: Card[] = [];
@@ -89,7 +89,11 @@ export class Game {
     }
   }
 
-  // Add a player to the game
+  /* Add a player to the game 
+  
+     The player must have a valid specie selected
+     The game must have less than 6 players already
+  */
   addPlayer(player: Player) {
     const x = this.availableSpecies.indexOf(player.species);
     if (this.players.length <= 6 && x != -1) {
@@ -135,7 +139,7 @@ export class Game {
   /* Make a player draw n cards
   
     Delete the cards from the deck after drawing them
-    The deck should never be empty
+    The deck should never be empty but we check anyway
   */
   draw(n: number) {
     let i: number;
@@ -148,7 +152,10 @@ export class Game {
     }
   }
 
-  /* End the player's turn */
+  /* End the player's turn 
+  
+     Make the player draw a valid number of cards
+  */
   endTurn() {
     const handLength = this.players[this.currentPlayer].hand.length;
     if (handLength != 3) {
@@ -166,6 +173,10 @@ export class Game {
     );
   }
 
+  /* Discard cards from the hand of the current player
+
+     Put it back at the bottom of the deck
+  */
   discardHand(indices: number[]) {
     let i: number;
     for (i of indices) {
@@ -173,6 +184,10 @@ export class Game {
     }
   }
 
+  /* Discard cards from slots of the current player
+
+     Put them back at the bottom of the deck
+  */
   discardBase(index: number[]) {
     let i: number;
     let oldCard: Card;
@@ -185,7 +200,10 @@ export class Game {
     }
   }
 
-  /* Make the current player abandon the game */
+  /* Make the current player abandon the game
+  
+     Discard its hand and its base
+  */
   abandon() {
     console.log(
       "Le joueur " + this.players[this.currentPlayer].pseudo + " a abbandonné !"
@@ -202,6 +220,10 @@ export class Game {
     }
   }
 
+  /* Check if an action is valid
+
+     Throw an error if it's not, return the action if it is
+  */
   checkAction(action: Action) {
     if (action.card instanceof Generator) this.checkActionGenerator(action);
     else if (action.card instanceof Firewall) this.checkActionFirewall(action);
@@ -209,6 +231,13 @@ export class Game {
     else this.checkActionSpe(action);
   }
 
+  /* Check if a special action is valid
+
+    We don't need to check anything for nuclear distract
+    We only check if the action is properly set for Id theft
+
+     Throw an error if it's not, return the action if it is
+  */
   checkActionSpe(action: Action) {
     switch (action.card.color) {
       case Color.Water: // Identity theft
@@ -231,6 +260,16 @@ export class Game {
     return action;
   }
 
+  /* Check if a system cleaning action is valid
+
+     Check for every virus cleaned that :
+      - The receiver of the "cleaned" virus is not the current player
+      - The slot target are properly set
+      - The state of both generator are proper (Virused and Generator only)
+      - The type of virus sent and the type of the receiver are coherent
+
+     Throw an error if it doesn't check, return the action if it does
+  */
   checkActionCleaning(action: Action) {
     let i: number;
     let slotInd = 0;
@@ -273,6 +312,15 @@ export class Game {
     }
   }
 
+  /* Check if a forced exchange action is valid
+
+     Check that :
+      - Both the two target and the two slot are specified
+      - No immunized or empty generator are part of the exchange
+      - No double of an already existing generator are created after the exchange
+
+     Throw an error if it doesn't check, return the action if it does
+  */
   checkActionExchange(action: Action) {
     let firstSrc: BaseSlot;
     let secondSrc: BaseSlot;
@@ -316,6 +364,15 @@ export class Game {
     }
   }
 
+  /* Check if a loan action is valid
+
+     Check that :
+      - Both the target and the slot are specified
+      - No immunized or empty generator are part of the loan
+      - No double of an already existing generator are created after the loan
+
+     Throw an error if it doesn't check, return the action if it does
+  */
   checkActionLoan(action: Action) {
     let loanSrc: BaseSlot;
     let loanDst: BaseSlot;
@@ -340,6 +397,22 @@ export class Game {
       throw 'Vous ne pouvez pas "emprunter" un générateur que vous posséder déjà !';
   }
 
+  /* Check if a Virus action is valid
+
+     Check that :
+      - Both the target and the slot are specified
+      - No immunized or empty generator are part of the action
+      - The color of the virus checks with the targeted generator
+      
+    The color checks if :
+      - The virus is a joker
+      - The generator is a joker and is not protected
+      - The virus is of a coherent type with the firewall of a protected joker generator
+      - The virus attacks a joker firewall
+      - The virus is of the same type of the generator's one
+
+     Throw an error if it doesn't check, return the action if it does
+  */
   checkActionVirus(action: Action) {
     if (action.target[0] === undefined)
       throw "Le virus n'a pas de joueur cible !";
@@ -374,6 +447,22 @@ export class Game {
     return action;
   }
 
+  /* Check if a Firewall action is valid
+
+     Check that :
+      - The slot is specified
+      - No immunized or empty generator are part of the action
+      - The color of the firewall checks with the targeted generator
+      
+    The color checks if :
+      - The firewall is a joker
+      - The generator is a joker and is not infected
+      - The firewall is of a coherent type with the virus of an infected joker generator
+      - The firewall target a joker virus
+      - The firewall is of the same type of the generator's one
+
+     Throw an error if it doesn't check, return the action if it does
+  */
   checkActionFirewall(action: Action) {
     if (action.slotTarget[0] === undefined)
       throw "Pas de générateur cible du parefeu !";
@@ -405,6 +494,13 @@ export class Game {
     return action;
   }
 
+  /* Check if a Generator action is valid
+
+     Check that :
+      - The slot of the color specified is empty
+
+     Throw an error if it doesn't check, return the action if it does
+  */
   checkActionGenerator(action: Action) {
     const temp = this.players[this.currentPlayer].getBase(action.card.color);
 

@@ -8,6 +8,13 @@ import { Firewall } from "./Firewall";
 import { Virus } from "./Virus";
 import { Generator } from "./Generator";
 
+/* An interface usefull for the Cleaning card
+
+  It contains - the index of a virus in the current player's base
+              - an array of player to which it is possible to give the virus
+              - an array of array of index of player's base slot to which it
+                  is possible to give the virus
+*/
 interface CleaningSystem {
   srcSlotInd: number;
   target: Player[];
@@ -33,6 +40,7 @@ function ask(quest: string): Promise<string> {
 /* Ask the number of players and returns it
 
    Ask the number of players until it's between 2 and 6
+   return the number selected
 */
 async function askNumberOfPlayer(): Promise<number> {
   const nPlayers = Number(await ask("\nCombien de joueurs participeront ?"));
@@ -54,6 +62,7 @@ async function askNumberOfPlayer(): Promise<number> {
 /* Ask a player his pseudo and returns it
 
    Ask the pseudo until it's made of 2 to 32 alphanumerical caracters.
+   return the pseudo entered
 */
 async function askPseudo(n: number): Promise<string> {
   const pseudo = await ask("\nPseudo du joueur " + n + " ?");
@@ -68,6 +77,7 @@ async function askPseudo(n: number): Promise<string> {
 /* Ask a player his species and returns it
 
    Ask the species until it's one of the proposed
+   return the specie selected
 */
 async function askSpecies(
   pseudo: string,
@@ -105,22 +115,11 @@ async function addPlayer(game: Game, nPlayers: number) {
     species = await askSpecies(pseudo, game.availableSpecies);
 
     game.addPlayer(new Player(pseudo, species));
-    console.log(pseudo + " joue les " + speciesToString(species));
+    console.log(pseudo + " joue les " + Species[species]);
   }
 }
 
-/* Convert a specie to string */
-function speciesToString(species: Species): string {
-  if (species == Species.Hutex) return "Hutex";
-  else if (species == Species.Sonyas) return "Sonyas";
-  else if (species == Species.Spectre) return "Spectre";
-  else if (species == Species.Totox) return "Totox";
-  else if (species == Species.Ulysse) return "Ulysse";
-  else if (species == Species.Xmars) return "Xmars";
-  return "Unkown";
-}
-
-/* Display the player's hand at the beginning of its turn */
+/* Display a player's hand */
 function displayHand(player: Player): void {
   let i: number;
 
@@ -130,7 +129,7 @@ function displayHand(player: Player): void {
   }
 }
 
-/* Display the player's base */
+/* Display a player's base */
 function displayBase(player: Player): void {
   let i = 0;
   let slot: BaseSlot;
@@ -183,6 +182,8 @@ async function askAction(): Promise<string> {
 
 /* Ask the player the cards he wants to discard
 
+   He can specify any card between 1 and 3 total
+
    Return an array of the index of the cards
 */
 async function askDiscard(player: Player): Promise<number[]> {
@@ -206,6 +207,11 @@ async function askDiscard(player: Player): Promise<number[]> {
   return indexDiscard;
 }
 
+/* Ask the player who to target an action to
+
+   Ask between the available players for the specific virus
+   return the specified index of the target
+*/
 async function askTarget(players: Player[], quest: string) {
   let goon = true;
   let target = 0;
@@ -222,6 +228,11 @@ async function askTarget(players: Player[], quest: string) {
   return target;
 }
 
+/* Ask the player where to do an action
+
+   Ask between the slotbase of a specified player
+   return the specified index of the slot's target
+*/
 async function askSlotTarget(player: Player, quest: string) {
   let goon = true;
   let slotTarget = 0;
@@ -240,6 +251,11 @@ async function askSlotTarget(player: Player, quest: string) {
   return slotTarget;
 }
 
+/* Create an Action using a Firewall card
+
+   Ask which of their generator slot will be targeted
+   return an action object
+*/
 async function createActionFirewall(player: Player, action: Action) {
   const quest = "Sur quel générateur voulez vous utiliser votre parefeu ?";
   const slotTarget = await askSlotTarget(player, quest);
@@ -248,6 +264,12 @@ async function createActionFirewall(player: Player, action: Action) {
   return action;
 }
 
+/* Create an Action using a Virus card
+
+   Ask which players will be targeted
+   Ask which of their generator slot will be targeted
+   return an action object
+*/
 async function createActionVirus(players: Player[], action: Action) {
   let quest = "Sur quel joueur voulez vous lancer votre virus ?";
   const target = await askTarget(players, quest);
@@ -260,6 +282,11 @@ async function createActionVirus(players: Player[], action: Action) {
   return action;
 }
 
+/* Ask the player who to give a virus to after cleaning
+
+   Ask between the available players for the specific virus
+   return the specified index of the target
+*/
 async function askWhichToClean(player: Player, viruses: CleaningSystem[]) {
   let goon = true;
   let virusToClean = 0;
@@ -287,6 +314,11 @@ async function askWhichToClean(player: Player, viruses: CleaningSystem[]) {
   return virusToClean;
 }
 
+/* Ask the player where to clean a virus
+
+   Ask between the possible generator of a targeted player
+   return the specified index
+*/
 async function askWhereToClean(indexes: number[], player: Player) {
   let goon = true;
   let virusToClean = 0;
@@ -314,6 +346,17 @@ async function askWhereToClean(indexes: number[], player: Player) {
   return virusToClean;
 }
 
+/* Search every virus cleanable
+
+   Create an array of CleaningSystem typed var
+   
+   It contains - the index of a virus in the current player's base
+               - an array of player to which it is possible to give the virus
+               - an array of array of index of player's base slot to which it
+                  is possible to give the virus
+
+   return the so called array, which can be empty
+*/
 function searchVirusToClean(players: Player[], currentPlayer: number) {
   let i: number;
   let j: number;
@@ -366,6 +409,14 @@ function searchVirusToClean(players: Player[], currentPlayer: number) {
   return virusToClean;
 }
 
+/* Create an Action using a Cleaning card
+
+   Search all the possibles viruses available for cleaning
+   Let the players decide the order of cleaning
+   
+   For each virus, ask which player and which generator to target
+   return an action object
+*/
 async function createActionCleaning(
   players: Player[],
   currentPlayer: number,
@@ -395,6 +446,12 @@ async function createActionCleaning(
   return action;
 }
 
+/* Create an Action using an Exchange card
+
+   Ask which players will be targeted
+   Ask which of their generator slot will be targeted
+   return an action object
+*/
 async function createActionExchange(players: Player[], action: Action) {
   let quest = "Qui sera la première victime de l'échange ?";
   let target1 = await askTarget(players, quest);
@@ -414,6 +471,11 @@ async function createActionExchange(players: Player[], action: Action) {
   action.addSlotTarget(slotTarget2);
 }
 
+/* Create an Action using a Loan card
+
+   Ask for the player targeted and its generator slot targeted
+   return an action object
+*/
 async function createActionLoan(players: Player[], action: Action) {
   let quest = 'Avec qui voulez vous effectuer un "emprunt" longue durée ?';
   let target1 = await askTarget(players, quest);
@@ -425,6 +487,11 @@ async function createActionLoan(players: Player[], action: Action) {
   action.addSlotTarget(slotTarget1);
 }
 
+/* Create an Action using a special action card
+
+   Ask the player contextuel informations depending on the card
+   return an action object
+*/
 async function createActionSpe(
   players: Player[],
   currentPlayer: number,
@@ -453,6 +520,10 @@ async function createActionSpe(
   return action;
 }
 
+/* Create an object Action representing the action of the player
+
+   return an action object
+*/
 async function createAction(
   players: Player[],
   currentPlayer: number,
@@ -469,8 +540,9 @@ async function createAction(
   else return await createActionSpe(players, currentPlayer, action);
 }
 
-/* TODO : COMMENTER FONCTIONS
+/* Ask to the player which card to use
 
+   Return a valid index of a card in the player's hand
 */
 async function askCardToUse(player: Player): Promise<number> {
   displayHand(player);
@@ -485,7 +557,7 @@ async function askCardToUse(player: Player): Promise<number> {
 
 /* Play a turn
 
-   Display a player's hand
+   Display a player's hand and base
    Ask him what action he wants to do
    Realise the action if possible
 */
@@ -538,7 +610,11 @@ async function playTurn(game: Game) {
   game.endTurn();
 }
 
-/* Start the game within the terminal */
+/* Start the game within the terminal 
+
+    Ask the number of players, add them to the game
+    Init the game and play turns until the game is finished.
+*/
 export async function startGame(): Promise<void> {
   const game: Game = new Game();
   const nPlayers: number = await askNumberOfPlayer();
@@ -550,12 +626,8 @@ export async function startGame(): Promise<void> {
   while (game.inProgress) {
     await playTurn(game);
   }
-
-  //TODO : private/protected si possible
-  //        Checker Nettoyage des systèmes (pas se target soit même)
-  //
-  //        Rendre plus propre
-  //        Commenter tout
-  //        Faire des test
-  //        Checker l'action dans le backend et la faire
 }
+
+//TODO : private/protected si possible
+//        Faire des test
+//        Checker l'action dans le backend et la faire

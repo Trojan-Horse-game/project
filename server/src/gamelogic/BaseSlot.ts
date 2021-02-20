@@ -8,7 +8,11 @@ export enum State {
   Immunized,
 }
 
-/* One slot of a base */
+/* A class for one slot of a player's base
+
+   The state property is used to have a fast way of checking
+   which cards compose the slot
+*/
 export class BaseSlot {
   state: State;
   color: Color;

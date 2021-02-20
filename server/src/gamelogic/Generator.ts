@@ -1,5 +1,6 @@
 import { Card, Color } from "./Card";
 
+/* A class for the generator cards */
 export class Generator implements Card {
   color: Color;
 
