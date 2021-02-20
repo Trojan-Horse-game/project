@@ -373,7 +373,7 @@ function searchVirusToClean(players: Player[], currentPlayer: number) {
     if (slot.state === State.Virused) {
       j = (currentPlayer + 1) % players.length;
       candidate = { srcSlotInd: i, target: [], dstSlotInd: [[]] };
-      for (j; j !== players.length; j = (j + 1) % players.length) {
+      for (j; j !== currentPlayer; j = (j + 1) % players.length) {
         doable = false;
         possibleSlot = [];
         if (slot.cards[1].color === Color.Joker) {
