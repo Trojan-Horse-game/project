@@ -168,7 +168,7 @@ export class Game {
   discardHand(indices: number[]) {
     let i: number;
     for (i of indices) {
-      this.discard.push(this.players[this.currentPlayer].discardHand(i));
+      this.deck.unshift(this.players[this.currentPlayer].discardHand(i));
     }
   }
 
@@ -179,7 +179,7 @@ export class Game {
     for (i of index) {
       const toDiscard = this.players[this.currentPlayer].discardBase(i);
       for (oldCard of toDiscard) {
-        this.discard.push(oldCard);
+        this.deck.unshift(oldCard);
       }
     }
   }
