@@ -10,4 +10,10 @@ module.exports = {
     "prettier/vue",
     "plugin:jest/recommended",
   ],
+  settings: {
+    "eslint.workingDirectories": [
+      { directory: "../server", changeProcessCWD: true },
+      { directory: "../client", changeProcessCWD: true },
+    ]
+  }
 };
