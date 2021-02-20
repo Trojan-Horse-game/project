@@ -437,7 +437,6 @@ export async function startGame(): Promise<void> {
   //TODO : private/protected si possible
   //        Changer Distraction nucléaire
   //        Commenter tout
-  //        virer la discard
   //        Faire des test
-  //        Vérifier les actions dans le backend
+  //        Faire l'action dans le backend et l'envoyer
 }
