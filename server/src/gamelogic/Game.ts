@@ -291,7 +291,6 @@ export class Game {
         this.checkActionExchange(action);
         break;
     }
-    return action;
   }
 
   /* Check if a system cleaning action is valid
@@ -531,7 +530,7 @@ export class Game {
   /* Check if a Generator action is valid
 
      Check that :
-      - The slot of the color specified is empty
+      - The slot of the specified color is empty
 
      Throw an error if it doesn't check, return the action if it does
   */
