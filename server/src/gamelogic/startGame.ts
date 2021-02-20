@@ -371,7 +371,7 @@ function searchVirusToClean(players: Player[], currentPlayer: number) {
   for (i = 0; i < players[currentPlayer].base.length; i++) {
     slot = players[currentPlayer].base[i];
     if (slot.state === State.Virused) {
-      j = currentPlayer + (1 % players.length);
+      j = (currentPlayer + 1) % players.length;
       candidate = { srcSlotInd: i, target: [], dstSlotInd: [[]] };
       for (j; j !== players.length; j = (j + 1) % players.length) {
         doable = false;

@@ -60,4 +60,17 @@ export class Player {
     // If we arrive here, something went terribly wrong
     throw "La couleur " + color + "n'existe pas dans la base de " + this.pseudo;
   }
+
+  /* Check if the player won
+
+     Return true if he has, false otherwhise
+  */
+  checkWin() {
+    let generatorValid = 0;
+    let i: number;
+    for (i = 0; i < this.base.length; i++) {
+      if (this.base[i].state === State.Generator) generatorValid++;
+    }
+    return generatorValid >= 4;
+  }
 }

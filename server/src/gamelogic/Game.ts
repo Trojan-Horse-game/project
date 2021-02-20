@@ -165,6 +165,19 @@ export class Game {
     this.currentPlayer = (this.currentPlayer + 1) % this.players.length;
   }
 
+  /* Check if someone won
+
+     Return undefined if no one has
+     Return the player object of the winner if someone has
+  */
+  checkForWinner() {
+    let winner: Player;
+    for (winner of this.players) {
+      if (winner.checkWin()) return winner;
+    }
+    return undefined;
+  }
+
   /* End the game and display the winner */
   endGame(winner: Player) {
     this.inProgress = false;
@@ -220,11 +233,17 @@ export class Game {
     }
   }
 
-  /* Check if an action is valid and realize it */
+  /* Check if an action is valid and realize it 
+  
+     Check if the action finish the game and finish the game if it does
+  */
   playAction(action: Action) {
+    let winner: Player | undefined;
     try {
       this.checkAction(action);
       action.card.action(this, action);
+      winner = this.checkForWinner();
+      if (winner !== undefined) this.endGame(winner);
     } catch (err) {
       throw err;
     }
