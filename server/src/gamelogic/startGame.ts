@@ -314,24 +314,16 @@ async function askWhereToClean(indexes: number[], player: Player) {
   return virusToClean;
 }
 
-async function createActionCleaning(
-  players: Player[],
-  currentPlayer: number,
-  action: Action
-) {
+function searchVirusToClean(players: Player[], currentPlayer: number) {
   let i: number;
   let j: number;
   let w: number;
   let virusToClean: CleaningSystem[] = [];
   let candidate: CleaningSystem;
-  let currentSrc: number;
-  let currentTarget: number;
-  let currentDst: number;
   let slot: BaseSlot;
   let baseInd: number;
   let doable: Boolean;
   let possibleSlot: number[];
-  let quest: string;
 
   for (i = 0; i < players[currentPlayer].base.length; i++) {
     slot = players[currentPlayer].base[i];
@@ -371,6 +363,19 @@ async function createActionCleaning(
       }
     }
   }
+  return virusToClean;
+}
+
+async function createActionCleaning(
+  players: Player[],
+  currentPlayer: number,
+  action: Action
+) {
+  let currentSrc: number;
+  let currentTarget: number;
+  let currentDst: number;
+  let quest: string;
+  let virusToClean = searchVirusToClean(players, currentPlayer);
 
   while (virusToClean.length !== 0) {
     currentSrc = await askWhichToClean(players[currentPlayer], virusToClean);
@@ -548,7 +553,8 @@ export async function startGame(): Promise<void> {
   }
 
   //TODO : private/protected si possible
-  //        Changer Distraction nucléaire
+  //        Checker Nettoyage des systèmes (pas se target soit même)
+  //
   //        Rendre plus propre
   //        Commenter tout
   //        Faire des test
