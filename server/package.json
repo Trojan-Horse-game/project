@@ -15,9 +15,6 @@
     "ext": "ts, html",
     "exec": "ts-node -r tsconfig-paths/register ./src"
   },
-  "_moduleAliases": {
-    "@server": "dist/Server"
-  },
   "eslintConfig": {
     "parser": "@typescript-eslint/parser",
     "plugins": [

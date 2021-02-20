@@ -1,5 +1,5 @@
 import "./pre-start";
-import app from "@server"
+import app from "./Server";
 import cors from "cors";
 import path from "path";
 
@@ -9,27 +9,27 @@ const port = Number(process.env.PORT || 3000);
 const http = require("http").Server(app);
 const io = require("socket.io")(http);
 
-app.get("/", function(req:any, res:any) {
+app.get("/", function (req: any, res: any) {
   res.sendFile(path.resolve("../client/index.html"));
 });
 
 app.use(cors());
 
-io.on("connection", function(socket:any) {
+io.on("connection", function (socket: any) {
   // When a user connects
   console.log("a user connected");
 
   // When a user sends a message
-  socket.on("chat message", function(msg:any) {
+  socket.on("chat message", function (msg: any) {
     console.log("message: " + msg);
   });
 
   // When a user disconnects
-  socket.on("disconnect", function() {
+  socket.on("disconnect", function () {
     console.log("user disconnected");
   });
 });
 
-http.listen(port, function() {
-  console.log("listening on *:"+port);
+http.listen(port, function () {
+  console.log("listening on *:" + port);
 });
