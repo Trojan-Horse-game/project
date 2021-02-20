@@ -4,9 +4,9 @@ import { Game } from "./Game";
 import { GeneratorSlot, State } from "./GeneratorSlot";
 import { Color } from "./Card";
 import { Action } from "./Action";
-import { FirewallCard } from "./Firewall";
-import { Virus } from "./Virus";
-import { Generator } from "./Generator";
+import { FirewallCard } from "./FirewallCard";
+import { VirusCard } from "./VirusCard";
+import { GeneratorCard } from "./GeneratorCard";
 
 /* An interface usefull for the Cleaning card
 
@@ -521,10 +521,10 @@ async function createAction(
   let player = players[currentPlayer];
   let action = new Action(player.hand[indexInHand], indexInHand);
 
-  if (action.card instanceof Generator) return action;
+  if (action.card instanceof GeneratorCard) return action;
   else if (action.card instanceof FirewallCard)
     return await createActionFirewall(player, action);
-  else if (action.card instanceof Virus)
+  else if (action.card instanceof VirusCard)
     return await createActionVirus(players, action);
   else return await createActionSpe(players, currentPlayer, action);
 }

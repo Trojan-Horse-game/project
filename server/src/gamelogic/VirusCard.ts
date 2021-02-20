@@ -4,7 +4,7 @@ import { State } from "./GeneratorSlot";
 import { Action } from "./Action";
 
 /* A class for the virus cards */
-export class Virus implements Card {
+export class VirusCard implements Card {
   color: Color;
 
   constructor(color: Color) {

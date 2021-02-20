@@ -3,7 +3,7 @@ import { Card, Color } from "./Card";
 import { Game } from "./Game";
 
 /* A class for the generator cards */
-export class Generator implements Card {
+export class GeneratorCard implements Card {
   color: Color;
 
   constructor(color: Color) {

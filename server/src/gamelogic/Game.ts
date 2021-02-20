@@ -1,9 +1,9 @@
-import { ActionCard } from "./ActionSpe";
+import { ActionCard } from "./ActionCard";
 import { Card, Color } from "./Card";
-import { Generator } from "./Generator";
+import { GeneratorCard } from "./GeneratorCard";
 import { Player, Species } from "./Players";
-import { FirewallCard } from "./Firewall";
-import { Virus } from "./Virus";
+import { FirewallCard } from "./FirewallCard";
+import { VirusCard } from "./VirusCard";
 import { Action } from "./Action";
 import { GeneratorSlot, State } from "./GeneratorSlot";
 
@@ -40,7 +40,7 @@ export class Game {
   */
   createDeck() {
     let construct = (color: Color) => {
-      return new Generator(color);
+      return new GeneratorCard(color);
     };
 
     this.addSerieToDeck(construct, 5, Color.Air);
@@ -50,7 +50,7 @@ export class Game {
     this.addSerieToDeck(construct, 1, Color.Joker);
 
     construct = (color: Color) => {
-      return new Virus(color);
+      return new VirusCard(color);
     };
 
     this.addSerieToDeck(construct, 4, Color.Air);
@@ -258,10 +258,10 @@ export class Game {
      Throw an error if it's not, return the action if it is
   */
   checkAction(action: Action) {
-    if (action.card instanceof Generator) this.checkActionGenerator(action);
+    if (action.card instanceof GeneratorCard) this.checkActionGenerator(action);
     else if (action.card instanceof FirewallCard)
       this.checkActionFirewall(action);
-    else if (action.card instanceof Virus) this.checkActionVirus(action);
+    else if (action.card instanceof VirusCard) this.checkActionVirus(action);
     else this.checkActionSpe(action);
   }
 
