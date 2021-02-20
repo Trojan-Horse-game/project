@@ -1,17 +1,35 @@
 import "./pre-start";
-import app from "@server";
-import { exit } from "process";
-import { startGame } from "./gamelogic/startGame";
+import app from "@server"
+import cors from "cors";
+import path from "path";
 
-// Start the server
+// Démarre le server
 const port = Number(process.env.PORT || 3000);
-// eslint-disable-next-line @typescript-eslint/no-misused-promises
-const server = app.listen(port, async () => {
-  console.log("Express server started on port: " + port);
-  await startGame();
 
-  server.close(() => {
-    console.log("Express stopped server");
+const http = require("http").Server(app);
+const io = require("socket.io")(http);
+
+app.get("/", function(req:any, res:any) {
+  res.sendFile(path.resolve("../client/index.html"));
+});
+
+app.use(cors());
+
+io.on("connection", function(socket:any) {
+  // When a user connects
+  console.log("a user connected");
+
+  // When a user sends a message
+  socket.on("chat message", function(msg:any) {
+    console.log("message: " + msg);
   });
-  exit(0);
+
+  // When a user disconnects
+  socket.on("disconnect", function() {
+    console.log("user disconnected");
+  });
+});
+
+http.listen(port, function() {
+  console.log("listening on *:"+port);
 });

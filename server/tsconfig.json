@@ -66,8 +66,8 @@
     "skipLibCheck": true /* Skip type checking of declaration files. */,
     "forceConsistentCasingInFileNames": true /* Disallow inconsistently-cased references to the same file. */,
     "paths": {
-      "@shared/*": ["src/shared/*"],
-      "@server": ["src/Server"]
+      "@server": ["src/Server"],
+      "@shared/*": ["src/shared/*"]
     }
   },
   "include": ["src/**/*.ts"]
