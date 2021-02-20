@@ -241,14 +241,10 @@ export class Game {
   */
   playAction(action: Action) {
     let winner: Player | undefined;
-    try {
-      this.checkAction(action);
-      action.card.action(this, action);
-      winner = this.checkForWinner();
-      if (winner !== undefined) this.endGame(winner);
-    } catch (err) {
-      throw err;
-    }
+    this.checkAction(action);
+    action.card.action(this, action);
+    winner = this.checkForWinner();
+    if (winner !== undefined) this.endGame(winner);
   }
 
   /* Check if an action is valid

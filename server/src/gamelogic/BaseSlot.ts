@@ -1,4 +1,3 @@
-import { throws } from "assert";
 import { Card, Color } from "./Card";
 
 export enum State {

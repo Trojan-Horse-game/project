@@ -297,7 +297,7 @@ async function askWhichToClean(player: Player, viruses: CleaningSystem[]) {
 
     console.log("");
     for (i = 0; i < viruses.length; i++) {
-      console.log(i + " => " + player.base[viruses[i].srcSlotInd].toString);
+      console.log(i + " => " + player.base[viruses[i].srcSlotInd]);
     }
 
     virusToClean = Number(await ask("Quel virus faut-il supprimer ?"));
@@ -329,7 +329,7 @@ async function askWhereToClean(indexes: number[], player: Player) {
 
     console.log("");
     for (i = 0; i < indexes.length; i++) {
-      console.log(i + " => " + player.base[indexes[i]].toString);
+      console.log(i + " => " + player.base[indexes[i]]);
     }
 
     virusToClean = Number(await ask("Quel générateur recevra votre virus ?"));
@@ -365,7 +365,7 @@ function searchVirusToClean(players: Player[], currentPlayer: number) {
   let candidate: CleaningSystem;
   let slot: BaseSlot;
   let baseInd: number;
-  let doable: Boolean;
+  let doable: boolean;
   let possibleSlot: number[];
 
   for (i = 0; i < players[currentPlayer].base.length; i++) {
