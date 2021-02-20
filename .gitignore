@@ -1,3 +1,10 @@
 .DS_Store
-backend/node_modules
-client/dependances.txt
+
+server/node_modules
+server/package-lock.json
+server/dist
+server/jet-logger.log
+
+client/node_modules
+client/package-lock.json
+client/dist

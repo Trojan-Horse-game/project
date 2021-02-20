@@ -1,22 +1,39 @@
 {
-	"name": "DockerEnv",
-	"dockerComposeFile": "../docker-compose.yml",
-	"service": "backend",
-	"workspaceFolder": "/projet-integrateur",
-
-	// Set *default* container specific settings.json values on container create.
-	"settings": {
-        "terminal.integrated.shell.linux": "/bin/bash"
+  "name": "DockerEnv",
+  "dockerComposeFile": "../config/docker-compose.yml",
+  "service": "backend",
+  "workspaceFolder": "/projet-integrateur",
+  // Set *default* container specific settings.json values on container create.
+  "settings": {
+    "terminal.integrated.shell.linux": "/bin/zsh",
+    "terminal.integrated.cursorBlinking": true,
+    "workbench.iconTheme": "vscode-icons",
+    "editor.defaultFormatter": "esbenp.prettier-vscode",
+    "[javascript]": {
+      "editor.defaultFormatter": "esbenp.prettier-vscode"
     },
-
-	// Add the IDs of extensions you want installed when the container is created.
-	"extensions": ["eg2.vscode-npm-script","esbenp.prettier-vscode","coenraads.bracket-pair-colorizer-2"],
-
-	// Use 'forwardPorts' to make a list of ports inside the container available locally.
-	"forwardPorts": [3000],
-
-	// Use 'postCreateCommand' to run commands after the container is created.
-	//"postCreateCommand": "",
-
-	// Comment out connect as root instead. More info: https://aka.ms/vscode-remote/containers/non-root.
+    "[typescript]": {
+      "editor.defaultFormatter": "esbenp.prettier-vscode"
+    },
+    "[json]": {
+      "editor.defaultFormatter": "esbenp.prettier-vscode"
+    },
+    "editor.formatOnPaste": true,
+    "editor.formatOnSave": true,
+    "editor.formatOnSaveMode": "file",
+    "files.autoSave": "afterDelay"
+  },
+  // Add the IDs of extensions you want installed when the container is created.
+  "extensions": [
+    "eg2.vscode-npm-script",
+    "esbenp.prettier-vscode",
+    "coenraads.bracket-pair-colorizer-2",
+    "dbaeumer.vscode-eslint",
+    "vscode-icons-team.vscode-icons"
+  ],
+  // Use 'forwardPorts' to make a list of ports inside the container available locally.
+  "forwardPorts": [3000, 8080]
+  // Use 'postCreateCommand' to run commands after the container is created.
+  //"postCreateCommand": "",
+  // Comment out connect as root instead. More info: https://aka.ms/vscode-remote/containers/non-root.
 }
