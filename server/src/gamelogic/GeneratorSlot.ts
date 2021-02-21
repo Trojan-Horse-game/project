@@ -55,7 +55,6 @@ export class GeneratorSlot {
     return this.state;
   }
 
-  addSpecialCard
 
   toString(): string {
     switch (this.state) {

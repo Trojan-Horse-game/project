@@ -18,15 +18,15 @@ export class SpecialCard implements Card {
   toString(): string {
     switch (this.color) {
       case Color.Air:
-        return "Distraction nucléaire";
+        return "Nuclear Disctration";
       case Color.Water:
-        return "Usurpation d’identité";
+        return "Identity theft";
       case Color.Energy:
-        return "Échange forcé";
+        return "Forced exchange";
       case Color.Radiation:
-        return "Emprunt à durée indéfinie";
+        return "Indefinite term loan";
       case Color.Joker:
-        return "Nettoyage des systèmes";
+        return "System cleaning";
       default:
         // Normally never
         return "Action unkown";
