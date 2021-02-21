@@ -4,8 +4,8 @@ import "./pre-start";
 import "reflect-metadata";
 import app from "./Server";
 import cors from "cors";
-import usersRouter from "./routes/user";
-import io from "./routes/game";
+import usersRouter from "./routes/user.route";
+import io from "./routes/game.route";
 
 const http = require("http").Server(app);
 app.use('/api/users', usersRouter);

@@ -114,7 +114,7 @@ async function addPlayer(game: Game, nPlayers: number) {
     pseudo = await askPseudo(i);
     species = await askSpecies(pseudo, game.availableSpecies);
 
-    game.addPlayer(new Player(pseudo, species));
+    game.addPlayer(new Player(pseudo, species, ""));
     console.log(pseudo + " joue les " + Species[species]);
   }
 }

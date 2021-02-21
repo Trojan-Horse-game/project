@@ -18,7 +18,7 @@ export class Player {
   hand: Card[] = [];
   base: GeneratorSlot[] = [];
 
-  constructor(pseudo: string, species: Species, socketid: string) {
+  constructor(pseudo: string, species: Species, socketid:string) {
     let i: number;
 
     this.species = species;

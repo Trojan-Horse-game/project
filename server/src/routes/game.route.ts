@@ -37,8 +37,6 @@ io.on("connection", async (socket: Socket) => {
     game.roomId = "room" + socket.id;
     // Assume that specie has already been chosen (to implement in client)
     game.addPlayer(player);
-    let id = games.push(game);
-    games[id].gameId = id;
     io.to(socket.id).emit("Id de la partie : " + game.roomId);
     console.log("a user created the game : " + game.roomId);
   });
@@ -48,11 +46,11 @@ io.on("connection", async (socket: Socket) => {
     "join game",
     async (socket: Socket, player: Player, roomId: string) => {
       let thisgame = findGame(roomId);
-      io.to(socket.id).emit(games[thisgame.gameId].availableSpecies);
+      socket.join(thisgame.roomId);
+      io.to(socket.id).emit(thisgame.availableSpecies);
       player.socketid = socket.id;
 
       io.on("choose species", async (species: Species) => {
-        socket.join(thisgame.roomId);
         player.species = species;
         thisgame.addPlayer(player);
         io.to(socket.id).emit("Vous avez rejoins la partie " + thisgame.roomId);
@@ -67,17 +65,10 @@ io.on("connection", async (socket: Socket) => {
     let thisgame = findGame(roomId);
     thisgame.init();
     for (let player of thisgame.players) {
-      io.to(player.socketid).emit(
-        player.hand,
-        thisgame.deck,
-        thisgame.currentPlayer
-      );
-      io.to(thisgame.roomId).emit(
-        thisgame.deck,
-        thisgame.currentPlayer,
-        player.base
-      );
+      io.to(player.socketid).emit(player.hand);
+      io.to(thisgame.roomId).emit(player.base);
     }
+    io.to(thisgame.roomId).emit(thisgame.deck, thisgame.currentPlayer);
   });
 
   // when a user updates the game
@@ -99,9 +90,9 @@ io.on("connection", async (socket: Socket) => {
     for (const room of socket.rooms) {
       if (room !== socket.id) {
         let thisgame = findGame(room);
-        let player = findPlayer(socket.id,thisgame);
+        let player = findPlayer(socket.id, thisgame);
         let idx = thisgame.players.indexOf(player);
-        thisgame.players.splice(idx,1);
+        thisgame.players.splice(idx, 1);
         socket.to(room).emit("Le joueur", socket.id, "a quitté la partie");
       }
     }
