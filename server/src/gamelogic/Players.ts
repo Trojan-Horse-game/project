@@ -69,7 +69,11 @@ export class Player {
     let generatorValid = 0;
     let i: number;
     for (i = 0; i < this.base.length; i++) {
-      if (this.base[i].state === State.Generator) generatorValid++;
+      if (
+        this.base[i].state !== State.Empty &&
+        this.base[i].state !== State.Virused
+      )
+        generatorValid++;
     }
     return generatorValid >= 4;
   }
