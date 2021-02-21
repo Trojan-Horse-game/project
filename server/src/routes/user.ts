@@ -79,7 +79,7 @@ usersRouter.post("/signin", async (req: Request, res: Response) => {
 
 // PUT users/:id
 usersRouter.put("/:id", async (req: Request, res: Response) => {
-  
+  try{
   await getConnection()
     .createQueryBuilder()
     .update(User)
@@ -87,18 +87,27 @@ usersRouter.put("/:id", async (req: Request, res: Response) => {
     .where("id = :id", { id: 1 })
     .execute();
     return res.json("OK")
+  }catch(error){
+    console.error(error);
+    
+  }
 })
 
 // DELETE users/:id
 usersRouter.delete("/:id", async (req: Request, res: Response) => {
-  
-  /await getConnection()
+  try{
+     await getConnection()
     .createQueryBuilder()
-    .delete("ce qu'on veut supprimer")
+    .delete()
     .from(User)
     .where("id = :id", { id: 1 })
     .execute();
     return res.json("OK")
+  }catch(error){
+    console.error(error);
+    
+  }
+  
   
 })
 
