@@ -4,11 +4,12 @@ import { Game } from "src/gamelogic/Game";
 import { Player, Species } from "src/gamelogic/Players";
 import app from "../Server";
 
-const server = require("http").createServer(app);
-const io = require("socket.io")(server);
+const http = require("http").Server(app);
+const io = require("socket.io")(http);
 
 let games: Array<Game> = [];
 
+// Finds a game from a roomId
 function findGame(roomId: string): Game {
   for (let game of games) {
     if (game.roomId == roomId) {
@@ -18,16 +19,18 @@ function findGame(roomId: string): Game {
   throw new Error("ERROR : Could not find game !");
 }
 
-function findPlayer(socket: Socket, thisgame: Game): Player {
+// Finds a player in a game from a socketId
+function findPlayer(socketId: string, thisgame: Game): Player {
   for (let player of thisgame.players) {
-    if (socket.id == player.socketid) {
+    if (socketId == player.socketid) {
       return player;
     }
   }
   throw new Error("ERROR : Could not find player !");
 }
 
- io.on("connection", async (socket: Socket) => {
+io.on("connection", async (socket: Socket) => {
+  // When creating a new game
   socket.on("create game", async (player: Player) => {
     socket.join("room" + socket.id);
     let game = new Game();
@@ -40,15 +43,17 @@ function findPlayer(socket: Socket, thisgame: Game): Player {
     console.log("a user created the game : " + game.roomId);
   });
 
+  // When joining a game
   socket.on(
     "join game",
     async (socket: Socket, player: Player, roomId: string) => {
       let thisgame = findGame(roomId);
       io.to(socket.id).emit(games[thisgame.gameId].availableSpecies);
+      player.socketid = socket.id;
 
       io.on("choose species", async (species: Species) => {
         socket.join(thisgame.roomId);
-        player.socketid = socket.id;
+        player.species = species;
         thisgame.addPlayer(player);
         io.to(socket.id).emit("Vous avez rejoins la partie " + thisgame.roomId);
         io.to(thisgame.roomId).emit(player.pseudo, player.species);
@@ -58,7 +63,7 @@ function findPlayer(socket: Socket, thisgame: Game): Player {
   );
 
   // when the game begins
-  socket.on("launch game", async (socket: Socket, roomId: string) => {
+  socket.on("launch game", async (_socket: Socket, roomId: string) => {
     let thisgame = findGame(roomId);
     thisgame.init();
     for (let player of thisgame.players) {
@@ -76,28 +81,27 @@ function findPlayer(socket: Socket, thisgame: Game): Player {
   });
 
   // when a user updates the game
-  socket.on("update game", async (socket: Socket, game: Game) => {});
+  socket.on("update game", async (socket: Socket, game: Game) => {
+    // TODO : Find out the objects and the methods which we will use
+  });
 
-  // When a user sends a message
+  // When a user sends a message on the chat
   socket.on(
     "chat message",
     function (socket: Socket, roomId: string, msg: string) {
-      let player = findPlayer(socket, findGame(roomId));
+      let player = findPlayer(socket.id, findGame(roomId));
       io.to(roomId).emit(player.pseudo, msg);
     }
   );
 
-  socket.on("disconnecting", (reason) => {
+  // When a user discconnects
+  socket.on("disconnecting", (_reason) => {
     for (const room of socket.rooms) {
       if (room !== socket.id) {
-        switch (reason) {
-          case "pingtimeout":
-            // TODO : action
-            break;
-          case "transport close":
-            // TODO : action
-            break;
-        }
+        let thisgame = findGame(room);
+        let player = findPlayer(socket.id,thisgame);
+        let idx = thisgame.players.indexOf(player);
+        thisgame.players.splice(idx,1);
         socket.to(room).emit("Le joueur", socket.id, "a quitté la partie");
       }
     }

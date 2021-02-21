@@ -5,26 +5,23 @@ import { User } from "../entity/user";
 import * as bcrypt from "bcrypt";
 import { createConnection, getConnection } from "typeorm";
 import jwt from "jsonwebtoken";
-import { create } from "domain";
+import path from "path";
+import app from "src/Server";
+
+app.get("/", function (req: any, res: any) {
+  res.sendFile(path.resolve("../client/index.html"));
+});
 
 // Connection creation
-async function Connection() {
-  try{
-    await createConnection();
-  } catch (error) {
-    console.log(error);
-  }
-}
-
+createConnection();
 // Router Definition
 const usersRouter = Router();
 
 // GET users/
 usersRouter.get("/", async (req: Request, res: Response) => {
   try {
-    const connection = await getConnection();
     console.log("Loading users from the database");
-    const users = await connection.manager.find(User);
+    const users = await getConnection().manager.find(User);
     res.status(200).json({ users: users });
   } catch (error) {
     res.status(401).json({ error: error });
@@ -34,9 +31,8 @@ usersRouter.get("/", async (req: Request, res: Response) => {
 // GET users/:id
 usersRouter.get("/:id", async (req: Request, res: Response) => {
   try {
-    const connection = await createConnection();
     console.log("Loading users from the database...");
-    const user = await connection.manager.findOne(User, req.body.id);
+    const user = await getConnection().manager.findOne(User, req.body.id);
     if (!user) {
       return res.status(401).json({ error: "Utilisateur non trouvé !" });
     }
@@ -49,8 +45,7 @@ usersRouter.get("/:id", async (req: Request, res: Response) => {
 // POST users/
 usersRouter.post("/signup", async (req: Request, res: Response) => {
   try {
-    const connection = await createConnection();
-    if (await connection.manager.findOne(User, req.body.username)) {
+    if (await getConnection().manager.findOne(User, req.body.username)) {
       return res.status(401).json({ error: "Username existe déjà !" });
     }
     console.log("Hashing a new user's passwod");
@@ -58,7 +53,7 @@ usersRouter.post("/signup", async (req: Request, res: Response) => {
     const user = new User();
     user.username = req.body.email;
     user.password = hash;
-    await connection.manager.save(user);
+    await getConnection().manager.save(user);
     res.status(200).json({ user_id: user.id, username: user.username });
   } catch (error) {
     res.status(401).json({ error: error });
@@ -67,8 +62,7 @@ usersRouter.post("/signup", async (req: Request, res: Response) => {
 
 usersRouter.post("/signin", async (req: Request, res: Response) => {
   try {
-    const connection = await createConnection();
-    const user = await connection.manager.findOne(User, req.body.username);
+    const user = await getConnection().manager.findOne(User, req.body.username);
     if (!user) {
       return res.status(401).json({ error: "Utilisateur non trouvé !" });
     }
