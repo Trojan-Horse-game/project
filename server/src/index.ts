@@ -6,21 +6,22 @@ import app from "./Server";
 import cors from "cors";
 import path from "path";
 import usersRouter from "./routes/user";
+import { exit } from "process";
+import { startGame } from "./gamelogic/startGame";
 
 app.use('/api/users', usersRouter);
 
-// Démarre le server
-const port = Number(process.env.PORT || 3000);
-
-const http = require("http").Server(app);
-const io = require("socket.io")(http);
-
-app.get("/", function (req: any, res: any) {
-  res.sendFile(path.resolve("../client/index.html"));
-});
-
 app.use(cors());
 
-http.listen(port, function () {
-  console.log("listening on *:" + port);
+// Start the server
+const port = Number(process.env.PORT || 3000);
+// eslint-disable-next-line @typescript-eslint/no-misused-promises
+const server = app.listen(port, async () => {
+  console.log("Express server started on port: " + port);
+  await startGame();
+
+  server.close(() => {
+    console.log("Express stopped server");
+  });
+  exit(0);
 });
