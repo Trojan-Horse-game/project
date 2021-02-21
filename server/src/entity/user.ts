@@ -19,6 +19,7 @@ export class User {
     @Column()    
     wins!: number;
 
+<<<<<<< HEAD
     @ManyToOne(() => friendship)
     @JoinColumn()
     friendship: friendship | undefined;  
@@ -36,4 +37,9 @@ export class friendship {
 
     @Column()
     confirmed!:boolean;
+=======
+    @ManyToOne ( ( )  =>  User ,  (user: any)  =>  User . friend_id ) 
+    user : User | undefined ;
+    static friend_id: any;
+>>>>>>> ae83f5ca049ca4076fdbc3cd64c2df89bca87beb
 }

@@ -2,40 +2,21 @@
 /* eslint-disable @typescript-eslint/no-unsafe-call */
 import "./pre-start";
 import "reflect-metadata";
-import app from "@server"
+import app from "./Server";
 import cors from "cors";
-import path from "path";
-import usersRouter from "./routes/user";
-
-app.use('/api/users', usersRouter);
-
-// Démarre le server
-const port = Number(process.env.PORT || 3000);
+import usersRouter from "./routes/user.route";
+import io from "./routes/game.route";
 
 const http = require("http").Server(app);
-const io = require("socket.io")(http);
-
-app.get("/", function(req:any, res:any) {
-  res.sendFile(path.resolve("../client/index.html"));
-});
+app.use('/api/users', usersRouter);
+app.use('/api/games', io);
 
 app.use(cors());
 
-io.on("connection", function(socket:any) {
-  // When a user connects
-  console.log("a user connected");
+// Start the server
+const port = Number(process.env.PORT || 3000);
 
-  // When a user sends a message
-  socket.on("chat message", function(msg:any) {
-    console.log("message: " + msg);
-  });
-
-  // When a user disconnects
-  socket.on("disconnect", function() {
-    console.log("user disconnected");
-  });
-});
-
-http.listen(port, function() {
-  console.log("listening on *:"+port);
+// eslint-disable-next-line @typescript-eslint/no-misused-promises
+http.listen(port, async () => {
+  console.log("Express server started on port: " + port);
 });
