@@ -1,12 +1,8 @@
 /* eslint-disable @typescript-eslint/no-var-requires */
 /* eslint-disable @typescript-eslint/no-unsafe-call */
 import "./pre-start";
-<<<<<<< HEAD
 import "reflect-metadata";
-import app from "@server"
-=======
 import app from "./Server";
->>>>>>> fc0ececa0fef5972bc78321231663eeb69c02ae4
 import cors from "cors";
 import path from "path";
 import usersRouter from "./routes/user";
@@ -24,21 +20,6 @@ app.get("/", function (req: any, res: any) {
 });
 
 app.use(cors());
-
-io.on("connection", function (socket: any) {
-  // When a user connects
-  console.log("a user connected");
-
-  // When a user sends a message
-  socket.on("chat message", function (msg: any) {
-    console.log("message: " + msg);
-  });
-
-  // When a user disconnects
-  socket.on("disconnect", function () {
-    console.log("user disconnected");
-  });
-});
 
 http.listen(port, function () {
   console.log("listening on *:" + port);

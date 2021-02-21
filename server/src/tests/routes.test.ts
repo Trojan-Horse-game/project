@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-unsafe-call */
-import app from "@server";
+import app from "../Server";
 import request from "supertest";
 
 describe("GET users/", () => {

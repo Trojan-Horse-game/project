@@ -22,7 +22,4 @@ export class User {
     @ManyToOne ( ( )  =>  User ,  (user: any)  =>  User . friend_id ) 
     user : User | undefined ;
     static friend_id: any;
-    
-
-
 }
