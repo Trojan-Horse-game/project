@@ -13,15 +13,17 @@ export enum Species {
 /* A class to represent a player */
 export class Player {
   pseudo: string;
+  socketid: string;
   species: Species;
   hand: Card[] = [];
   base: GeneratorSlot[] = [];
 
-  constructor(pseudo: string, species: Species) {
+  constructor(pseudo: string, species: Species, socketid: string) {
     let i: number;
 
     this.species = species;
     this.pseudo = pseudo;
+    this.socketid = socketid;
 
     for (i = 0; i < 5; i++) {
       this.base.push(new GeneratorSlot(State.Empty, i));

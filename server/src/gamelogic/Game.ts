@@ -11,6 +11,8 @@ import { GeneratorSlot, State } from "./GeneratorSlot";
 export class Game {
   players: Player[] = [];
   deck: Card[] = [];
+  gameId = 0;
+  roomId: string = "";
   currentPlayerIdx = 0;
   inProgress = false;
   availableSpecies: Species[];

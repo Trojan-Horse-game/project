@@ -8,8 +8,11 @@ import path from "path";
 import usersRouter from "./routes/user";
 import { exit } from "process";
 import { startGame } from "./gamelogic/startGame";
+import io from "./routes/game";
+
 
 app.use('/api/users', usersRouter);
+app.use('/api/games', io);
 
 app.use(cors());
 
