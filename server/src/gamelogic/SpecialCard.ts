@@ -4,7 +4,7 @@ import { Card, Color } from "./Card";
 
    The color property is used to differentiate every action
 */
-export class ActionCard implements Card {
+export class SpecialCard implements Card {
   color: Color;
 
   constructor(color: Color) {

@@ -1,4 +1,4 @@
-import { ActionCard } from "./ActionCard";
+import { SpecialCard } from "./SpecialCard";
 import { Card, Color } from "./Card";
 import { GeneratorCard } from "./GeneratorCard";
 import { Player, Species } from "./Players";
@@ -70,7 +70,7 @@ export class Game {
     this.addSerieToDeck(construct, 4, Color.Joker);
 
     construct = (color: Color) => {
-      return new ActionCard(color);
+      return new SpecialCard(color);
     };
 
     this.addSerieToDeck(construct, 1, Color.Air); // Nuclear Distract

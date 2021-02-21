@@ -1,4 +1,7 @@
 import { Card, Color } from "./Card";
+import { Game } from "./Game";
+import { Action } from "./Action";
+import { State } from "./GeneratorSlot";
 
 /* A class for the firewall cards */
 export class FirewallCard implements Card {
@@ -8,8 +11,13 @@ export class FirewallCard implements Card {
     this.color = color;
   }
 
-  action(): void {
-    //TODO
+  action(game: Game, action: Action): void {
+    const indx = game.currentPlayer.getBase(action.card.color);
+    let state = game.currentPlayer.base[indx].addFireWall(action.card);
+    if (state === State.Generator)
+      game.deck.unshift(game.currentPlayer.base[indx].cards[1]);
+
+    game.discardHand([action.indexInHand]);
   }
 
   toString(): string {
