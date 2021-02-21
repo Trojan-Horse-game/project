@@ -11,6 +11,35 @@
     "postinstall": "electron-builder install-app-deps",
     "postuninstall": "electron-builder install-app-deps"
   },
+  "eslintConfig": {
+    "parser": "@typescript-eslint/parser",
+    "plugins": [
+      "@typescript-eslint"
+    ],
+    "extends": [
+      "plugin:vue/essential",
+      "eslint:recommended",
+      "plugin:vue/base",
+      "@vue/typescript/recommended",
+      "@vue/prettier",
+      "@vue/prettier/@typescript-eslint",
+      "plugin:@typescript-eslint/recommended"
+    ],
+    "parserOptions": {
+      "ecmaVersion": 2020
+    },
+    "rules": {
+      "max-len": [
+        "error",
+        {
+          "code": 100
+        }
+      ]
+    }
+  },
+  "eslintIgnore": [
+    "build.ts"
+  ],
   "main": "background.js",
   "dependencies": {
     "core-js": "^3.6.5",
