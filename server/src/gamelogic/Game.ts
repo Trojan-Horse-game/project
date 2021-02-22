@@ -24,6 +24,7 @@ export class Game {
       Species.Ulysse,
       Species.Xmars,
     ];
+    this.currentPlayerIdx = Math.floor(Math.random() * this.players.length);
     this.createDeck();
   }
 
