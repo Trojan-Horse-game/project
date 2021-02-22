@@ -460,24 +460,23 @@ export class Game {
     if (temp.state === State.Immunized)
       throw "Vous ne pouvez pas utiliser un virus sur un générateur immunisé !";
 
-    if (action.card.color === Color.Joker) return action;
+    if (action.card.color === Color.Joker) return;
 
-    if (temp.state !== State.Protected && temp.color === Color.Joker)
-      return action;
+    if (temp.state !== State.Protected && temp.color === Color.Joker) return;
 
     if (
       temp.state === State.Protected &&
       temp.color === Color.Joker &&
       temp.cards[1].color === action.card.color
     )
-      return action;
+      return;
 
     if (temp.state === State.Protected && temp.cards[1].color === Color.Joker)
-      return action;
+      return;
 
     if (temp.color !== action.card.color)
       throw "Ce type de virus ne peut pas protéger ce type de générateur !";
-    return action;
+    return;
   }
 
   /* Check if a Firewall action is valid
@@ -507,24 +506,23 @@ export class Game {
     if (temp.state === State.Immunized)
       throw "Vous ne pouvez pas utiliser un parefeu sur un générateur immunisé !";
 
-    if (action.card.color === Color.Joker) return action;
+    if (action.card.color === Color.Joker) return;
 
-    if (temp.state !== State.Virused && temp.color === Color.Joker)
-      return action;
+    if (temp.state !== State.Virused && temp.color === Color.Joker) return;
 
     if (
       temp.state === State.Virused &&
       temp.color === Color.Joker &&
       temp.cards[1].color === action.card.color
     )
-      return action;
+      return;
 
     if (temp.state === State.Virused && temp.cards[1].color === Color.Joker)
-      return action;
+      return;
 
     if (temp.color !== action.card.color)
       throw "Ce type de parefeu ne peut pas protéger ce type de générateur !";
-    return action;
+    return;
   }
 
   /* Check if a Generator action is valid
@@ -540,6 +538,6 @@ export class Game {
     if (this.currentPlayer.base[temp].state !== State.Empty)
       throw "The generator is already placed in your base !";
 
-    return action;
+    return;
   }
 }
