@@ -1,4 +1,4 @@
-import {Entity, PrimaryGeneratedColumn, Column, OneToMany, ManyToOne} from "typeorm";
+import {Entity, PrimaryGeneratedColumn, Column, OneToMany, ManyToOne, JoinColumn} from "typeorm";
 
 @Entity()
 export class User {
@@ -19,7 +19,19 @@ export class User {
     @Column()    
     wins!: number;
 
-    @ManyToOne ( ( )  =>  User ,  (user: any)  =>  User . friend_id ) 
-    user : User | undefined ;
-    static friend_id: any;
+    
+    friendship: any;
+
+    
+}
+@Entity()
+export class friendship {
+ 
+    @ManyToOne(() => User, (user1: User) => user1.friendship)
+    public user1_id: User | undefined;
+    @ManyToOne(() => User, (user2: User) => user2.friendship)
+    public user2_id: User | undefined;
+
+    @Column()
+    confirmed!:boolean;
 }
