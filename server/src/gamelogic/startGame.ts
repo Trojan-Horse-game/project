@@ -398,6 +398,31 @@ function searchVirusToClean(players: Player[], currentPlayer: number) {
   return virusToClean;
 }
 
+function supprVirusToClean(
+  toClean: CleaningSystem[],
+  target: Player,
+  slotSrc: number,
+  slotDst: number
+) {
+  let i: number;
+  let j: number;
+  let idx: number;
+  for (i = 0; i < toClean.length; i++) {
+    if (toClean[i].srcSlotInd === slotSrc) {
+      toClean.slice(i, 1);
+    } else {
+      for (j = 0; j < toClean[i].target.length; j++) {
+        if (toClean[i].target[j] === target) {
+          idx = toClean[i].dstSlotInd[j].indexOf(slotDst);
+          if (idx !== -1) {
+            toClean[i].dstSlotInd[j].slice(idx, 1);
+          }
+        }
+      }
+    }
+  }
+}
+
 /* Create an Action using a Cleaning card
 
    Search all the possibles viruses available for cleaning
@@ -431,6 +456,12 @@ async function createActionCleaning(
     action.addSlotTarget(currentSrc);
     action.addTarget(currentTarget);
     action.addSlotTarget(currentDst);
+    supprVirusToClean(
+      virusToClean,
+      players[currentTarget],
+      currentSrc,
+      currentDst
+    );
   }
   return action;
 }
