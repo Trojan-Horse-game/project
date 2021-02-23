@@ -268,12 +268,23 @@ export class Game {
 
   /* Check if a special action is valid
 
-    We don't need to check anything for nuclear distract
+    Check that the card specified in the action is held by the player
+
+    We don't need to check anything else for nuclear distract
     We only check if the action is properly set for Id theft
 
-     Throw an error if it's not, return the action if it is
+     Throw an error if it's not valid, return the action if it is
   */
   checkActionSpe(action: Action) {
+    const cardInHand = this.currentPlayer.hand[action.indexInHand];
+    if (!(cardInHand instanceof SpecialCard)) {
+      throw "You don't have an action there ?!";
+    }
+
+    if (cardInHand.color !== action.card.color) {
+      throw "Your action the right one ?!";
+    }
+
     switch (action.card.color) {
       case Color.Water: // Identity theft
         if (action.target[0] === undefined)
@@ -440,6 +451,7 @@ export class Game {
   /* Check if a Virus action is valid
 
      Check that :
+      - The action is correctly specified
       - Both the target and the slot are specified
       - No immunized or empty generator are part of the action
       - The color of the virus checks with the targeted generator
@@ -454,6 +466,15 @@ export class Game {
      Throw an error if it doesn't check, return the action if it does
   */
   checkActionVirus(action: Action) {
+    const cardInHand = this.currentPlayer.hand[action.indexInHand];
+    if (!(cardInHand instanceof VirusCard)) {
+      throw "You don't have a virus there ?!";
+    }
+
+    if (cardInHand.color !== action.card.color) {
+      throw "Your virus isn't of the right color ?!";
+    }
+
     if (action.target[0] === undefined)
       throw "Le virus n'a pas de joueur cible !";
 
@@ -489,6 +510,7 @@ export class Game {
   /* Check if a Firewall action is valid
 
      Check that :
+      - The action is correctly specified
       - The slot is specified
       - No immunized or empty generator are part of the action
       - The color of the firewall checks with the targeted generator
@@ -503,6 +525,15 @@ export class Game {
      Throw an error if it doesn't check, return the action if it does
   */
   checkActionFirewall(action: Action) {
+    const cardInHand = this.currentPlayer.hand[action.indexInHand];
+    if (!(cardInHand instanceof FirewallCard)) {
+      throw "You don't have a firewall there ?!";
+    }
+
+    if (cardInHand.color !== action.card.color) {
+      throw "Your firewall isn't of the right color ?!";
+    }
+
     if (action.slotTarget[0] === undefined)
       throw "Pas de générateur cible du parefeu !";
 
