@@ -535,14 +535,23 @@ export class Game {
   /* Check if a Generator action is valid
 
      Check that :
+      - The action is correctly specified
       - The slot of the specified color is empty
 
      Throw an error if it doesn't check, return the action if it does
   */
   checkActionGenerator(action: Action) {
-    const temp = this.currentPlayer.getBase(action.card.color);
+    const cardInHand = this.currentPlayer.hand[action.indexInHand];
+    if (!(cardInHand instanceof GeneratorCard)) {
+      throw "You don't have a generator there ?!";
+    }
 
-    if (this.currentPlayer.base[temp].state !== State.Empty)
+    if (cardInHand.color !== action.card.color) {
+      throw "Your generator isn't of the right color ?!";
+    }
+
+    const baseSlotTarget = this.currentPlayer.getBase(action.card.color);
+    if (this.currentPlayer.base[baseSlotTarget].state !== State.Empty)
       throw "The generator is already placed in your base !";
 
     return;
