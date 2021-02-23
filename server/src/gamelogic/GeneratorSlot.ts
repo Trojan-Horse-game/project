@@ -65,7 +65,7 @@ export class GeneratorSlot {
 
       case State.Virused:
         return (
-          "Génerateur ' " +
+          "Génerateur " +
           Color[this.color] +
           " contaminé par " +
           this.cards[1] +
