@@ -194,16 +194,16 @@ async function askDiscard(player: Player): Promise<number[]> {
    return the specified index of the target
 */
 async function askTarget(players: Player[], quest: string) {
-  let goon = true;
+  let goOn = true;
   let target = 0;
 
-  while (goon) {
-    goon = false;
+  while (goOn) {
+    goOn = false;
     displayPlayers(players);
     target = Number(await ask(quest));
     if (isNaN(target) || target < 0 || target > players.length) {
       console.log("Vous n'avez pas rentré un nombre valide");
-      goon = true;
+      goOn = true;
     }
   }
   return target;
@@ -215,18 +215,18 @@ async function askTarget(players: Player[], quest: string) {
    return the specified index of the slot's target
 */
 async function askSlotTarget(player: Player, quest: string) {
-  let goon = true;
+  let goOn = true;
   let slotTarget = 0;
 
-  while (goon) {
-    goon = false;
+  while (goOn) {
+    goOn = false;
     displayBase(player);
 
     slotTarget = Number(await ask(quest));
 
     if (isNaN(slotTarget) || slotTarget < 0 || slotTarget > 4) {
       console.log("Vous n'avez pas rentré un nombre valide");
-      goon = true;
+      goOn = true;
     }
   }
   return slotTarget;
@@ -269,12 +269,12 @@ async function createActionVirus(players: Player[], action: Action) {
    return the specified index of the target
 */
 async function askWhichToClean(player: Player, viruses: SearchForClean[]) {
-  let goon = true;
+  let goOn = true;
   let virusToClean = 0;
   let i: number;
 
-  while (goon) {
-    goon = false;
+  while (goOn) {
+    goOn = false;
 
     console.log("");
     for (i = 0; i < viruses.length; i++) {
@@ -289,7 +289,7 @@ async function askWhichToClean(player: Player, viruses: SearchForClean[]) {
       virusToClean > viruses.length
     ) {
       console.log("Vous n'avez pas rentré un nombre valide");
-      goon = true;
+      goOn = true;
     }
   }
   return virusToClean;
@@ -301,12 +301,12 @@ async function askWhichToClean(player: Player, viruses: SearchForClean[]) {
    return the specified index
 */
 async function askWhereToClean(indexes: number[], player: Player) {
-  let goon = true;
+  let goOn = true;
   let virusToClean = 0;
   let i: number;
 
-  while (goon) {
-    goon = false;
+  while (goOn) {
+    goOn = false;
 
     console.log("");
     for (i = 0; i < indexes.length; i++) {
@@ -321,7 +321,7 @@ async function askWhereToClean(indexes: number[], player: Player) {
       virusToClean > indexes.length
     ) {
       console.log("Vous n'avez pas rentré un nombre valide");
-      goon = true;
+      goOn = true;
     }
   }
   return virusToClean;
