@@ -387,7 +387,7 @@ async function createActionExchange(players: Player[], action: Action) {
   const target2 = await askTarget(players, quest);
 
   quest = "Quel générateur sera pris chez lui ?";
-  const slotTarget2 = await askSlotTarget(players[target1], quest);
+  const slotTarget2 = await askSlotTarget(players[target2], quest);
 
   action.addTarget(target1);
   action.addSlotTarget(slotTarget1);
