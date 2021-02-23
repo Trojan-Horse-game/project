@@ -55,7 +55,6 @@ export class GeneratorSlot {
     return this.state;
   }
 
-
   toString(): string {
     switch (this.state) {
       case State.Empty:

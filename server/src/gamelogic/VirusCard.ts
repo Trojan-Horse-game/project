@@ -13,7 +13,9 @@ export class VirusCard implements Card {
 
   action(game: Game, action: Action): void {
     const indx = game.players[action.target[0]].getBase(action.slotTarget[0]);
-    let state = game.players[action.target[0]].base[indx].addVirus(action.card);
+    const state = game.players[action.target[0]].base[indx].addVirus(
+      action.card
+    );
     if (state === State.Empty) game.discardBase([indx]);
     if (state === State.Generator)
       game.deck.unshift(game.currentPlayer.base[indx].cards[1]);
