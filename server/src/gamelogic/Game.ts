@@ -6,6 +6,7 @@ import { FirewallCard } from "./FirewallCard";
 import { VirusCard } from "./VirusCard";
 import { Action } from "./Action";
 import { GeneratorSlot, State } from "./GeneratorSlot";
+import { searchVirusToClean, supprVirusToClean } from "./SearchingVirus";
 
 /* A class representing a game */
 export class Game {
@@ -245,10 +246,9 @@ export class Game {
      Check if the action finish the game and finish the game if it does
   */
   playAction(action: Action) {
-    let winner: Player | undefined;
     this.checkAction(action);
     action.card.action(this, action);
-    winner = this.checkForWinner();
+    const winner = this.checkForWinner();
     if (winner !== undefined) {
       this.endGame(winner);
     }
@@ -301,28 +301,31 @@ export class Game {
       - The slot target are properly set
       - The state of both generator are proper (Virused and Generator only)
       - The type of virus sent and the type of the receiver are coherent
+    
+    Check for the whole action that :
+      - Every candidates for cleaning are being cleaned
 
      Throw an error if it doesn't check, return the action if it does
   */
   checkActionCleaning(action: Action) {
     let i: number;
-    let slotInd = 0;
     let dst: GeneratorSlot;
     let src: GeneratorSlot;
+    const candidates = searchVirusToClean(this.players, this.currentPlayerIdx);
 
     for (i = 0; i < action.target.length; i++) {
       if (action.target[i] === this.currentPlayerIdx)
         throw "Impossible de rejeter un virus sur soi même !";
 
       if (
-        action.slotTarget[slotInd] === undefined ||
-        action.slotTarget[slotInd + 1] === undefined
+        action.slotTarget[2 * i] === undefined ||
+        action.slotTarget[2 * i + 1] === undefined
       ) {
         throw "Un des générateurs du nettoyage a mal été annoncé !";
       }
 
-      dst = this.players[action.target[i]].base[action.slotTarget[slotInd + 1]];
-      src = this.currentPlayer.base[action.slotTarget[slotInd]];
+      dst = this.players[action.target[i]].base[action.slotTarget[2 * i + 1]];
+      src = this.currentPlayer.base[action.slotTarget[2 * i]];
       if (src.state !== State.Virused)
         throw "Vous ne pouvez nettoyer un générateur dans un état non infecté !";
 
@@ -342,8 +345,17 @@ export class Game {
           " !"
         );
       }
-      slotInd += 2;
+
+      supprVirusToClean(
+        candidates,
+        this.players[action.target[0]],
+        action.slotTarget[0],
+        action.slotTarget[1]
+      );
     }
+
+    if (candidates.length !== 0)
+      throw "Vous n'avez pas rejeté tous vos virus de vos systèmes !";
   }
 
   /* Check if a forced exchange action is valid
@@ -356,8 +368,6 @@ export class Game {
      Throw an error if it doesn't check, return the action if it does
   */
   checkActionExchange(action: Action) {
-    let firstSrc: GeneratorSlot;
-    let secondSrc: GeneratorSlot;
     let baseIdx: number;
     let firstDst: GeneratorSlot;
     let secondDst: GeneratorSlot;
@@ -371,14 +381,14 @@ export class Game {
     if (action.slotTarget[1] === undefined)
       throw "Pas de générateur ciblé pour le second joueur de l'échange forcé !";
 
-    firstSrc = this.players[action.target[0]].base[action.slotTarget[0]];
+    const firstSrc = this.players[action.target[0]].base[action.slotTarget[0]];
     if (firstSrc.state === State.Immunized)
       throw "Vous ne pouvez échanger un générateur immunisé !";
 
     if (firstSrc.state === State.Empty)
       throw "Vous ne pouvez pas échanger un générateur inexistant !";
 
-    secondSrc = this.players[action.target[1]].base[action.slotTarget[1]];
+    const secondSrc = this.players[action.target[1]].base[action.slotTarget[1]];
     if (secondSrc.state === State.Immunized)
       throw "Vous ne pouvez échanger un générateur immunisé !";
     if (secondSrc.state === State.Empty)
@@ -408,25 +418,21 @@ export class Game {
      Throw an error if it doesn't check, return the action if it does
   */
   checkActionLoan(action: Action) {
-    let loanSrc: GeneratorSlot;
-    let loanDst: GeneratorSlot;
-    let baseInd: number;
-
     if (action.target[0] === undefined)
       throw "Pas de joueur ciblé pour l'emprunt à durée indéterminée !";
 
     if (action.slotTarget[0] === undefined)
       throw "Pas de générateur ciblé pour l'emprunt à durée indéterminée !";
 
-    loanSrc = this.players[action.target[0]].base[action.slotTarget[0]];
+    const loanSrc = this.players[action.target[0]].base[action.slotTarget[0]];
     if (loanSrc.state === State.Immunized)
       throw 'Vous ne pouvez "emprunter" un générateur immunisé !';
 
     if (loanSrc.state === State.Empty)
       throw 'Vous ne pouvez pas "emprunter" un générateur inexistant !';
 
-    baseInd = this.currentPlayer.getBase(action.card.color);
-    loanDst = this.currentPlayer.base[baseInd];
+    const baseInd = this.currentPlayer.getBase(action.card.color);
+    const loanDst = this.currentPlayer.base[baseInd];
     if (loanDst.state !== State.Empty)
       throw 'Vous ne pouvez pas "emprunter" un générateur que vous posséder déjà !';
   }
