@@ -13,24 +13,51 @@ export class SpecialCard implements Card {
   }
 
   action(game: Game, action: Action): void {
+    //nuclear distraction ==> All players discard their hands
     if (action.card.color === Color.Air) {
-      for (let index = 0; index < action.target.length; index++) {
-        game.discardHand([action.target[index]]);
+      for (let index = 0; index < game.players.length; index++) {
+        if (index != game.currentPlayerIdx) {
+          game.discardHand([0, 1, 2], game.players[index]);
+        }
       }
     }
     if (action.card.color === Color.Water) {
-      //échange de toutes les cartes
+      //identity theft => 2 players exchange their hands
       [game.currentPlayer.base, game.players[action.target[0]].base] = [
         game.players[action.target[0]].base,
         game.currentPlayer.base,
       ];
     }
     if (action.card.color === Color.Joker) {
-      const indx = game.currentPlayer.getBase(action.slotTarget[0]);
-      const indx2 = game.currentPlayer.getBase(action.target[0]);
+      //Systeme cleaning => put virus as most as i can to other players generators
+      //const indx = game.players[action.target[0]].getBase(action.slotTarget[0]);
       for (let i = 0; i < action.target.length; i += 2) {
-        game.currentPlayer.base[action.slotTarget[i + 1]].addVirus(action.card);
+        const card =
+          game.players[action.target[i]].base[action.slotTarget[2 * i]]
+            .cards[1];
+        game.players[action.target[i]].base[
+          action.slotTarget[2 * i + 1]
+        ].addVirus(card);
+        game.players[action.target[i]].base[
+          action.slotTarget[2 * i]
+        ].cards.splice(1, 1);
+        game.discardHand([action.indexInHand]);
       }
+    }
+    if (action.card.color === Color.Radiation) {
+      // Indefinite term loan => steal a non iminized-generator from another player
+      game.currentPlayer.base[action.slotTarget[0]] =
+        game.players[action.target[0]].base[action.slotTarget[0]];
+
+      game.discardHand([action.indexInHand]);
+    }
+
+    if (action.card.color === Color.Energy) {
+      // forced exchange => steal a generator from another player
+      game.players[action.target[0]].base[action.slotTarget[0]] =
+        game.players[action.target[1]].base[action.slotTarget[0]];
+
+      game.discardHand([action.indexInHand]);
     }
   }
 
