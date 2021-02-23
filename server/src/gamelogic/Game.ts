@@ -197,11 +197,11 @@ export class Game {
 
      Put it back at the bottom of the deck
   */
-  discardHand(indices: number[]) {
+  discardHand(indices: number[], player = this.currentPlayer) {
     let i: number;
     let padd = 0;
     for (i of indices) {
-      this.deck.unshift(this.currentPlayer.discardHand(i - padd));
+      this.deck.unshift(player.discardHand(i - padd));
       padd++;
     }
   }
