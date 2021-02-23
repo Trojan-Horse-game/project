@@ -122,7 +122,7 @@ function displayBase(player: Player): void {
   }
 }
 
-/* Display the player' pseudos */
+/* Display the players' pseudos */
 function displayPlayers(players: Player[]): void {
   let i: number;
 
