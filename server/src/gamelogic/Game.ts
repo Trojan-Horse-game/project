@@ -25,7 +25,6 @@ export class Game {
       Species.Ulysse,
       Species.Xmars,
     ];
-    this.currentPlayerIdx = Math.floor(Math.random() * this.players.length);
     this.createDeck();
   }
 
@@ -117,6 +116,7 @@ export class Game {
       this.shuffleDeck();
       this.distribute();
       this.inProgress = true;
+      this.currentPlayerIdx = Math.floor(Math.random() * this.players.length);
     }
   }
 
