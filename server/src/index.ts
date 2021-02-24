@@ -6,11 +6,14 @@ import app from "./Server";
 import cors from "cors";
 import path from "path";
 
-import usersRouter from "./routes/user.route";
+import usersRouter from "./routes/user.routes";
+import { createConnection } from "typeorm";
 
 const http = require("http").Server(app);
 const io = require("socket.io")(http);
 require("./routes/game.route")(io);
+
+createConnection();
 app.use('/api/users', usersRouter);
 
 app.get("/", function (res: any) {

@@ -1,4 +1,4 @@
-import { ActionCard } from "./ActionCard";
+import { SpecialCard } from "./SpecialCard";
 import { Card, Color } from "./Card";
 import { GeneratorCard } from "./GeneratorCard";
 import { Player, Species } from "./Players";
@@ -6,6 +6,7 @@ import { FirewallCard } from "./FirewallCard";
 import { VirusCard } from "./VirusCard";
 import { Action } from "./Action";
 import { GeneratorSlot, State } from "./GeneratorSlot";
+import { searchVirusToClean, supprVirusToClean } from "./SearchingVirus";
 
 /* A class representing a game */
 export class Game {
@@ -72,7 +73,7 @@ export class Game {
     this.addSerieToDeck(construct, 4, Color.Joker);
 
     construct = (color: Color) => {
-      return new ActionCard(color);
+      return new SpecialCard(color);
     };
 
     this.addSerieToDeck(construct, 1, Color.Air); // Nuclear Distract
@@ -117,6 +118,7 @@ export class Game {
       this.shuffleDeck();
       this.distribute();
       this.inProgress = true;
+      this.currentPlayerIdx = Math.floor(Math.random() * this.players.length);
     }
   }
 
@@ -198,11 +200,11 @@ export class Game {
 
      Put it back at the bottom of the deck
   */
-  discardHand(indices: number[]) {
+  discardHand(indices: number[], player = this.currentPlayer) {
     let i: number;
     let padd = 0;
     for (i of indices) {
-      this.deck.unshift(this.currentPlayer.discardHand(i - padd));
+      this.deck.unshift(player.discardHand(i - padd));
       padd++;
     }
   }
@@ -246,10 +248,9 @@ export class Game {
      Check if the action finish the game and finish the game if it does
   */
   playAction(action: Action) {
-    let winner: Player | undefined;
     this.checkAction(action);
     action.card.action(this, action);
-    winner = this.checkForWinner();
+    const winner = this.checkForWinner();
     if (winner !== undefined) {
       this.endGame(winner);
     }
@@ -269,12 +270,23 @@ export class Game {
 
   /* Check if a special action is valid
 
-    We don't need to check anything for nuclear distract
+    Check that the card specified in the action is held by the player
+
+    We don't need to check anything else for nuclear distract
     We only check if the action is properly set for Id theft
 
-     Throw an error if it's not, return the action if it is
+     Throw an error if it's not valid, return the action if it is
   */
   checkActionSpe(action: Action) {
+    const cardInHand = this.currentPlayer.hand[action.indexInHand];
+    if (!(cardInHand instanceof SpecialCard)) {
+      throw "You don't have an action there ?!";
+    }
+
+    if (cardInHand.color !== action.card.color) {
+      throw "Your action the right one ?!";
+    }
+
     switch (action.card.color) {
       case Color.Water: // Identity theft
         if (action.target[0] === undefined)
@@ -302,28 +314,31 @@ export class Game {
       - The slot target are properly set
       - The state of both generator are proper (Virused and Generator only)
       - The type of virus sent and the type of the receiver are coherent
+    
+    Check for the whole action that :
+      - Every candidates for cleaning are being cleaned
 
      Throw an error if it doesn't check, return the action if it does
   */
   checkActionCleaning(action: Action) {
     let i: number;
-    let slotInd = 0;
     let dst: GeneratorSlot;
     let src: GeneratorSlot;
+    const candidates = searchVirusToClean(this.players, this.currentPlayerIdx);
 
     for (i = 0; i < action.target.length; i++) {
       if (action.target[i] === this.currentPlayerIdx)
         throw "Impossible de rejeter un virus sur soi même !";
 
       if (
-        action.slotTarget[slotInd] === undefined ||
-        action.slotTarget[slotInd + 1] === undefined
+        action.slotTarget[2 * i] === undefined ||
+        action.slotTarget[2 * i + 1] === undefined
       ) {
         throw "Un des générateurs du nettoyage a mal été annoncé !";
       }
 
-      dst = this.players[action.target[i]].base[action.slotTarget[slotInd + 1]];
-      src = this.currentPlayer.base[action.slotTarget[slotInd]];
+      dst = this.players[action.target[i]].base[action.slotTarget[2 * i + 1]];
+      src = this.currentPlayer.base[action.slotTarget[2 * i]];
       if (src.state !== State.Virused)
         throw "Vous ne pouvez nettoyer un générateur dans un état non infecté !";
 
@@ -343,8 +358,17 @@ export class Game {
           " !"
         );
       }
-      slotInd += 2;
+
+      supprVirusToClean(
+        candidates,
+        this.players[action.target[0]],
+        action.slotTarget[0],
+        action.slotTarget[1]
+      );
     }
+
+    if (candidates.length !== 0)
+      throw "Vous n'avez pas rejeté tous vos virus de vos systèmes !";
   }
 
   /* Check if a forced exchange action is valid
@@ -357,8 +381,6 @@ export class Game {
      Throw an error if it doesn't check, return the action if it does
   */
   checkActionExchange(action: Action) {
-    let firstSrc: GeneratorSlot;
-    let secondSrc: GeneratorSlot;
     let baseIdx: number;
     let firstDst: GeneratorSlot;
     let secondDst: GeneratorSlot;
@@ -372,14 +394,14 @@ export class Game {
     if (action.slotTarget[1] === undefined)
       throw "Pas de générateur ciblé pour le second joueur de l'échange forcé !";
 
-    firstSrc = this.players[action.target[0]].base[action.slotTarget[0]];
+    const firstSrc = this.players[action.target[0]].base[action.slotTarget[0]];
     if (firstSrc.state === State.Immunized)
       throw "Vous ne pouvez échanger un générateur immunisé !";
 
     if (firstSrc.state === State.Empty)
       throw "Vous ne pouvez pas échanger un générateur inexistant !";
 
-    secondSrc = this.players[action.target[1]].base[action.slotTarget[1]];
+    const secondSrc = this.players[action.target[1]].base[action.slotTarget[1]];
     if (secondSrc.state === State.Immunized)
       throw "Vous ne pouvez échanger un générateur immunisé !";
     if (secondSrc.state === State.Empty)
@@ -409,25 +431,21 @@ export class Game {
      Throw an error if it doesn't check, return the action if it does
   */
   checkActionLoan(action: Action) {
-    let loanSrc: GeneratorSlot;
-    let loanDst: GeneratorSlot;
-    let baseInd: number;
-
     if (action.target[0] === undefined)
       throw "Pas de joueur ciblé pour l'emprunt à durée indéterminée !";
 
     if (action.slotTarget[0] === undefined)
       throw "Pas de générateur ciblé pour l'emprunt à durée indéterminée !";
 
-    loanSrc = this.players[action.target[0]].base[action.slotTarget[0]];
+    const loanSrc = this.players[action.target[0]].base[action.slotTarget[0]];
     if (loanSrc.state === State.Immunized)
       throw 'Vous ne pouvez "emprunter" un générateur immunisé !';
 
     if (loanSrc.state === State.Empty)
       throw 'Vous ne pouvez pas "emprunter" un générateur inexistant !';
 
-    baseInd = this.currentPlayer.getBase(action.card.color);
-    loanDst = this.currentPlayer.base[baseInd];
+    const baseInd = this.currentPlayer.getBase(action.card.color);
+    const loanDst = this.currentPlayer.base[baseInd];
     if (loanDst.state !== State.Empty)
       throw 'Vous ne pouvez pas "emprunter" un générateur que vous posséder déjà !';
   }
@@ -435,6 +453,7 @@ export class Game {
   /* Check if a Virus action is valid
 
      Check that :
+      - The action is correctly specified
       - Both the target and the slot are specified
       - No immunized or empty generator are part of the action
       - The color of the virus checks with the targeted generator
@@ -449,6 +468,15 @@ export class Game {
      Throw an error if it doesn't check, return the action if it does
   */
   checkActionVirus(action: Action) {
+    const cardInHand = this.currentPlayer.hand[action.indexInHand];
+    if (!(cardInHand instanceof VirusCard)) {
+      throw "You don't have a virus there ?!";
+    }
+
+    if (cardInHand.color !== action.card.color) {
+      throw "Your virus isn't of the right color ?!";
+    }
+
     if (action.target[0] === undefined)
       throw "Le virus n'a pas de joueur cible !";
 
@@ -462,29 +490,29 @@ export class Game {
     if (temp.state === State.Immunized)
       throw "Vous ne pouvez pas utiliser un virus sur un générateur immunisé !";
 
-    if (action.card.color === Color.Joker) return action;
+    if (action.card.color === Color.Joker) return;
 
-    if (temp.state !== State.Protected && temp.color === Color.Joker)
-      return action;
+    if (temp.state !== State.Protected && temp.color === Color.Joker) return;
 
     if (
       temp.state === State.Protected &&
       temp.color === Color.Joker &&
       temp.cards[1].color === action.card.color
     )
-      return action;
+      return;
 
     if (temp.state === State.Protected && temp.cards[1].color === Color.Joker)
-      return action;
+      return;
 
     if (temp.color !== action.card.color)
       throw "Ce type de virus ne peut pas protéger ce type de générateur !";
-    return action;
+    return;
   }
 
   /* Check if a Firewall action is valid
 
      Check that :
+      - The action is correctly specified
       - The slot is specified
       - No immunized or empty generator are part of the action
       - The color of the firewall checks with the targeted generator
@@ -499,6 +527,15 @@ export class Game {
      Throw an error if it doesn't check, return the action if it does
   */
   checkActionFirewall(action: Action) {
+    const cardInHand = this.currentPlayer.hand[action.indexInHand];
+    if (!(cardInHand instanceof FirewallCard)) {
+      throw "You don't have a firewall there ?!";
+    }
+
+    if (cardInHand.color !== action.card.color) {
+      throw "Your firewall isn't of the right color ?!";
+    }
+
     if (action.slotTarget[0] === undefined)
       throw "Pas de générateur cible du parefeu !";
 
@@ -509,39 +546,47 @@ export class Game {
     if (temp.state === State.Immunized)
       throw "Vous ne pouvez pas utiliser un parefeu sur un générateur immunisé !";
 
-    if (action.card.color === Color.Joker) return action;
+    if (action.card.color === Color.Joker) return;
 
-    if (temp.state !== State.Virused && temp.color === Color.Joker)
-      return action;
+    if (temp.state !== State.Virused && temp.color === Color.Joker) return;
 
     if (
       temp.state === State.Virused &&
       temp.color === Color.Joker &&
       temp.cards[1].color === action.card.color
     )
-      return action;
+      return;
 
     if (temp.state === State.Virused && temp.cards[1].color === Color.Joker)
-      return action;
+      return;
 
     if (temp.color !== action.card.color)
       throw "Ce type de parefeu ne peut pas protéger ce type de générateur !";
-    return action;
+    return;
   }
 
   /* Check if a Generator action is valid
 
      Check that :
+      - The action is correctly specified
       - The slot of the specified color is empty
 
      Throw an error if it doesn't check, return the action if it does
   */
   checkActionGenerator(action: Action) {
-    const temp = this.currentPlayer.getBase(action.card.color);
+    const cardInHand = this.currentPlayer.hand[action.indexInHand];
+    if (!(cardInHand instanceof GeneratorCard)) {
+      throw "You don't have a generator there ?!";
+    }
 
-    if (this.currentPlayer.base[temp].state !== State.Empty)
+    if (cardInHand.color !== action.card.color) {
+      throw "Your generator isn't of the right color ?!";
+    }
+
+    const baseSlotTarget = this.currentPlayer.getBase(action.card.color);
+    if (this.currentPlayer.base[baseSlotTarget].state !== State.Empty)
       throw "The generator is already placed in your base !";
 
-    return action;
+    return;
   }
 }

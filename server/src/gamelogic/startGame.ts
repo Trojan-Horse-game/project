@@ -7,19 +7,11 @@ import { Action } from "./Action";
 import { FirewallCard } from "./FirewallCard";
 import { VirusCard } from "./VirusCard";
 import { GeneratorCard } from "./GeneratorCard";
-
-/* An interface usefull for the Cleaning card
-
-  It contains - the index of a virus in the current player's base
-              - an array of player to which it is possible to give the virus
-              - an array of array of index of player's base slot to which it
-                  is possible to give the virus
-*/
-interface CleaningSystem {
-  srcSlotInd: number;
-  target: Player[];
-  dstSlotInd: number[][];
-}
+import {
+  SearchForClean,
+  searchVirusToClean,
+  supprVirusToClean,
+} from "./SearchingVirus";
 
 const rl = readline.createInterface({
   input: process.stdin,
@@ -130,7 +122,7 @@ function displayBase(player: Player): void {
   }
 }
 
-/* Display the player' pseudos */
+/* Display the players' pseudos */
 function displayPlayers(players: Player[]): void {
   let i: number;
 
@@ -202,16 +194,16 @@ async function askDiscard(player: Player): Promise<number[]> {
    return the specified index of the target
 */
 async function askTarget(players: Player[], quest: string) {
-  let goon = true;
+  let goOn = true;
   let target = 0;
 
-  while (goon) {
-    goon = false;
+  while (goOn) {
+    goOn = false;
     displayPlayers(players);
     target = Number(await ask(quest));
     if (isNaN(target) || target < 0 || target > players.length) {
       console.log("Vous n'avez pas rentré un nombre valide");
-      goon = true;
+      goOn = true;
     }
   }
   return target;
@@ -223,18 +215,18 @@ async function askTarget(players: Player[], quest: string) {
    return the specified index of the slot's target
 */
 async function askSlotTarget(player: Player, quest: string) {
-  let goon = true;
+  let goOn = true;
   let slotTarget = 0;
 
-  while (goon) {
-    goon = false;
+  while (goOn) {
+    goOn = false;
     displayBase(player);
 
     slotTarget = Number(await ask(quest));
 
     if (isNaN(slotTarget) || slotTarget < 0 || slotTarget > 4) {
       console.log("Vous n'avez pas rentré un nombre valide");
-      goon = true;
+      goOn = true;
     }
   }
   return slotTarget;
@@ -276,13 +268,13 @@ async function createActionVirus(players: Player[], action: Action) {
    Ask between the available players for the specific virus
    return the specified index of the target
 */
-async function askWhichToClean(player: Player, viruses: CleaningSystem[]) {
-  let goon = true;
+async function askWhichToClean(player: Player, viruses: SearchForClean[]) {
+  let goOn = true;
   let virusToClean = 0;
   let i: number;
 
-  while (goon) {
-    goon = false;
+  while (goOn) {
+    goOn = false;
 
     console.log("");
     for (i = 0; i < viruses.length; i++) {
@@ -297,7 +289,7 @@ async function askWhichToClean(player: Player, viruses: CleaningSystem[]) {
       virusToClean > viruses.length
     ) {
       console.log("Vous n'avez pas rentré un nombre valide");
-      goon = true;
+      goOn = true;
     }
   }
   return virusToClean;
@@ -309,12 +301,12 @@ async function askWhichToClean(player: Player, viruses: CleaningSystem[]) {
    return the specified index
 */
 async function askWhereToClean(indexes: number[], player: Player) {
-  let goon = true;
+  let goOn = true;
   let virusToClean = 0;
   let i: number;
 
-  while (goon) {
-    goon = false;
+  while (goOn) {
+    goOn = false;
 
     console.log("");
     for (i = 0; i < indexes.length; i++) {
@@ -329,70 +321,7 @@ async function askWhereToClean(indexes: number[], player: Player) {
       virusToClean > indexes.length
     ) {
       console.log("Vous n'avez pas rentré un nombre valide");
-      goon = true;
-    }
-  }
-  return virusToClean;
-}
-
-/* Search every virus cleanable
-
-   Create an array of CleaningSystem typed var
-   
-   It contains - the index of a virus in the current player's base
-               - an array of player to which it is possible to give the virus
-               - an array of array of index of player's base slot to which it
-                  is possible to give the virus
-
-   return the so called array, which can be empty
-*/
-function searchVirusToClean(players: Player[], currentPlayer: number) {
-  let i: number;
-  let j: number;
-  let w: number;
-  let virusToClean: CleaningSystem[] = [];
-  let candidate: CleaningSystem;
-  let slot: GeneratorSlot;
-  let baseInd: number;
-  let doable: boolean;
-  let possibleSlot: number[];
-
-  for (i = 0; i < players[currentPlayer].base.length; i++) {
-    slot = players[currentPlayer].base[i];
-    if (slot.state === State.Virused) {
-      j = (currentPlayer + 1) % players.length;
-      candidate = { srcSlotInd: i, target: [], dstSlotInd: [[]] };
-      for (j; j !== currentPlayer; j = (j + 1) % players.length) {
-        doable = false;
-        possibleSlot = [];
-        if (slot.cards[1].color === Color.Joker) {
-          for (w = 0; w !== players[j].base.length; j++) {
-            if (players[j].base[w].state === State.Generator) {
-              doable = true;
-              possibleSlot.push(w);
-            }
-          }
-        } else {
-          baseInd = players[j].getBase(Color.Joker);
-          if (players[j].base[baseInd].state === State.Generator) {
-            doable = true;
-            possibleSlot.push(baseInd);
-          }
-
-          baseInd = players[j].getBase(slot.cards[1].color);
-          if (players[j].base[baseInd].state === State.Generator) {
-            doable = true;
-            possibleSlot.push(baseInd);
-          }
-        }
-        if (doable) {
-          candidate.target.push(players[j]);
-          candidate.dstSlotInd.push(possibleSlot);
-        }
-      }
-      if (candidate.target.length > 0) {
-        virusToClean.push(candidate);
-      }
+      goOn = true;
     }
   }
   return virusToClean;
@@ -415,7 +344,7 @@ async function createActionCleaning(
   let currentTarget: number;
   let currentDst: number;
   let quest: string;
-  let virusToClean = searchVirusToClean(players, currentPlayer);
+  const virusToClean = searchVirusToClean(players, currentPlayer);
 
   while (virusToClean.length !== 0) {
     currentSrc = await askWhichToClean(players[currentPlayer], virusToClean);
@@ -431,6 +360,12 @@ async function createActionCleaning(
     action.addSlotTarget(currentSrc);
     action.addTarget(currentTarget);
     action.addSlotTarget(currentDst);
+    supprVirusToClean(
+      virusToClean,
+      players[currentTarget],
+      currentSrc,
+      currentDst
+    );
   }
   return action;
 }
@@ -443,16 +378,16 @@ async function createActionCleaning(
 */
 async function createActionExchange(players: Player[], action: Action) {
   let quest = "Qui sera la première victime de l'échange ?";
-  let target1 = await askTarget(players, quest);
+  const target1 = await askTarget(players, quest);
 
   quest = "Quel générateur sera pris chez lui ?";
-  let slotTarget1 = await askSlotTarget(players[target1], quest);
+  const slotTarget1 = await askSlotTarget(players[target1], quest);
 
   quest = "Qui sera la seconde victime de l'échange ?";
-  let target2 = await askTarget(players, quest);
+  const target2 = await askTarget(players, quest);
 
   quest = "Quel générateur sera pris chez lui ?";
-  let slotTarget2 = await askSlotTarget(players[target1], quest);
+  const slotTarget2 = await askSlotTarget(players[target2], quest);
 
   action.addTarget(target1);
   action.addSlotTarget(slotTarget1);
@@ -467,10 +402,10 @@ async function createActionExchange(players: Player[], action: Action) {
 */
 async function createActionLoan(players: Player[], action: Action) {
   let quest = 'Avec qui voulez vous effectuer un "emprunt" longue durée ?';
-  let target1 = await askTarget(players, quest);
+  const target1 = await askTarget(players, quest);
 
   quest = 'Quel générateur voulez vous "emprunter" ?';
-  let slotTarget1 = await askSlotTarget(players[target1], quest);
+  const slotTarget1 = await askSlotTarget(players[target1], quest);
 
   action.addTarget(target1);
   action.addSlotTarget(slotTarget1);
@@ -518,8 +453,8 @@ async function createAction(
   currentPlayer: number,
   indexInHand: number
 ) {
-  let player = players[currentPlayer];
-  let action = new Action(player.hand[indexInHand], indexInHand);
+  const player = players[currentPlayer];
+  const action = new Action(player.hand[indexInHand], indexInHand);
 
   if (action.card instanceof GeneratorCard) return action;
   else if (action.card instanceof FirewallCard)
@@ -617,7 +552,3 @@ export async function startGame(): Promise<void> {
     await playTurn(game);
   }
 }
-
-//TODO : private/protected/static si possible, typer le retour des fonctions maybe
-//        Faire des test
-//        Checker l'action dans le backend et la faire
