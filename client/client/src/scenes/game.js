@@ -1,5 +1,6 @@
 import Card from '../helpers/card';
 import Zone from '../helpers/zone';
+import Perso from '../helpers/perso';
 import Generateur from '../helpers/generateur';
 
 export default class Game extends Phaser.Scene {
@@ -59,23 +60,23 @@ export default class Game extends Phaser.Scene {
             let super_1 = new Generateur(this);
 
             foudre_1.gen_render(195, 40, 'foudre');
-            this.foudre_renZ_1 = foudre_1.gen_renderZone(195, 40, "foudre_1", foudre_1);
+            this.foudre_renZ_1 = foudre_1.gen_renderZone(195, 40, "foudre_1");
             this.foudre_renO_1 = foudre_1.gen_renderOutline(this.foudre_renZ_1);
 
             air_1.gen_render(225,115, 'air');
-            this.air_renZ_1 = air_1.gen_renderZone(225, 115, "air_1", air_1);
+            this.air_renZ_1 = air_1.gen_renderZone(225, 115, "air_1");
             this.air_renO_1 = air_1.gen_renderOutline(this.air_renZ_1);
 
             goute_1.gen_render(200, 185, 'goute');
-            this.goute_renZ_1 = goute_1.gen_renderZone(200, 185, "goute_1", goute_1);
+            this.goute_renZ_1 = goute_1.gen_renderZone(200, 185, "goute_1");
             this.goute_renO_1 = goute_1.gen_renderOutline(this.goute_renZ_1);
 
             radiation_1.gen_render(150, 245, 'radiation');
-            this.rad_renZ_1 = radiation_1.gen_renderZone(150, 245, "radiation_1", radiation_1);
+            this.rad_renZ_1 = radiation_1.gen_renderZone(150, 245, "radiation_1");
             this.rad_renO_1 = radiation_1.gen_renderOutline(this.rad_renZ_1);
 
             super_1.gen_render(70, 245, 'super');
-            this.super_renZ_1 = super_1.gen_renderZone(70, 245, "super_1", super_1);
+            this.super_renZ_1 = super_1.gen_renderZone(70, 245, "super_1");
             this.super_renO_1 = super_1.gen_renderOutline(this.super_renZ_1);
 
             let foudre_2 = new Generateur(this);
@@ -85,23 +86,23 @@ export default class Game extends Phaser.Scene {
             let super_2 = new Generateur(this);
 
             foudre_2.gen_render(1280 - 195, 40, 'foudre');
-            this.foudre_renZ_2 = foudre_2.gen_renderZone(1280 - 195, 40, "foudre_2", foudre_2);
+            this.foudre_renZ_2 = foudre_2.gen_renderZone(1280 - 195, 40, "foudre_2");
             this.foudre_renO_2 = foudre_2.gen_renderOutline(this.foudre_renZ_2);
 
             air_2.gen_render(1280 - 225, 115, 'air');
-            this.air_renZ_2 = air_2.gen_renderZone(1280 - 225, 115, "air_2", air_2);
+            this.air_renZ_2 = air_2.gen_renderZone(1280 - 225, 115, "air_2");
             this.air_renO_2 = air_2.gen_renderOutline(this.air_renZ_2);
 
             goute_2.gen_render(1280 - 200, 185, 'goute');
-            this.goute_renZ_2 = goute_2.gen_renderZone(1280 - 200, 185, "goute_2", goute_2);
+            this.goute_renZ_2 = goute_2.gen_renderZone(1280 - 200, 185, "goute_2");
             this.goute_renO_2 = goute_2.gen_renderOutline(this.goute_renZ_2);
 
             radiation_2.gen_render(1280 - 150, 245, 'radiation');
-            this.rad_renZ_2 = radiation_2.gen_renderZone(1280 - 150, 245, "radiation_2", radiation_2);
+            this.rad_renZ_2 = radiation_2.gen_renderZone(1280 - 150, 245, "radiation_2");
             this.rad_renO_2 = radiation_2.gen_renderOutline(this.rad_renZ_2);
 
             super_2.gen_render(1280 - 70, 245, 'super');
-            this.super_renZ_2 = super_2.gen_renderZone(1280 - 70, 245, "super_2", super_2);
+            this.super_renZ_2 = super_2.gen_renderZone(1280 - 70, 245, "super_2");
             this.super_renO_2 = super_2.gen_renderOutline(this.super_renZ_2);
 
             let foudre_3 = new Generateur(this);
@@ -111,23 +112,23 @@ export default class Game extends Phaser.Scene {
             let super_3 = new Generateur(this);
 
             foudre_3.gen_render(70, 390, 'foudre');
-            this.foudre_renZ_3 = foudre_3.gen_renderZone(70, 390, "foudre_3", foudre_3);
+            this.foudre_renZ_3 = foudre_3.gen_renderZone(70, 390, "foudre_3");
             this.foudre_renO_3 = foudre_3.gen_renderOutline(this.foudre_renZ_3);
 
             air_3.gen_render(150, 400, 'air');
-            this.air_renZ_3 = air_3.gen_renderZone(150, 400, "air_3", air_3);
+            this.air_renZ_3 = air_3.gen_renderZone(150, 400, "air_3");
             this.air_renO_3 = air_3.gen_renderOutline(this.air_renZ_3);
 
             goute_3.gen_render(200, 465, 'goute');
-            this.goute_renZ_3 = goute_3.gen_renderZone(200, 465, "goute_3", goute_3);
+            this.goute_renZ_3 = goute_3.gen_renderZone(200, 465, "goute_3");
             this.goute_renO_3 = goute_3.gen_renderOutline(this.goute_renZ_3);
 
             radiation_3.gen_render(225, 545, 'radiation');
-            this.rad_renZ_3 = radiation_3.gen_renderZone(225, 545, "radiation_3", radiation_3);
+            this.rad_renZ_3 = radiation_3.gen_renderZone(225, 545, "radiation_3");
             this.rad_renO_3 = radiation_3.gen_renderOutline(this.rad_renZ_3);
 
             super_3.gen_render(195, 625, 'super');
-            this.super_renZ_3 = super_3.gen_renderZone(195, 625, "super_3", super_3);
+            this.super_renZ_3 = super_3.gen_renderZone(195, 625, "super_3");
             this.super_renO_3 = super_3.gen_renderOutline(this.super_renZ_3);
 
             let foudre_4 = new Generateur(this);
@@ -137,23 +138,23 @@ export default class Game extends Phaser.Scene {
             let super_4 = new Generateur(this);
 
             foudre_4.gen_render(1280 - 70, 390, 'foudre');
-            this.foudre_renZ_4 = foudre_4.gen_renderZone(1280 - 70, 390, "foudre_4", foudre_4);
+            this.foudre_renZ_4 = foudre_4.gen_renderZone(1280 - 70, 390, "foudre_4");
             this.foudre_renO_4 = foudre_4.gen_renderOutline(this.foudre_renZ_4);
 
             air_4.gen_render(1280 - 150, 400, 'air');
-            this.air_renZ_4 = air_4.gen_renderZone(1280 - 150, 400, "air_4", air_4);
+            this.air_renZ_4 = air_4.gen_renderZone(1280 - 150, 400, "air_4");
             this.air_renO_4 = air_4.gen_renderOutline(this.air_renZ_4);
 
             goute_4.gen_render(1280 - 200, 465, 'goute');
-            this.goute_renZ_4 = goute_4.gen_renderZone(1280 - 200, 465, "goute_4", goute_4);
+            this.goute_renZ_4 = goute_4.gen_renderZone(1280 - 200, 465, "goute_4");
             this.goute_renO_4 = goute_4.gen_renderOutline(this.goute_renZ_4);
 
             radiation_4.gen_render(1280 - 225, 545, 'radiation');
-            this.rad_renZ_4 = radiation_4.gen_renderZone(1280 - 225, 545, "radiation_4", radiation_4);
+            this.rad_renZ_4 = radiation_4.gen_renderZone(1280 - 225, 545, "radiation_4");
             this.rad_renO_4 = radiation_4.gen_renderOutline(this.rad_renZ_4);
 
             super_4.gen_render(1280 - 195, 625, 'super');
-            this.super_renZ_4 = super_4.gen_renderZone(1280 - 195, 625, "super_4", super_4);
+            this.super_renZ_4 = super_4.gen_renderZone(1280 - 195, 625, "super_4");
             this.super_renO_4 = super_4.gen_renderOutline(this.super_renZ_4);
 
             let foudre_5 = new Generateur(this);
@@ -163,23 +164,23 @@ export default class Game extends Phaser.Scene {
             let super_5 = new Generateur(this);
 
             foudre_5.gen_render(500, 155, 'foudre');
-            this.foudre_renZ_5 = foudre_5.gen_renderZone(500, 155, "foudre_5", foudre_5);
+            this.foudre_renZ_5 = foudre_5.gen_renderZone(500, 155, "foudre_5");
             this.foudre_renO_5 = foudre_5.gen_renderOutline(this.foudre_renZ_5);
 
             air_5.gen_render(560, 210, 'air');
-            this.air_renZ_5 = air_5.gen_renderZone(560, 210, "air_5", air_5);
+            this.air_renZ_5 = air_5.gen_renderZone(560, 210, "air_5");
             this.air_renO_5 = air_5.gen_renderOutline(this.air_renZ_5);
 
             goute_5.gen_render(640, 245, 'goute');
-            this.goute_renZ_5 = goute_5.gen_renderZone(640, 245, "goute_5", goute_5);
+            this.goute_renZ_5 = goute_5.gen_renderZone(640, 245, "goute_5");
             this.goute_renO_5 = goute_5.gen_renderOutline(this.goute_renZ_5);
 
             radiation_5.gen_render(720, 210, 'radiation');
-            this.rad_renZ_5 = radiation_5.gen_renderZone(720, 210, "radiation_5", radiation_5);
+            this.rad_renZ_5 = radiation_5.gen_renderZone(720, 210, "radiation_5");
             this.rad_renO_5 = radiation_5.gen_renderOutline(this.rad_renZ_5);
 
             super_5.gen_render(780, 155, 'super');
-            this.super_renZ_5 = super_5.gen_renderZone(780, 155, "super_5", super_5);
+            this.super_renZ_5 = super_5.gen_renderZone(780, 155, "super_5");
             this.super_renO_5 = super_5.gen_renderOutline(this.super_renZ_5);
 
             let foudre_6 = new Generateur(this);
@@ -188,26 +189,63 @@ export default class Game extends Phaser.Scene {
             let radiation_6 = new Generateur(this);
             let super_6 = new Generateur(this);
 
-            foudre_6.gen_render(440, 680 - 170, 'foudre');
-            this.foudre_renZ_6 = foudre_6.gen_renderZone(440, 680 - 170, "foudre_6", foudre_6);
+            foudre_6.gen_render(440, 780 - 270, 'foudre');
+            this.foudre_renZ_6 = foudre_6.gen_renderZone(440, 780 - 270, "foudre_6");
             this.foudre_renO_6 = foudre_6.gen_renderOutline(this.foudre_renZ_6);
 
-            air_6.gen_render(540, 680 - 170, 'air');
-            this.air_renZ_6 = air_6.gen_renderZone(540, 680 - 170, "air_6", air_6);
+            air_6.gen_render(540, 780 - 270, 'air');
+            this.air_renZ_6 = air_6.gen_renderZone(540, 780 - 270, "air_6");
             this.air_renO_6 = air_6.gen_renderOutline(this.air_renZ_6);
 
-            goute_6.gen_render(640, 680 - 170, 'goute');
-            this.goute_renZ_6 = goute_6.gen_renderZone(640, 680 - 170, "goute_6", goute_6);
+            goute_6.gen_render(640, 780 - 270, 'goute');
+            this.goute_renZ_6 = goute_6.gen_renderZone(640, 780 - 270, "goute_6");
             this.goute_renO_6 = goute_6.gen_renderOutline(this.goute_renZ_6);
 
-            radiation_6.gen_render(740, 680 - 170, 'radiation');
-            this.rad_renZ_6 = radiation_6.gen_renderZone(740, 680 - 170, "radiation_6", radiation_6);
+            radiation_6.gen_render(740, 780 - 270, 'radiation');
+            this.rad_renZ_6 = radiation_6.gen_renderZone(740, 780 - 270, "radiation_6");
             this.rad_renO_6 = radiation_6.gen_renderOutline(this.rad_renZ_6);
 
-            super_6.gen_render(840, 680 - 170, 'super');
-            this.super_renZ_6 = super_6.gen_renderZone(840, 680 - 170, "super_6", super_6);
+            super_6.gen_render(840, 780 - 270, 'super');
+            this.super_renZ_6 = super_6.gen_renderZone(840, 780 - 270, "super_6");
             this.super_renO_6 = super_6.gen_renderOutline(this.super_renZ_6);
         }
+
+        //Icônes joueurs avec nicknames
+        let perso_1 = new Perso(this);
+        let perso_2 = new Perso(this);
+        let perso_3 = new Perso(this);
+        let perso_4 = new Perso(this);
+        let perso_5 = new Perso(this);
+        let perso_6 = new Perso(this);
+
+        perso_1.per_ren(100, 120, 'fawkes');
+        this.nick_1 = perso_1.per_ren_Nickname(65, 40, "SIHAM");
+        this.renZ_perso_1 = perso_1.per_renderZone(100, 120, "perso_1");
+        this.renO_perso_1 = perso_1.per_renderOutline(this.renZ_perso_1);
+        this.renZ_nick_perso_1 = perso_1.per_renderZone_nick(100, 120, "perso_1", this.nick_1);
+        this.renO_nick_perso_1 = perso_1.per_renderOutline_nick(this.renZ_nick_perso_1);
+        //this.renZ_perso_2
+        //this.renZ_perso_3
+        //this.renZ_perso_4
+        //this.renZ_perso_5
+        //this.renZ_perso_6
+
+        perso_2.per_ren(1200, 120, 'hutex');
+        perso_2.per_ren_Nickname(1150, 40, "NICOLAS");
+
+        perso_3.per_ren(640, 120, 'robotec');
+        perso_1.per_ren_Nickname(600, 40, "TREVOR", perso_1);
+
+        perso_4.per_ren(1200, 500, 'spectre');
+        perso_1.per_ren_Nickname(1150, 560, "HAKIM", perso_1);
+
+        perso_5.per_ren(100, 500, 'totox');
+        perso_1.per_ren_Nickname(65, 560, "AGHILAS", perso_1);
+
+        perso_6.per_ren(320, 660, 'xmars');
+        perso_6.per_ren_Nickname(300, 740, "ISA");
+
+ 
 
         this.dealText.on('pointerdown', function () {
             self.dealCards();
@@ -555,7 +593,7 @@ export default class Game extends Phaser.Scene {
             if (!dropped) {
                 gameObject.x = gameObject.input.dragStartX;
                 gameObject.y = gameObject.input.dragStartY;
-                gameObject.setScale(0.07);
+                gameObject.setScale(0.06);
             }
         })
 
