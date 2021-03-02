@@ -5,7 +5,7 @@ export default class Generateur {
             return generateur;
         }
 
-        this.gen_renderZone = (x, y, name, generateur) => {
+        this.gen_renderZone = (x, y, name) => {
             let generateurDropZone = scene.add.zone(x, y).setCircleDropZone(35);
             generateurDropZone.setName(name);
             generateurDropZone.setData({ state: 'inactif' });
@@ -14,7 +14,7 @@ export default class Generateur {
 
         this.gen_renderOutline = (generateurDropZone) => {
             var generateurDropZoneOutline = scene.add.graphics();
-            generateurDropZoneOutline.lineStyle(4, 0xffffff);
+            generateurDropZoneOutline.lineStyle(4, 0x999999);
             generateurDropZoneOutline.strokeCircle(generateurDropZone.x, generateurDropZone.y, generateurDropZone.input.hitArea.radius);
             return generateurDropZoneOutline;
         }
