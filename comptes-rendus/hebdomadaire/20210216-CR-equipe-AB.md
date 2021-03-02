@@ -14,7 +14,7 @@
 
 ### Séance du 16/02/2021
 
-Bilan sur le sprint passé positif étant donné que les objectifs ont tous été réalisés. 
+Bilan sur le sprint passé positif étant donné que les objectifs ont tous été réalisés.
 
 Définition des objectifs du prochain sprint et répartition des tâches (voir plus bas).
 
@@ -32,7 +32,7 @@ Ayant assisté à la réunion : Trevör, Nicolas, Youness et Walid
 
 Prise de décision concernant la gamelogic et l'interface de jeu.
 
-L'interface du jeu étant grandement compléxifié par certaines règles spécifiques aux joker, il a été débattu de l'intérêt de modifier les règles ou de complexifier l'interface. 
+L'interface du jeu étant grandement compléxifiée par certaines règles spécifiques aux joker, il a été débattu de l'intérêt de modifier les règles ou de complexifier l'interface.
 
 Il a été décidé de complexifier l'interface temporairement afin de voir si cela pose des problèmes de jouabilités.
 
