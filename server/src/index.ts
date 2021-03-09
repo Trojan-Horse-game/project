@@ -11,7 +11,6 @@ import { createConnection } from "typeorm";
 
 const port = Number(process.env.PORT || 3000);
 const http = require("http").Server(app);
-
 const io = require("socket.io")(http);
 require("./routes/game.routes")(io);
 
