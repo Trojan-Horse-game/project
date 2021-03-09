@@ -1,6 +1,7 @@
 // Required External Modules and Interfaces
 import { Socket } from "socket.io";
 import { Action } from "src/gamelogic/Action";
+import { Card } from "src/gamelogic/Card";
 import { Game } from "../gamelogic/Game";
 import { Player, Species } from "../gamelogic/Players";
 
@@ -28,6 +29,7 @@ function findPlayer(socketId: string, thisgame: Game): Player {
 
 module.exports = function (io: any) {
   io.on("connection", async (socket: Socket) => {
+    // TODO : Vérifier que l'user a un token d'authentification valide ?
     console.log("a user connected");
     // When creating a new game
     socket.on("create game", async (pseudo: string, species: Species) => {
@@ -39,7 +41,7 @@ module.exports = function (io: any) {
       game.addPlayer(player);
       games.push(game);
       io.to(socket.id).emit("game id", game.roomId);
-      console.log("a user created the game : " + game.roomId);
+      console.log(pseudo + " created the game : " + game.roomId);
     });
 
     // When joining a game
@@ -52,7 +54,7 @@ module.exports = function (io: any) {
         let player = new Player(pseudo, species, socket.id);
         thisgame.addPlayer(player);
         io.to(socket.id).emit("game id", thisgame.roomId);
-        io.to(thisgame.roomId).emit("join game", player.pseudo, player.species);
+        io.to(thisgame.roomId).emit("join game", player.pseudo, player.species); // TODO : je crois qu'il ne faut pas utiliser io.to pour faire ça mais io.in
         console.log("a user joined the game " + thisgame.roomId);
       });
     });
@@ -63,7 +65,7 @@ module.exports = function (io: any) {
       thisgame.init();
       for (let player of thisgame.players) {
         io.to(player.socketid).emit("hand", player.hand);
-        io.to(thisgame.roomId).emit("base", player.base);
+        io.to(thisgame.roomId).emit("base", player.base); // TODO : je crois qu'il ne faut pas utiliser io.to pour faire ça mais io.in
       }
     });
 
@@ -73,19 +75,45 @@ module.exports = function (io: any) {
     });
 
     // when a user discard
-    socket.on("discard", async (roomId: string, action: Action) => {
-      // TODO : Find out the objects and the methods which we will use
+    socket.on("discard", async (roomId: string, indexDiscard: number[]) => {
+      let thisgame = findGame(roomId);
+      let player = findPlayer(socket.id, thisgame);
+
+      if (player !== thisgame.currentPlayer) {
+        io.to(socket.id).emit("error", "WRONG_PLAYER"); // TODO : Gérer cette erreur et changer le string en une énum
+      } else {
+        try {
+          thisgame.checkDiscard(indexDiscard);
+
+          let index: number;
+          let cards: Card[] = [];
+          for (index of indexDiscard) {
+            cards.push(thisgame.currentPlayer.hand[index]);
+          }
+
+          socket.to(roomId).emit("discard", indexDiscard, cards);
+
+          thisgame.discardHand(indexDiscard);
+          io.to(socket.id).emit("discarded", thisgame.currentPlayer.hand);
+
+          thisgame.endTurn();
+          io.in(roomId).emit("nextTurn", thisgame.currentPlayer);
+        } catch {
+          io.to(socket.id).emit("error", "WRONG_DISCARDINDX"); // TODO : Gérer cette erreur et changer le string en une énum
+        }
+      }
     });
 
     // When a user sends a message on the chat
     socket.on("chat message", function (roomId: string, msg: string) {
       let player = findPlayer(socket.id, findGame(roomId));
-      io.to(roomId).emit("chat message", player.pseudo, msg);
+      io.to(roomId).emit("chat message", player.pseudo, msg); // TODO : je crois qu'il ne faut pas utiliser io.to pour faire ça mais io.in
     });
 
     // When a user disconnects or abandon the game
     socket.on("disconnecting", (_reason) => {
       for (const room of socket.rooms) {
+        //TODO : Comprendre la ligne ci-dessous et vérifier qu'elle fonctionne bien pour ce qu'on veut faire
         if (room !== socket.id) {
           let thisgame = findGame(room);
           let player = findPlayer(socket.id, thisgame);

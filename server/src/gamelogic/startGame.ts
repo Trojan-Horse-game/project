@@ -521,8 +521,14 @@ async function playTurn(game: Game) {
 
       case "Defausser":
         indexDiscard = await askDiscard(player);
-        game.discardHand(indexDiscard);
-        game.endTurn();
+        try {
+          game.checkDiscard(indexDiscard);
+          game.discardHand(indexDiscard);
+          game.endTurn();
+        } catch (err) {
+          console.log(err);
+          notDone = true;
+        }
         break;
 
       case "Abandon":

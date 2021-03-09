@@ -196,6 +196,17 @@ export class Game {
     );
   }
 
+  /* Check if the discard's indexes are valid */
+  checkDiscard(indexDiscard: number[]) {
+    let i: number;
+
+    for (i of indexDiscard) {
+      if (isNaN(i) || i < 0 || i > 2) {
+        throw "Mauvaise tentative de discard !";
+      }
+    }
+  }
+
   /* Discard cards from the hand of the current player(default)
 
      Put it back at the bottom of the deck
@@ -490,8 +501,8 @@ export class Game {
     if (temp.state === State.Empty)
       throw "Vous ne pouvez pas utiliser un virus sur un générateur inexistant !";
 
-    if (temp.state === State.Immunized)
-      throw "Vous ne pouvez pas utiliser un virus sur un générateur immunisé !";
+    if (temp.state === State.Immunized) Discard;
+    throw "Vous ne pouvez pas utiliser un virus sur un générateur immunisé !";
 
     if (action.card.color === Color.Joker) return;
 
