@@ -99,7 +99,7 @@
       });
 
       socket.on("chat message", (pseudo, message) => {
-        var txt = document.createTextNode(pseudo + ":" + message);
+        var txt = document.createTextNode(pseudo + " : " + message);
         var p = document.createElement("p");
         p.appendChild(txt);
         msg.appendChild(p);

@@ -38,7 +38,7 @@ module.exports = function (io: any) {
       game.roomId = "ROOM-" + socket.id;
       let player = new Player(pseudo, species, socket.id);
       // Assume that specie has already been chosen (to implement in client)
-      game.addPlayer(player);
+      game.addPlayer(player); //TODO : gérer les erreurs, également pour findGame et findPlayer
       games.push(game);
       io.to(socket.id).emit("game id", game.roomId);
       console.log(pseudo + " created the game : " + game.roomId);

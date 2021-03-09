@@ -106,6 +106,8 @@ export class Game {
     if (this.players.length <= 6 && x != -1) {
       this.availableSpecies.splice(x, 1);
       this.players.push(player);
+    } else {
+      throw new Error("Espèce invalide");
     }
   }
 
