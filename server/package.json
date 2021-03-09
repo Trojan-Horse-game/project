@@ -6,7 +6,7 @@
     "lint": "eslint . --ext .ts",
     "start": "ts-node src/index.ts",
     "start:dev": "nodemon",
-    "test": "jest"
+    "test": "jest --watch"
   },
   "nodemonConfig": {
     "watch": [

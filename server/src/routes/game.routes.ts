@@ -25,7 +25,7 @@ function findPlayer(socketId: string, thisgame: Game): Player {
   throw new Error("ERROR : Could not find player !");
 }
 
-module.exports = function (io) {
+module.exports = function (io:any) {
   io.on("connection", async (socket: Socket) => {
     console.log("a user connected");
     // When creating a new game

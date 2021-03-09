@@ -2,25 +2,27 @@
 import app from "../Server";
 import request from "supertest";
 import { User } from "../entity/user";
-import { createConnection } from "typeorm";
 
-let user = {
-  username: "username",
-  password: "password",
-  games: 0,
-  wins: 0,
-};
+jest.useFakeTimers();
 
-beforeAll(() => {
-  createConnection();
-  request(app).post("/api/users/signup").send(user);
-});
+let user = new User();
+user.username = "username"
+user.password = "password"
+user.games = 0
+user.wins = 0
+user.friendship = undefined
 
-describe("GET users/", () => {
-  it("Should return a list of users", async () => {
+// beforeAll(() => {
+//   request(app).post("/api/users/signup").send(user);
+// });
+
+test.only("GET users/", async () => {
+  // it("Should return a list of users", async () => {
     const result = await request(app).get("/api/users/");
+    expect(result.body).not.toBeUndefined();
+    console.log(result.body);
     expect(result.status).toEqual(200);
-  });
+  // });
 });
 
 describe("GET users/:id", () => {
