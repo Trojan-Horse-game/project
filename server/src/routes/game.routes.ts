@@ -71,7 +71,25 @@ module.exports = function (io: any) {
 
     // when a user plays a card
     socket.on("play card", async (roomId: string, action: Action) => {
-      // TODO : Find out the objects and the methods which we will use
+      let thisgame = findGame(roomId);
+      let player = findPlayer(socket.id, thisgame);
+
+      if (player !== thisgame.currentPlayer) {
+        let error = new Error("Ce n'est pas le tour du joueur");
+        io.to(socket.id).emit("error", error);
+      } else {
+        try {
+          thisgame.checkAction(action);
+          socket.to(roomId).emit("playCard", action);
+
+          thisgame.playAction(action);
+          io.to(socket.id).emit("cardPlayed", thisgame.currentPlayer.hand);
+
+          io.in(roomId).emit("nextTurn", thisgame.currentPlayer);
+        } catch (err) {
+          io.to(socket.id).emit("error", err);
+        }
+      }
     });
 
     // when a user discard
@@ -80,7 +98,8 @@ module.exports = function (io: any) {
       let player = findPlayer(socket.id, thisgame);
 
       if (player !== thisgame.currentPlayer) {
-        io.to(socket.id).emit("error", "WRONG_PLAYER"); // TODO : Gérer cette erreur et changer le string en une énum
+        let error = new Error("Ce n'est pas le tour du joueur");
+        io.to(socket.id).emit("error", error);
       } else {
         try {
           thisgame.checkDiscard(indexDiscard);
@@ -98,8 +117,8 @@ module.exports = function (io: any) {
 
           thisgame.endTurn();
           io.in(roomId).emit("nextTurn", thisgame.currentPlayer);
-        } catch {
-          io.to(socket.id).emit("error", "WRONG_DISCARDINDX"); // TODO : Gérer cette erreur et changer le string en une énum
+        } catch (err) {
+          io.to(socket.id).emit("error", err);
         }
       }
     });
@@ -132,3 +151,5 @@ module.exports = function (io: any) {
     });
   });
 };
+
+// TODO : Je crois qu'on peut remplacer les io.to par socket.emit quand on renvoie au sender
