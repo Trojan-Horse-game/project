@@ -501,8 +501,8 @@ export class Game {
     if (temp.state === State.Empty)
       throw "Vous ne pouvez pas utiliser un virus sur un générateur inexistant !";
 
-    if (temp.state === State.Immunized) Discard;
-    throw "Vous ne pouvez pas utiliser un virus sur un générateur immunisé !";
+    if (temp.state === State.Immunized)
+      throw "Vous ne pouvez pas utiliser un virus sur un générateur immunisé !";
 
     if (action.card.color === Color.Joker) return;
 
