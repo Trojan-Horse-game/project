@@ -93,7 +93,7 @@
 
       var room;
 
-      socket.on("Id de la partie", (roomId) => {
+      socket.on("game id", (roomId) => {
         room = roomId;
         console.log(room);
       });
@@ -130,12 +130,12 @@
         }
       });
 
-      let user = {
-        username: "username",
-        password: "password",
-        games: 0,
-        wins: 0,
-      };
+      // let user = {
+      //   username: "username",
+      //   password: "password",
+      //   games: 0,
+      //   wins: 0,
+      // };
 
       // async function getUsers() {
       //   let response = await fetch("http://localhost:3000/api/users/");

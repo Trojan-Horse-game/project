@@ -64,11 +64,6 @@ module.exports = function (io:any) {
         io.to(player.socketid).emit("hand", player.hand);
         io.to(thisgame.roomId).emit("base", player.base);
       }
-      io.to(thisgame.roomId).emit(
-        "deck",
-        thisgame.deck,
-        thisgame.currentPlayer
-      );
     });
 
     // when a user updates the game
