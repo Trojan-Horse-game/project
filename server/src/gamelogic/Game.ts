@@ -237,13 +237,10 @@ export class Game {
 
     this.players.splice(this.currentPlayerIdx, 1);
 
-    if (index === this.currentPlayerIdx) {
-      this.currentPlayerIdx--;
-      this.currentPlayerIdx %= this.players.length;
-    }
-
     if (this.players.length == 1) {
       this.endGame(this.players[0]);
+    } else if (index === this.currentPlayerIdx) {
+      this.endTurn();
     }
   }
 
@@ -257,6 +254,8 @@ export class Game {
     const winner = this.checkForWinner();
     if (winner !== undefined) {
       this.endGame(winner);
+    } else {
+      this.endTurn();
     }
   }
 

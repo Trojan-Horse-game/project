@@ -90,8 +90,15 @@ module.exports = function (io: any) {
           let thisgame = findGame(room);
           let player = findPlayer(socket.id, thisgame);
           let idx = thisgame.players.indexOf(player);
-          thisgame.players.splice(idx, 1);
-          socket.to(room).emit("disconnect", socket.id);
+
+          if (idx == thisgame.currentPlayerIdx) {
+            thisgame.resign();
+            socket.to(room).emit("disconnect", socket.id);
+            socket.to(room).emit("nextTurn", thisgame.currentPlayerIdx);
+          } else {
+            thisgame.resign(idx);
+            socket.to(room).emit("disconnect", socket.id);
+          }
         }
       }
     });
