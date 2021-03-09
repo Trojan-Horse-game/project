@@ -196,7 +196,7 @@ export class Game {
     );
   }
 
-  /* Discard cards from the hand of the current player
+  /* Discard cards from the hand of the current player(default)
 
      Put it back at the bottom of the deck
   */
@@ -209,16 +209,16 @@ export class Game {
     }
   }
 
-  /* Discard cards from slots of the current player
+  /* Discard cards from slots of the current player(default)
 
      Put them back at the bottom of the deck
   */
-  discardBase(index: number[]) {
+  discardBase(index: number[], player = this.currentPlayer) {
     let i: number;
     let oldCard: Card;
 
     for (i of index) {
-      const toDiscard = this.currentPlayer.discardBase(i);
+      const toDiscard = player.discardBase(i);
       for (oldCard of toDiscard) {
         this.deck.unshift(oldCard);
       }
@@ -229,14 +229,18 @@ export class Game {
   
      Discard its hand and its base
   */
-  resign() {
-    console.log("Le joueur " + this.currentPlayer.pseudo + " a abbandonné !");
+  resign(index = this.currentPlayerIdx) {
+    console.log("Le joueur " + this.players[index].pseudo + " a abbandonné !");
 
-    this.discardHand([0, 1, 2]);
+    this.discardHand([0, 1, 2], this.players[index]);
     this.discardBase([0, 1, 2, 3, 4]);
 
     this.players.splice(this.currentPlayerIdx, 1);
-    this.currentPlayerIdx %= this.players.length;
+
+    if (index === this.currentPlayerIdx) {
+      this.currentPlayerIdx--;
+      this.currentPlayerIdx %= this.players.length;
+    }
 
     if (this.players.length == 1) {
       this.endGame(this.players[0]);

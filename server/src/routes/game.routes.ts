@@ -1,5 +1,6 @@
 // Required External Modules and Interfaces
 import { Socket } from "socket.io";
+import { Action } from "src/gamelogic/Action";
 import { Game } from "../gamelogic/Game";
 import { Player, Species } from "../gamelogic/Players";
 
@@ -25,7 +26,7 @@ function findPlayer(socketId: string, thisgame: Game): Player {
   throw new Error("ERROR : Could not find player !");
 }
 
-module.exports = function (io:any) {
+module.exports = function (io: any) {
   io.on("connection", async (socket: Socket) => {
     console.log("a user connected");
     // When creating a new game
@@ -66,8 +67,13 @@ module.exports = function (io:any) {
       }
     });
 
-    // when a user updates the game
-    socket.on("update game", async (roomId: string) => {
+    // when a user plays a card
+    socket.on("play card", async (roomId: string, action: Action) => {
+      // TODO : Find out the objects and the methods which we will use
+    });
+
+    // when a user discard
+    socket.on("discard", async (roomId: string, action: Action) => {
       // TODO : Find out the objects and the methods which we will use
     });
 
@@ -77,7 +83,7 @@ module.exports = function (io:any) {
       io.to(roomId).emit("chat message", player.pseudo, msg);
     });
 
-    // When a user discconnects
+    // When a user disconnects or abandon the game
     socket.on("disconnecting", (_reason) => {
       for (const room of socket.rooms) {
         if (room !== socket.id) {
