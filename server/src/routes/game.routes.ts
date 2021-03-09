@@ -33,6 +33,8 @@ module.exports = function (io: any) {
     console.log("a user connected");
     // When creating a new game
     socket.on("create game", async (pseudo: string, species: Species) => {
+      // TODO : Empêcher de créer une partie si on est déjà dans une autre
+
       socket.join("ROOM-" + socket.id);
       let game = new Game();
       game.roomId = "ROOM-" + socket.id;
@@ -46,6 +48,7 @@ module.exports = function (io: any) {
 
     // When joining a game
     socket.on("join game", async (pseudo: string, roomId: string) => {
+      // TODO : Empêcher de rejoindre une partie si on est déjà dans une autre
       let thisgame = findGame(roomId);
       io.to(socket.id).emit("available species", thisgame.availableSpecies);
       socket.join(thisgame.roomId);
