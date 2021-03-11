@@ -8,6 +8,7 @@ import Login from "../views/Login.vue";
 import Parametres from "../views/Parametres.vue";
 import Regles from "../views/Regles.vue";
 import Profil from "../views/Profil.vue";
+import Amis from "../views/Amis.vue";
 
 Vue.use(VueRouter);
 
