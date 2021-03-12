@@ -29,15 +29,6 @@ a.lienDesactive {
   color: #ff5252;
 }
 
-.titre {
-  font-size: 40px;
-  text-shadow: 1px 2px #000;
-}
-
-.v-label {
-  color: #fff !important;
-}
-
 #container {
   display: -webkit-box;
   display: -ms-flexbox;

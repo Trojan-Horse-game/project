@@ -8,7 +8,6 @@ import store from "./store";
 Vue.config.productionTip = false;
 
 new Vue({
-  store,
   router,
   vuetify,
   render: (h) => h(App)

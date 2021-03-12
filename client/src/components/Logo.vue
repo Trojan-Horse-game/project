@@ -18,7 +18,7 @@ export default {
 
 <style lang="scss" scoped>
 #logo img {
-  width: 300px;
+  width: 450px;
   height: auto;
 }
 
@@ -28,9 +28,5 @@ export default {
   flex-direction: column;
   justify-content: center;
   align-items: center;
-}
-
-.titre {
-  margin: 5px 0px;
 }
 </style>

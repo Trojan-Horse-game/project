@@ -7,14 +7,14 @@
           color="#fff"
           dark
           label="Nom d'utilisateur"
-          v-model="user.username"
+          v-model="form.username"
         />
         <v-text-field
           :type="'password'"
           color="#fff"
           dark
           label="Mot de passe"
-          v-model="user.password"
+          v-model="form.password"
         />
         <p v-if="showError" class="error--text">
           Le nom utilisateur ou le mot de passe sont incorrects.
@@ -23,8 +23,10 @@
           <router-link to="/nouveauCompte">
             <v-btn title="Inscription">Inscription</v-btn></router-link
           >
-          <v-btn title="Valider" type="submit" :disabled="!this.validInput"
-            >Valider</v-btn
+          <router-link to="/menuPrincipal"
+            ><v-btn title="Valider" type="submit" :disabled="!this.validInput"
+              >Valider</v-btn
+            ></router-link
           >
         </div></v-form
       >
@@ -39,38 +41,13 @@ export default {
   data: () => ({
     validInput: false,
     showError: false,
-    user: {
+    form: {
       username: "",
       password: ""
     }
   }),
 
-  computed: {
-    loggedIn() {
-      return this.$store.state.auth.status.loggedIn;
-    }
-  },
-
-  created() {
-    if (this.loggedIn) {
-      this.$router.push("/menuPrincipal");
-    }
-  },
-
-  methods: {
-    login() {
-      this.showError = false;
-      this.$store.dispatch("auth/signin", this.user).then(
-        () => {
-          this.$router.push("/menuPrincipal");
-        },
-        (error) => {
-          this.showError = true;
-          console.error(error);
-        }
-      );
-    }
-  }
+  methods: {}
 };
 </script>
 

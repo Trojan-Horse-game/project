@@ -6,7 +6,9 @@
 ../client/dist
 # don't lint nyc coverage output
 ../coverage
-# don't lint log
-../server/jet-logger.log
 # don't lint .json
 ../*.json
+../**/*.json
+
+# temp fix : don't lint test files on client
+../client/src/tests
