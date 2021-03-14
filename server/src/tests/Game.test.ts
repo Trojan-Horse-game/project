@@ -17,6 +17,63 @@ beforeEach(() => {
   game.init();
   game.currentPlayerIdx = 0;
 });
+describe("small checkup", () => {
+  let indx = 0;
+  let decklen = 0;
+  let handlen = 0;
+  let similiarty = 0;
+  let cardrawed = 3;
+  let nberplayer = 0;
+  let tmpArrlen = 0;
+  const temparray: any[] = [];
+  const temparray1: any[] = [];
+
+  test("Check if the % shuffling cards is lesser than 70% ", () => {
+    decklen = game.deck.length;
+
+    for (indx = 0; indx < decklen; ++indx) temparray[indx] = game.deck[indx];
+
+    game.shuffleDeck();
+
+    for (indx = 0; indx < decklen; ++indx)
+      if (temparray[indx] == game.deck[indx]) similiarty++;
+
+    similiarty = (similiarty * 100) / decklen;
+    expect(similiarty).toBeLessThan(70);
+  });
+  test("Check if people can draw cards ", () => {
+    handlen = game.currentPlayer.hand.length;
+    game.draw(cardrawed);
+    cardrawed = cardrawed + handlen;
+
+    expect(cardrawed).toBe(game.currentPlayer.hand.length);
+  });
+  test("Check if the distribution went smoothly ", () => {
+    nberplayer = game.players.length;
+    while (nberplayer != 0) {
+      temparray[indx] = game.players[indx].hand.length;
+      nberplayer--;
+      game.players[indx++];
+    }
+    //distribute 3 cards
+    game.distribute();
+    nberplayer = game.players.length;
+    indx = 0;
+
+    while (nberplayer != 0) {
+      temparray1[indx] = game.players[indx].hand.length;
+      nberplayer--;
+      game.players[indx++];
+    }
+    indx = 0;
+    tmpArrlen = temparray.length;
+
+    while (tmpArrlen != 0) {
+      expect(temparray[indx] + 3).toBe(temparray1[indx]);
+      tmpArrlen--;
+    }
+  });
+});
 
 describe("checkActionGenerator", () => {
   let action: Action;
