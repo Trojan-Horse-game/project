@@ -93,7 +93,7 @@
                       v-show="!this.showFriendInput"
                       ><v-icon>mdi-account-plus</v-icon></v-btn
                     >
-                    <v-btn text @click="addFriendDialog = false">
+                    <v-btn text @click="dialog = false">
                       Fermer
                     </v-btn>
                   </v-card-actions>
@@ -135,7 +135,7 @@
                   <v-divider></v-divider>
 
                   <v-card-actions>
-                    <v-btn text @click="addFriendDialog = false">
+                    <v-btn text @click="dialog = false">
                       Fermer
                     </v-btn>
                   </v-card-actions>
@@ -163,7 +163,6 @@ export default {
   data: () => ({
     dialog: false,
     tab: null,
-    addFriendDialog: false,
     newFriend: "",
     showFriendInput: false,
     validInput: false,
