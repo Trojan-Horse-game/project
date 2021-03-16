@@ -64,7 +64,7 @@ export default {
         () => {
           this.$router.push("/menuPrincipal");
         },
-        (error) => {
+        error => {
           this.showError = true;
           console.error(error);
         }

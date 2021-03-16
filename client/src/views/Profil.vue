@@ -168,7 +168,7 @@ export default {
     showFriendInput: false,
     validInput: false,
     rules: {
-      required: (value) => !!value || "Champ requis"
+      required: value => !!value || "Champ requis"
     }
   }),
 
@@ -230,19 +230,19 @@ export default {
     },
 
     deleteFriend(friendToDelete) {
-      this.friends = this.friends.filter((friend) => friend != friendToDelete);
+      this.friends = this.friends.filter(friend => friend != friendToDelete);
     },
 
     acceptFriendRequest(friendRequest) {
       this.addFriend(friendRequest);
       this.pendingFriendRequests = this.pendingFriendRequests.filter(
-        (friend) => friend != friendRequest
+        friend => friend != friendRequest
       );
     },
 
     declineFriendRequest(friendRequest) {
       this.pendingFriendRequests = this.pendingFriendRequests.filter(
-        (friend) => friend != friendRequest
+        friend => friend != friendRequest
       );
     }
   }

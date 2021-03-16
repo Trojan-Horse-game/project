@@ -49,22 +49,22 @@ export default {
     username: "",
 
     mailRules: [
-      (mail) => !!mail || "Adresse mail requise",
-      (mail) => {
+      mail => !!mail || "Adresse mail requise",
+      mail => {
         const mailPattern = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
         return (mail && mailPattern.test(mail)) || "Adresse mail invalide";
       }
     ],
 
     passwordRules: [
-      (password) => !!password || "Mot de passe requis",
-      (password) =>
+      password => !!password || "Mot de passe requis",
+      password =>
         (password && password.length >= 8) ||
         "Le mot de passe doit faire au moins 8 caractères"
     ],
     usernameRules: [
-      (username) => !!username || "Nom utilisateur requis",
-      (username) => {
+      username => !!username || "Nom utilisateur requis",
+      username => {
         const usernamePattern = /^[\w]{2,32}$/;
         return (
           usernamePattern.test(username) ||
