@@ -28,18 +28,27 @@ describe("small checkup", () => {
   const temparray: any[] = [];
   const temparray1: any[] = [];
 
-  test("Check if the % shuffling cards is lesser than 70% ", () => {
+  test("Check if the % of erreur is lesser than 5% ", () => {
+    jest.spyOn(global.Math, 'random').mockReturnValue(0.5);
+    game.deck = [];
+    game.createDeck();
     decklen = game.deck.length;
 
-    for (indx = 0; indx < decklen; ++indx) temparray[indx] = game.deck[indx];
+    for (indx = 0; indx < decklen; ++indx)
+      temparray[indx] = game.deck[indx];
 
     game.shuffleDeck();
+   
 
     for (indx = 0; indx < decklen; ++indx)
-      if (temparray[indx] == game.deck[indx]) similiarty++;
+      if ( game.deck[indx] === temparray[indx] &&
+         temparray[indx].color == game.deck[indx].color ){
+            similiarty++;
+        
+      }
+    similiarty = (similiarty * decklen) / 100 ;
 
-    similiarty = (similiarty * 100) / decklen;
-    expect(similiarty).toBeLessThan(70);
+    expect(similiarty).toBeLessThan(5);
   });
   test("Check if people can draw cards ", () => {
     handlen = game.currentPlayer.hand.length;
