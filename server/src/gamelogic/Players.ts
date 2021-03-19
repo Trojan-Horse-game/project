@@ -13,6 +13,7 @@ export enum Species {
 /* A class to represent a player */
 export class Player {
   pseudo: string;
+  socketid: string = ""
   species: Species;
   hand: Card[] = [];
   base: GeneratorSlot[] = [];
