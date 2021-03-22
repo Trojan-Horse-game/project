@@ -35,10 +35,8 @@ module.exports = function (io: any) {
       // TODO : Empêcher de créer une partie si on est déjà dans une autre
       try {
         socket.join("ROOM-" + socket.id);
-        let game = new Game();
-        game.roomId = "ROOM-" + socket.id;
-        let player = new Player(pseudo, species);
-        player.socketid = socket.id; //TODO : créer un constructeur pour ça
+        let game = new Game("ROOM-" + socket.id);
+        let player = new Player(pseudo, species, socket.id);
         // Assume that specie has already been chosen (to implement in client)
         game.addPlayer(player);
         games.push(game);
@@ -57,8 +55,8 @@ module.exports = function (io: any) {
         socket.join(thisgame.roomId);
 
         io.on("choose species", (species: Species) => {
-          let player = new Player(pseudo, species); //TODO : changer constructeur
-          (player.socketid = socket.id), thisgame.addPlayer(player);
+          let player = new Player(pseudo, species, socket.id);
+          thisgame.addPlayer(player);
           socket.emit("game id", thisgame.roomId);
           io.in(thisgame.roomId).emit(
             "join game",
@@ -175,6 +173,5 @@ module.exports = function (io: any) {
   });
 };
 
-//TODO: constructeur socketid et gameid
 //TODO: optimiser l'envoi de paquets
 // TODO : Je crois qu'on peut remplacer les io.to par socket.emit quand on renvoie au sender

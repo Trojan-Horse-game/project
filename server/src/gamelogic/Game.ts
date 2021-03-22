@@ -12,12 +12,13 @@ import { searchVirusToClean, supprVirusToClean } from "./SearchingVirus";
 export class Game {
   players: Player[] = [];
   deck: Card[] = [];
-  roomId: string = "";
+  roomId: string;
   currentPlayerIdx = 0;
   inProgress = false;
   availableSpecies: Species[];
 
-  constructor() {
+  constructor(id?: string) {
+    this.roomId = id || "";
     this.availableSpecies = [
       Species.Hutex,
       Species.Sonyas,
