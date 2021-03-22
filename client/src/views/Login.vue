@@ -74,4 +74,5 @@ export default {
 };
 </script>
 
+<style scoped lang="css" src="../assets/scss/index.css"></style>
 <style scoped lang="css" src="../assets/scss/login.css"></style>

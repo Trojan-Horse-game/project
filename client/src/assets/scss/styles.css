@@ -1,9 +1,24 @@
+@font-face {
+  font-family: 'Gagalin';
+  src: url("fonts/Gagalin-Regular.woff2") format("woff2"), url("fonts/Gagalin-Regular.woff") format("woff"), url("fonts/Gagalin-Regular.ttf") format("truetype");
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
 html {
-  height: 100vh;
+  max-height: 810px;
+  max-width: 1440px;
+  height: 810px;
+  width: 1440px;
 }
 
 body {
-  min-height: 100vh;
+  min-height: 810px;
+}
+
+.v-application, body {
+  font-family: "Gagalin", sans-serif !important;
 }
 
 #app {

@@ -1,76 +1,64 @@
 <template>
-  <div id="container">
-    <logo title="Les Cavaliers de Troie" />
-
-    <div id="boutons">
-      <div id="boutons-partie">
-        <v-btn title="Nouvelle partie">Nouvelle partie</v-btn>
-        <v-btn title="Rejoindre une partie">Rejoindre une partie</v-btn>
-
-        <div id="boutons-divers">
-          <router-link to="/parametres"
-            ><v-btn title="Paramètres" x-large icon
-              ><v-icon>mdi-cog</v-icon></v-btn
-            ></router-link
-          >
+  <v-app>
+    <div id="container">
+      <div id="background">
+        <img src="Design/MenuPrincipal.gif" usemap="#image-map" />
+        <map name="image-map">
+          <router-link to="#">
+            <area
+              target="_self"
+              alt="Lancer une partie"
+              title="Lancer une partie"
+              coords="554,298,848,405"
+              shape="rect"
+            />
+          </router-link>
+          <router-link to="#">
+            <area
+              target="_self"
+              alt="Rejoindre une partie"
+              title="Rejoindre une partie"
+              coords="554,461,848,569"
+              shape="rect"
+            />
+          </router-link>
+          <router-link to="/parametres">
+            <area
+              target="_self"
+              alt="Paramètres"
+              title="Paramètres"
+              coords="584,664,34"
+              shape="circle"
+            />
+          </router-link>
           <router-link to="/reglesDuJeu">
-            <v-btn title="Aide" x-large icon
-              ><v-icon>mdi-help-circle</v-icon></v-btn
-            ></router-link
-          >
+            <area
+              target="_self"
+              alt="Règles du jeu"
+              title="Règles du jeu"
+              coords="689,664,33"
+              shape="circle"
+            />
+          </router-link>
           <router-link to="/Profil">
-            <v-btn title="Profil" x-large icon
-              ><v-icon>mdi-account-box</v-icon></v-btn
-            ></router-link
-          >
-        </div>
+            <area
+              target="_self"
+              alt="Profil"
+              title="Profil"
+              coords="796,663,33"
+              shape="circle"
+            />
+          </router-link>
+        </map>
       </div>
     </div>
-  </div>
+  </v-app>
 </template>
 
-<script>
-import Logo from "../components/Logo.vue";
-export default {
-  components: { logo: Logo }
-};
-</script>
-
-<style lang="css" scoped>
-#boutons-divers .v-btn {
-  background-color: transparent !important;
-}
-
-#container {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  height: 100vh;
-}
-
-#boutons {
-  width: 450px;
-  display: flex;
-  flex-direction: column;
-}
-
-#boutons div {
+<style scoped>
+#background img {
   width: 100%;
-  display: flex;
-}
-
-#boutons-partie {
-  flex-direction: column;
-}
-
-#boutons-partie .v-btn {
-  margin: 0px 0px 20px 0px;
-}
-
-#boutons-divers {
-  flex-direction: row;
-  justify-content: space-around;
-  font-size: 32px;
+  height: 100%;
+  z-index: -1;
 }
 </style>

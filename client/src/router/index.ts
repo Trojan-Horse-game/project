@@ -8,7 +8,7 @@ import Login from "../views/Login.vue";
 import Parametres from "../views/Parametres.vue";
 import Regles from "../views/Regles.vue";
 import Profil from "../views/Profil.vue";
-import Amis from "../views/Amis.vue";
+import Test from "../views/Test.vue";
 
 Vue.use(VueRouter);
 
@@ -18,57 +18,65 @@ const routes: Array<RouteConfig> = [
     name: "Landing Page",
     component: LandingPage,
     meta: {
-      title: "Les Cavaliers de Troie - Bienvenue"
-    }
+      title: "Les Cavaliers de Troie - Bienvenue",
+    },
   },
   {
     path: "/nouveauCompte",
     name: "Nouveau compte",
     component: NouveauCompte,
     meta: {
-      title: "Les Cavaliers de Troie - Nouveau compte"
-    }
+      title: "Les Cavaliers de Troie - Nouveau compte",
+    },
   },
   {
     path: "/menuPrincipal",
     name: "Menu principal",
     component: MenuPrincipal,
     meta: {
-      title: "Les Cavaliers de Troie - Menu principal"
-    }
+      title: "Les Cavaliers de Troie - Menu principal",
+    },
   },
   {
     path: "/login",
     name: "Login",
     component: Login,
     meta: {
-      title: "Les Cavaliers de Troie - Login"
-    }
+      title: "Les Cavaliers de Troie - Login",
+    },
   },
   {
     path: "/parametres",
     name: "Paramètres",
     component: Parametres,
     meta: {
-      title: "Les Cavaliers de Troie - Parametres"
-    }
+      title: "Les Cavaliers de Troie - Parametres",
+    },
   },
   {
     path: "/reglesDuJeu",
     name: "Règles du jeu",
     component: Regles,
     meta: {
-      title: "Les Cavaliers de Troie - Règles du jeu"
-    }
+      title: "Les Cavaliers de Troie - Règles du jeu",
+    },
   },
   {
     path: "/profil",
     name: "Profil",
     component: Profil,
     meta: {
-      title: "Les Cavaliers de Troie - Profil"
-    }
-  }
+      title: "Les Cavaliers de Troie - Profil",
+    },
+  },
+  {
+    path: "/Test",
+    name: "Test",
+    component: Test,
+    meta: {
+      title: "Les Cavaliers de Troie - Test",
+    },
+  },
 ];
 
 const router = new VueRouter({

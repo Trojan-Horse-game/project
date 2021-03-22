@@ -1,15 +1,29 @@
 @import "variables.scss";
 
-html {
-  height: 100vh;
+@font-face {
+    font-family: 'Gagalin';
+    src: url('fonts/Gagalin-Regular.woff2') format('woff2'),
+        url('fonts/Gagalin-Regular.woff') format('woff'),
+        url('fonts/Gagalin-Regular.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+    font-display: swap;
 }
-body {
-  min-height: 100vh;
+
+
+html, body {
+  max-height: 810px;
+  max-width: 1440px;
+  height: 810px;
+  width: 1440px;
+}
+
+.v-application, body {
+  font-family: 'Gagalin', sans-serif!important;
 }
 
 #app {
-  background-color: $lightGrey;
-  background-image: linear-gradient(315deg, $darkBlue 0%, $lightGrey 74%);
+  background-color: #171717;
   color: #fff;
 }
 

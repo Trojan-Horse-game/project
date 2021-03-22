@@ -20,11 +20,11 @@
     "extends": [
       "plugin:vue/essential",
       "eslint:recommended",
-      "plugin:vue/base",
       "@vue/typescript/recommended",
       "@vue/prettier",
       "@vue/prettier/@typescript-eslint",
-      "plugin:@typescript-eslint/recommended"
+      "plugin:@typescript-eslint/recommended",
+      "plugin:vue/base"
     ],
     "parserOptions": {
       "ecmaVersion": 2020
@@ -103,34 +103,5 @@
     "vuetify-loader": "^1.7.0",
     "vuex": "^3.6.2",
     "vuex-persistedstate": "^4.0.0-beta.3"
-  },
-  "eslintConfig": {
-    "parser": "@typescript-eslint/parser",
-    "plugins": [
-      "@typescript-eslint"
-    ],
-    "extends": [
-      "plugin:vue/essential",
-      "eslint:recommended",
-      "@vue/typescript/recommended",
-      "@vue/prettier",
-      "@vue/prettier/@typescript-eslint",
-      "plugin:@typescript-eslint/recommended",
-      "plugin:vue/base"
-    ],
-    "parserOptions": {
-      "ecmaVersion": 2020
-    },
-    "rules": {
-      "max-len": [
-        "error",
-        {
-          "code": 100
-        }
-      ]
-    }
-  },
-  "eslintIgnore": [
-    "build.ts"
-  ]
+  }
 }

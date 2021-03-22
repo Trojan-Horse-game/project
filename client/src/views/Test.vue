@@ -321,7 +321,7 @@ $gris: #b9bab9;
 
 #content {
   width: 540px;
-  height: 517px;
+  height: 497px;
   top: 156px;
   left: 459px;
   z-index: 0;
@@ -365,7 +365,6 @@ table {
 }
 
 #stats {
-  margin: 5px 0px;
   height: 10%;
 }
 
@@ -375,10 +374,6 @@ table {
 
 #infos .element {
   margin: 0px 10px 0px 0px;
-}
-
-#infos .value {
-  text-align: center;
 }
 
 #stats .element {
@@ -393,13 +388,12 @@ table {
 
 #buttons-row {
   display: flex;
-  justify-content: space-evenly;
+  justify-content: center;
 }
 
 #buttons-row .v-btn {
   background-color: transparent !important;
   color: #000 !important;
-  border: 1px solid #000;
 }
 
 li {

@@ -1,28 +1,40 @@
 <template>
-  <div id="container">
-    <logo title="Les Cavaliers de Troie" />
+  <v-app>
+    <div id="background">
+      <img src="Design/Home.gif" usemap="#image-map" />
 
-    <div id="buttons">
-      <router-link to="nouveauCompte"
-        ><v-btn title="Créer un nouveau compte"
-          >Créer un nouveau compte</v-btn
-        ></router-link
-      >
-      <router-link to="login"
-        ><v-btn title="S'identifier">S'identifier</v-btn></router-link
-      >
+      <div id="buttons">
+        <map name="image-map">
+          <router-link to="nouveauCompte">
+            <area
+              target="_self"
+              alt="Inscription"
+              title="Inscription"
+              coords="390,544,107,440"
+              shape="rect"
+            />
+          </router-link>
+
+          <router-link to="Login">
+            <area
+              target="_self"
+              alt="Connexion"
+              title="Connexion"
+              coords="110,599,390,701"
+              shape="rect"
+            />
+          </router-link>
+        </map>
+      </div>
     </div>
-  </div>
+  </v-app>
 </template>
 
-<script lang="ts">
-import Logo from "../components/Logo.vue";
-export default {
-  components: { logo: Logo }
-};
-</script>
-
-<style lang="scss">
-@import "../assets/scss/index.css";
+<style scoped>
+#background img {
+  width: 100%;
+  height: 100%;
+}
 </style>
-<style scoped lang="css" src="../assets/scss/landingPage.css"></style>
+
+<style lang="css" src="../assets/scss/index.css"></style>
