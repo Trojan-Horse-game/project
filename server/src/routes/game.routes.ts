@@ -5,7 +5,7 @@ import { Card } from "src/gamelogic/Card";
 import { Game } from "../gamelogic/Game";
 import { Player, Species } from "../gamelogic/Players";
 
-let games: Game[] = []
+let games: Game[] = [];
 
 // Finds a game from a roomId
 export function findGame(roomId: string, games: Game[]): Game {
@@ -14,7 +14,7 @@ export function findGame(roomId: string, games: Game[]): Game {
       return game;
     }
   }
-  throw new Error("ERROR : Could not find game !");
+  throw "ERROR: Could not find game !";
 }
 
 // Finds a player in a game from a socketId
@@ -24,7 +24,7 @@ export function findPlayer(socketId: string, thisgame: Game): Player {
       return player;
     }
   }
-  throw new Error("ERROR : Could not find player !");
+  throw "ERROR: Could not find player !";
 }
 
 module.exports = function (io: any) {
@@ -38,7 +38,7 @@ module.exports = function (io: any) {
         let game = new Game();
         game.roomId = "ROOM-" + socket.id;
         let player = new Player(pseudo, species);
-        player.socketid = socket.id //TODO : créer un constructeur pour ça
+        player.socketid = socket.id; //TODO : créer un constructeur pour ça
         // Assume that specie has already been chosen (to implement in client)
         game.addPlayer(player);
         games.push(game);
@@ -58,8 +58,7 @@ module.exports = function (io: any) {
 
         io.on("choose species", (species: Species) => {
           let player = new Player(pseudo, species); //TODO : changer constructeur
-          player.socketid = socket.id,
-          thisgame.addPlayer(player);
+          (player.socketid = socket.id), thisgame.addPlayer(player);
           socket.emit("game id", thisgame.roomId);
           io.in(thisgame.roomId).emit(
             "join game",
@@ -83,13 +82,13 @@ module.exports = function (io: any) {
     });
 
     // when a user plays a card
-    socket.on("play card",  (roomId: string, action: Action) => {
-      let thisgame = findGame(roomId);
+    socket.on("play card", (roomId: string, action: Action) => {
+      let thisgame = findGame(roomId, games);
       let player = findPlayer(socket.id, thisgame);
 
       if (player !== thisgame.currentPlayer) {
-        let error = new Error("Ce n'est pas le tour du joueur");
-        io.to(socket.id).emit("error", error);
+        let error = "Ce n'est pas le tour du joueur";
+        io.to(socket.id).emit("oops", error);
       } else {
         try {
           thisgame.checkAction(action);
@@ -100,19 +99,19 @@ module.exports = function (io: any) {
 
           io.in(roomId).emit("nextTurn", thisgame.currentPlayer);
         } catch (err) {
-          io.to(socket.id).emit("error", err);
+          io.to(socket.id).emit("wrongAction", err);
         }
       }
     });
 
     // when a user discard
-    socket.on("discard",  (roomId: string, indexDiscard: number[]) => {
-      let thisgame = findGame(roomId);
+    socket.on("discard", (roomId: string, indexDiscard: number[]) => {
+      let thisgame = findGame(roomId, games);
       let player = findPlayer(socket.id, thisgame);
 
       if (player !== thisgame.currentPlayer) {
-        let error = new Error("Ce n'est pas le tour du joueur");
-        io.to(socket.id).emit("error", error);
+        let error = "Ce n'est pas le tour du joueur";
+        io.to(socket.id).emit("oops", error);
       } else {
         try {
           thisgame.checkDiscard(indexDiscard);
@@ -131,7 +130,7 @@ module.exports = function (io: any) {
           thisgame.endTurn();
           io.in(roomId).emit("nextTurn", thisgame.currentPlayer);
         } catch (err) {
-          io.to(socket.id).emit("error", err);
+          io.to(socket.id).emit("oops", err);
         }
       }
     });
@@ -164,4 +163,7 @@ module.exports = function (io: any) {
   });
 };
 
+// TODO: Try/catch findplayer et findgame
+//TODO: constructeur socketid et gameid
+//TODO: optimiser l'envoi de paquets
 // TODO : Je crois qu'on peut remplacer les io.to par socket.emit quand on renvoie au sender

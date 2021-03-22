@@ -106,7 +106,7 @@ export class Game {
       this.availableSpecies.splice(x, 1);
       this.players.push(player);
     } else {
-      throw new Error("Espèce invalide");
+      throw "Espèce invalide";
     }
   }
 
@@ -157,7 +157,7 @@ export class Game {
     for (i = 0; i < n; i++) {
       card = this.deck.pop();
       if (card === undefined) {
-        throw new Error("Empty deck");
+        throw "Empty deck";
       }
       this.currentPlayer.draw(card);
     }
@@ -205,7 +205,7 @@ export class Game {
 
     for (i of indexDiscard) {
       if (isNaN(i) || i < 0 || i > 2) {
-        throw new Error("Discard : mauvaise index de discard");
+        throw "Discard : mauvaise index de discard";
       }
     }
   }
@@ -297,17 +297,17 @@ export class Game {
   checkActionSpe(action: Action) {
     const cardInHand = this.currentPlayer.hand[action.indexInHand];
     if (!(cardInHand instanceof SpecialCard)) {
-      throw new Error("Action : pas d'action en main à l'index");
+      throw "Action : pas d'action en main à l'index";
     }
 
     if (cardInHand.color !== action.card.color) {
-      throw new Error("Action : mauvaise action en main");
+      throw "Action : mauvaise action en main";
     }
 
     switch (action.card.color) {
       case Color.Water: // Identity theft
         if (action.target[0] === undefined)
-          throw new Error("Action id theft : pas de joueur cible");
+          throw "Action id theft : pas de joueur cible";
         break;
 
       case Color.Joker: // System cleaning
@@ -345,33 +345,33 @@ export class Game {
 
     for (i = 0; i < action.target.length; i++) {
       if (action.target[i] === undefined) {
-        throw new Error("Action cleaning : pas de joueur cible");
+        throw "Action cleaning : pas de joueur cible";
       }
       if (action.target[i] === this.currentPlayerIdx)
-        throw new Error("Action cleaning : mauvais joueur cible");
+        throw "Action cleaning : mauvais joueur cible";
 
       if (action.slotTarget[2 * i] === undefined) {
-        throw new Error("Action cleaning : pas de générateur source");
+        throw "Action cleaning : pas de générateur source";
       }
 
       if (action.slotTarget[2 * i + 1] === undefined) {
-        throw new Error("Action cleaning : pas de générateur cible");
+        throw "Action cleaning : pas de générateur cible";
       }
 
       dst = this.players[action.target[i]].base[action.slotTarget[2 * i + 1]];
       src = this.currentPlayer.base[action.slotTarget[2 * i]];
       if (src.state !== State.Virused)
-        throw new Error("Action cleaning : Générateur source non infecté");
+        throw "Action cleaning : Générateur source non infecté";
 
       if (dst.state !== State.Generator)
-        throw new Error("Action cleaning : Générateur cible non sain");
+        throw "Action cleaning : Générateur cible non sain";
 
       if (
         src.cards[1].color !== Color.Joker &&
         dst.color !== Color.Joker &&
         src.cards[1].color !== dst.color
       ) {
-        throw new Error("Action cleaning : Générateur cible incompatible");
+        throw "Action cleaning : Générateur cible incompatible";
       }
 
       supprVirusToClean(
@@ -383,7 +383,7 @@ export class Game {
     }
 
     if (candidates.length !== 0)
-      throw new Error("Action cleaning : il reste du ménage à faire");
+      throw "Action cleaning : il reste du ménage à faire";
   }
 
   /* Check if a forced exchange action is valid
@@ -401,26 +401,26 @@ export class Game {
     let secondDst: GeneratorSlot;
 
     if (action.target[0] === undefined)
-      throw new Error("Action exchange : pas de joueur cible");
+      throw "Action exchange : pas de joueur cible";
     if (action.slotTarget[0] === undefined)
-      throw new Error("Action exchange : pas de générateur cible");
+      throw "Action exchange : pas de générateur cible";
     if (action.target[1] === undefined)
-      throw new Error("Action exchange : pas de second joueur cible");
+      throw "Action exchange : pas de second joueur cible";
     if (action.slotTarget[1] === undefined)
-      throw new Error("Action exchange : pas de second générateur cible");
+      throw "Action exchange : pas de second générateur cible";
 
     const firstSrc = this.players[action.target[0]].base[action.slotTarget[0]];
     if (firstSrc.state === State.Immunized)
-      throw new Error("Action exchange : générateur cible immunisé");
+      throw "Action exchange : générateur cible immunisé";
 
     if (firstSrc.state === State.Empty)
-      throw new Error("Action exchange : générateur cible inexistant");
+      throw "Action exchange : générateur cible inexistant";
 
     const secondSrc = this.players[action.target[1]].base[action.slotTarget[1]];
     if (secondSrc.state === State.Immunized)
-      throw new Error("Action exchange : générateur cible immunisé");
+      throw "Action exchange : générateur cible immunisé";
     if (secondSrc.state === State.Empty)
-      throw new Error("Action exchange : générateur cible inexistant");
+      throw "Action exchange : générateur cible inexistant";
 
     if (firstSrc.color !== secondSrc.color) {
       baseIdx = this.players[action.target[1]].getBase(firstSrc.color);
@@ -430,9 +430,9 @@ export class Game {
       secondDst = this.players[action.target[0]].base[baseIdx];
 
       if (firstDst.state !== State.Empty)
-        throw new Error("Action exchange : échange créant un doublon");
+        throw "Action exchange : échange créant un doublon";
       if (secondDst.state !== State.Empty)
-        throw new Error("Action exchange : échange créant un doublon");
+        throw "Action exchange : échange créant un doublon";
     }
   }
 
@@ -447,21 +447,21 @@ export class Game {
   */
   checkActionLoan(action: Action) {
     if (action.target[0] === undefined)
-      throw new Error("ActionLoan : pas de joueur cible");
+      throw "ActionLoan : pas de joueur cible";
 
     if (action.slotTarget[0] === undefined)
-      throw new Error("ActionLoan : pas de générateur cible");
+      throw "ActionLoan : pas de générateur cible";
 
     const loanSrc = this.players[action.target[0]].base[action.slotTarget[0]];
     if (loanSrc.state === State.Immunized)
-      throw new Error("ActionLoan : générateur cible immunisé !");
+      throw "ActionLoan : générateur cible immunisé !";
 
     if (loanSrc.state === State.Empty)
-      throw new Error("ActionLoan : générateur cible inexistant !");
+      throw "ActionLoan : générateur cible inexistant !";
 
     const loanDst = this.currentPlayer.base[action.slotTarget[0]];
     if (loanDst.state !== State.Empty)
-      throw new Error("ActionLoan : générateur cible déjà posséder");
+      throw "ActionLoan : générateur cible déjà posséder";
   }
 
   /* Check if a Virus action is valid
@@ -483,25 +483,23 @@ export class Game {
   checkActionVirus(action: Action) {
     const cardInHand = this.currentPlayer.hand[action.indexInHand];
     if (!(cardInHand instanceof VirusCard)) {
-      throw new Error("Virus : pas de virus en main à l'index");
+      throw "Virus : pas de virus en main à l'index";
     }
 
     if (cardInHand.color !== action.card.color) {
-      throw new Error("Virus : virus de la mauvaise couleur");
+      throw "Virus : virus de la mauvaise couleur";
     }
 
-    if (action.target[0] === undefined)
-      throw new Error("Virus : pas de joueur cible");
+    if (action.target[0] === undefined) throw "Virus : pas de joueur cible";
 
     if (action.slotTarget[0] === undefined)
-      throw new Error("Virus : pas de générateur cible");
+      throw "Virus : pas de générateur cible";
 
     const temp = this.players[action.target[0]].base[action.slotTarget[0]];
-    if (temp.state === State.Empty)
-      throw new Error("Virus : générateur cible inexistant");
+    if (temp.state === State.Empty) throw "Virus : générateur cible inexistant";
 
     if (temp.state === State.Immunized)
-      throw new Error("Virus : générateur cible immunisé");
+      throw "Virus : générateur cible immunisé";
 
     if (action.card.color === Color.Joker) return;
 
@@ -511,7 +509,7 @@ export class Game {
       return;
 
     if (temp.color !== action.card.color)
-      throw new Error("Virus : générateur cible de couleur incompatible");
+      throw "Virus : générateur cible de couleur incompatible";
     return;
   }
 
@@ -534,22 +532,22 @@ export class Game {
   checkActionFirewall(action: Action) {
     const cardInHand = this.currentPlayer.hand[action.indexInHand];
     if (!(cardInHand instanceof FirewallCard)) {
-      throw new Error("Firewall : pas de pare-feu en main à l'index");
+      throw "Firewall : pas de pare-feu en main à l'index";
     }
 
     if (cardInHand.color !== action.card.color) {
-      throw new Error("Firewall : pare-feu de la mauvaise couleur");
+      throw "Firewall : pare-feu de la mauvaise couleur";
     }
 
     if (action.slotTarget[0] === undefined)
-      throw new Error("Firewall : pas de générateur cible");
+      throw "Firewall : pas de générateur cible";
 
     const temp = this.currentPlayer.base[action.slotTarget[0]];
     if (temp.state === State.Empty)
-      throw new Error("Firewall : générateur cible indexistant");
+      throw "Firewall : générateur cible indexistant";
 
     if (temp.state === State.Immunized)
-      throw new Error("Firewall : générateur cible immunisé");
+      throw "Firewall : générateur cible immunisé";
 
     if (action.card.color === Color.Joker) return;
 
@@ -559,7 +557,7 @@ export class Game {
       return;
 
     if (temp.color !== action.card.color)
-      throw new Error("Firewall : générateur cible de couleur incompatible");
+      throw "Firewall : générateur cible de couleur incompatible";
     return;
   }
 
@@ -574,16 +572,16 @@ export class Game {
   checkActionGenerator(action: Action) {
     const cardInHand = this.currentPlayer.hand[action.indexInHand];
     if (!(cardInHand instanceof GeneratorCard)) {
-      throw new Error("Generator : pas de générateur en main à l'index");
+      throw "Generator : pas de générateur en main à l'index";
     }
 
     if (cardInHand.color !== action.card.color) {
-      throw new Error("Generator : mauvaise couleur de générateur");
+      throw "Generator : mauvaise couleur de générateur";
     }
 
     const baseSlotTarget = this.currentPlayer.getBase(action.card.color);
     if (this.currentPlayer.base[baseSlotTarget].state !== State.Empty)
-      throw new Error("Generator : générateur déjà placé");
+      throw "Generator : générateur déjà placé";
 
     return;
   }
