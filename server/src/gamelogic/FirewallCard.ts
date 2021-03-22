@@ -14,10 +14,13 @@ export class FirewallCard implements Card {
   action(game: Game, action: Action): void {
     const indx = game.currentPlayer.getBase(action.slotTarget[0]);
     const state = game.currentPlayer.base[indx].addFireWall(action.card);
-    if (state === State.Generator)
+    if (state === State.Generator) {
       game.deck.unshift(game.currentPlayer.base[indx].cards[1]);
+      game.deck.unshift(game.currentPlayer.base[indx].cards[2]);
+      game.currentPlayer.base[indx].cards.splice(1, 2);
+    }
 
-    game.discardHand([action.indexInHand]);
+    game.currentPlayer.discardHand(action.indexInHand);
   }
 
   toString(): string {

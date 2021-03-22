@@ -5,10 +5,10 @@ import { Card } from "src/gamelogic/Card";
 import { Game } from "../gamelogic/Game";
 import { Player, Species } from "../gamelogic/Players";
 
-let games: Array<Game> = [];
+let games: Game[] = []
 
 // Finds a game from a roomId
-function findGame(roomId: string): Game {
+export function findGame(roomId: string, games: Game[]): Game {
   for (let game of games) {
     if (game.roomId == roomId) {
       return game;
@@ -18,7 +18,7 @@ function findGame(roomId: string): Game {
 }
 
 // Finds a player in a game from a socketId
-function findPlayer(socketId: string, thisgame: Game): Player {
+export function findPlayer(socketId: string, thisgame: Game): Player {
   for (let player of thisgame.players) {
     if (socketId == player.socketid) {
       return player;
@@ -28,52 +28,62 @@ function findPlayer(socketId: string, thisgame: Game): Player {
 }
 
 module.exports = function (io: any) {
-  io.on("connection", async (socket: Socket) => {
+  io.on("connection", (socket: Socket) => {
     // TODO : Vérifier que l'user a un token d'authentification valide ?
-    console.log("a user connected");
     // When creating a new game
-    socket.on("create game", async (pseudo: string, species: Species) => {
+    socket.on("create game", (pseudo: string, species: Species) => {
       // TODO : Empêcher de créer une partie si on est déjà dans une autre
-
-      socket.join("ROOM-" + socket.id);
-      let game = new Game();
-      game.roomId = "ROOM-" + socket.id;
-      let player = new Player(pseudo, species, socket.id);
-      // Assume that specie has already been chosen (to implement in client)
-      game.addPlayer(player); //TODO : gérer les erreurs, également pour findGame et findPlayer
-      games.push(game);
-      io.to(socket.id).emit("game id", game.roomId);
-      console.log(pseudo + " created the game : " + game.roomId);
+      try {
+        socket.join("ROOM-" + socket.id);
+        let game = new Game();
+        game.roomId = "ROOM-" + socket.id;
+        let player = new Player(pseudo, species);
+        player.socketid = socket.id //TODO : créer un constructeur pour ça
+        // Assume that specie has already been chosen (to implement in client)
+        game.addPlayer(player);
+        games.push(game);
+        socket.emit("game id", game.roomId);
+      } catch (err) {
+        socket.emit("oops", err);
+      }
     });
 
     // When joining a game
-    socket.on("join game", async (pseudo: string, roomId: string) => {
+    socket.on("join game", (pseudo: string, roomId: string) => {
       // TODO : Empêcher de rejoindre une partie si on est déjà dans une autre
-      let thisgame = findGame(roomId);
-      io.to(socket.id).emit("available species", thisgame.availableSpecies);
-      socket.join(thisgame.roomId);
+      try {
+        let thisgame = findGame(roomId, games);
+        socket.emit("available species", thisgame.availableSpecies);
+        socket.join(thisgame.roomId);
 
-      io.on("choose species", async (species: Species) => {
-        let player = new Player(pseudo, species, socket.id);
-        thisgame.addPlayer(player);
-        io.to(socket.id).emit("game id", thisgame.roomId);
-        io.to(thisgame.roomId).emit("join game", player.pseudo, player.species); // TODO : je crois qu'il ne faut pas utiliser io.to pour faire ça mais io.in
-        console.log("a user joined the game " + thisgame.roomId);
-      });
+        io.on("choose species", (species: Species) => {
+          let player = new Player(pseudo, species); //TODO : changer constructeur
+          player.socketid = socket.id,
+          thisgame.addPlayer(player);
+          socket.emit("game id", thisgame.roomId);
+          io.in(thisgame.roomId).emit(
+            "join game",
+            player.pseudo,
+            player.species
+          );
+        });
+      } catch (err) {
+        socket.emit("oops", err);
+      }
     });
 
     // when the game begins
-    socket.on("launch game", async (roomId: string) => {
-      let thisgame = findGame(roomId);
+    socket.on("launch game", (roomId: string) => {
+      let thisgame = findGame(roomId, games);
       thisgame.init();
       for (let player of thisgame.players) {
         io.to(player.socketid).emit("hand", player.hand);
-        io.to(thisgame.roomId).emit("base", player.base); // TODO : je crois qu'il ne faut pas utiliser io.to pour faire ça mais io.in
+        io.in(thisgame.roomId).emit("base", player.base);
       }
     });
 
     // when a user plays a card
-    socket.on("play card", async (roomId: string, action: Action) => {
+    socket.on("play card",  (roomId: string, action: Action) => {
       let thisgame = findGame(roomId);
       let player = findPlayer(socket.id, thisgame);
 
@@ -96,7 +106,7 @@ module.exports = function (io: any) {
     });
 
     // when a user discard
-    socket.on("discard", async (roomId: string, indexDiscard: number[]) => {
+    socket.on("discard",  (roomId: string, indexDiscard: number[]) => {
       let thisgame = findGame(roomId);
       let player = findPlayer(socket.id, thisgame);
 
@@ -127,17 +137,16 @@ module.exports = function (io: any) {
     });
 
     // When a user sends a message on the chat
-    socket.on("chat message", function (roomId: string, msg: string) {
-      let player = findPlayer(socket.id, findGame(roomId));
-      io.to(roomId).emit("chat message", player.pseudo, msg); // TODO : je crois qu'il ne faut pas utiliser io.to pour faire ça mais io.in
+    socket.on("chat message", (roomId: string, msg: string) => {
+      let player = findPlayer(socket.id, findGame(roomId, games));
+      io.in(roomId).emit("chat message", player.pseudo, msg);
     });
 
-    // When a user disconnects or abandon the game
+    // When a user disconnects from the game
     socket.on("disconnecting", (_reason) => {
       for (const room of socket.rooms) {
-        //TODO : Comprendre la ligne ci-dessous et vérifier qu'elle fonctionne bien pour ce qu'on veut faire
-        if (room !== socket.id) {
-          let thisgame = findGame(room);
+        if (room == socket.id) {
+          let thisgame = findGame(room, games);
           let player = findPlayer(socket.id, thisgame);
           let idx = thisgame.players.indexOf(player);
 

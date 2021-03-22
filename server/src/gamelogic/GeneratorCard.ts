@@ -17,7 +17,7 @@ export class GeneratorCard implements Card {
   action(game: Game, action: Action): void {
     const indx = game.currentPlayer.getBase(action.card.color);
     game.currentPlayer.base[indx].addGenerator(action.card);
-    game.discardHand([action.indexInHand]);
+    game.currentPlayer.discardHand(action.indexInHand);
   }
 
   toString(): string {

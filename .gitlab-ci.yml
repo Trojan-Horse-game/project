@@ -1,0 +1,14 @@
+image: node:latest
+
+test-job:
+  stage: test
+  script:
+    - cd server
+    - npm install
+    - echo "Testing..."
+    - npm run test
+    - echo "Tests completed successfuly !"
+
+# deploy:
+#   stage: deploy
+#     - echo "This job deploys something from the $CI_COMMIT_BRANCH branch."

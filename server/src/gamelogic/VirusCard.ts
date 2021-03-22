@@ -12,15 +12,22 @@ export class VirusCard implements Card {
   }
 
   action(game: Game, action: Action): void {
-    const indx = game.players[action.target[0]].getBase(action.slotTarget[0]);
-    const state = game.players[action.target[0]].base[indx].addVirus(
-      action.card
-    );
-    if (state === State.Empty) game.discardBase([indx]);
-    if (state === State.Generator)
-      game.deck.unshift(game.currentPlayer.base[indx].cards[1]);
+    const victim = game.players[action.target[0]];
+    const indx = victim.getBase(action.slotTarget[0]);
+    const state = victim.base[indx].addVirus(action.card);
 
-    game.discardHand([action.indexInHand]);
+    if (state === State.Empty) {
+      game.deck.unshift(victim.base[indx].cards[0]);
+      game.deck.unshift(victim.base[indx].cards[1]);
+      game.deck.unshift(victim.base[indx].cards[2]);
+      victim.discardBase(indx);
+    } else if (state === State.Generator) {
+      game.deck.unshift(victim.base[indx].cards[1]);
+      game.deck.unshift(victim.base[indx].cards[2]);
+      victim.base[indx].cards.splice(1, 2);
+    }
+
+    game.currentPlayer.discardHand(action.indexInHand);
   }
 
   toString(): string {

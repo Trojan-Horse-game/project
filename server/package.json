@@ -6,7 +6,7 @@
     "lint": "eslint . --ext .ts",
     "start": "ts-node src/index.ts",
     "start:dev": "nodemon",
-    "test": "jest --watch"
+    "test": "jest --coverage"
   },
   "nodemonConfig": {
     "watch": [
@@ -89,6 +89,7 @@
     "pg": "^8.5.1",
     "reflect-metadata": "^0.1.10",
     "socket.io": "^3.1.1",
+    "socket.io-client": "^4.0.0",
     "typeorm": "^0.2.31"
   },
   "devDependencies": {

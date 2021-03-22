@@ -106,7 +106,7 @@ async function addPlayer(game: Game, nPlayers: number) {
     pseudo = await askPseudo(i);
     species = await askSpecies(pseudo, game.availableSpecies);
 
-    game.addPlayer(new Player(pseudo, species, ""));
+    game.addPlayer(new Player(pseudo, species));
     console.log(pseudo + " joue les " + Species[species]);
   }
 }
@@ -161,6 +161,12 @@ async function askAction(): Promise<string> {
   return action;
 }
 
+/* Return true if every element of an array is uniq */
+function eachIsUniq(array: Array<any>) {
+  const uniq = new Set(array);
+  return uniq.size === array.length;
+}
+
 /* Ask the player the cards he wants to discard
 
    He can specify any card between 1 and 3 total
@@ -179,11 +185,13 @@ async function askDiscard(player: Player): Promise<number[]> {
   const indexDiscard = answer.split(",").map(Number);
   for (i of indexDiscard) {
     if (isNaN(i) || i < 0 || i > 2) {
-      console.log(
-        "Vous n'avez pas rentré que des chiffres valides, exemple : 0, 1, 2"
-      );
+      console.log("Vous n'avez pas rentré que des chiffres valides !");
       return askDiscard(player);
     }
+  }
+  if (!eachIsUniq(indexDiscard)) {
+    console.log("Vous avez rentré plusieurs fois la même carte !");
+    return askDiscard(player);
   }
   return indexDiscard;
 }
@@ -522,6 +530,7 @@ async function playTurn(game: Game) {
       case "Defausser":
         indexDiscard = await askDiscard(player);
         try {
+          indexDiscard.sort();
           game.checkDiscard(indexDiscard);
           game.discardHand(indexDiscard);
           game.endTurn();

@@ -12,7 +12,6 @@ import { searchVirusToClean, supprVirusToClean } from "./SearchingVirus";
 export class Game {
   players: Player[] = [];
   deck: Card[] = [];
-  gameId = 0;
   roomId: string = "";
   currentPlayerIdx = 0;
   inProgress = false;
@@ -169,12 +168,14 @@ export class Game {
      Make the player draw a valid number of cards
   */
   endTurn() {
-    const handLength = this.currentPlayer.hand.length;
-    if (handLength != 3) {
-      this.draw(3 - handLength);
-    }
+    do {
+      const handLength = this.currentPlayer.hand.length;
+      if (handLength != 3) {
+        this.draw(3 - handLength);
+      }
 
-    this.currentPlayerIdx = (this.currentPlayerIdx + 1) % this.players.length;
+      this.currentPlayerIdx = (this.currentPlayerIdx + 1) % this.players.length;
+    } while (this.currentPlayer.hand.length === 0);
   }
 
   /* Check if someone won
@@ -458,8 +459,7 @@ export class Game {
     if (loanSrc.state === State.Empty)
       throw new Error("ActionLoan : générateur cible inexistant !");
 
-    const baseInd = this.currentPlayer.getBase(action.card.color);
-    const loanDst = this.currentPlayer.base[baseInd];
+    const loanDst = this.currentPlayer.base[action.slotTarget[0]];
     if (loanDst.state !== State.Empty)
       throw new Error("ActionLoan : générateur cible déjà posséder");
   }
@@ -474,8 +474,7 @@ export class Game {
       
     The color checks if :
       - The virus is a joker
-      - The generator is a joker and is not protected
-      - The virus is of a coherent type with the firewall of a protected joker generator
+      - The generator is a joker
       - The virus attacks a joker firewall
       - The virus is of the same type of the generator's one
 
@@ -506,14 +505,7 @@ export class Game {
 
     if (action.card.color === Color.Joker) return;
 
-    if (temp.state !== State.Protected && temp.color === Color.Joker) return;
-
-    if (
-      temp.state === State.Protected &&
-      temp.color === Color.Joker &&
-      temp.cards[1].color === action.card.color
-    )
-      return;
+    if (temp.color === Color.Joker) return;
 
     if (temp.state === State.Protected && temp.cards[1].color === Color.Joker)
       return;
@@ -533,8 +525,7 @@ export class Game {
       
     The color checks if :
       - The firewall is a joker
-      - The generator is a joker and is not infected
-      - The firewall is of a coherent type with the virus of an infected joker generator
+      - The generator is a joker
       - The firewall target a joker virus
       - The firewall is of the same type of the generator's one
 
@@ -562,14 +553,7 @@ export class Game {
 
     if (action.card.color === Color.Joker) return;
 
-    if (temp.state !== State.Virused && temp.color === Color.Joker) return;
-
-    if (
-      temp.state === State.Virused &&
-      temp.color === Color.Joker &&
-      temp.cards[1].color === action.card.color
-    )
-      return;
+    if (temp.color === Color.Joker) return;
 
     if (temp.state === State.Virused && temp.cards[1].color === Color.Joker)
       return;

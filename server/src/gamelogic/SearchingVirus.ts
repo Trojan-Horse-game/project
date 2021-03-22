@@ -41,7 +41,7 @@ export function searchVirusToClean(players: Player[], currentPlayer: number) {
     slot = players[currentPlayer].base[i];
     if (slot.state === State.Virused) {
       j = (currentPlayer + 1) % players.length;
-      candidate = { srcSlotInd: i, target: [], dstSlotInd: [[]] };
+      candidate = { srcSlotInd: i, target: [], dstSlotInd: [] };
       for (j; j !== currentPlayer; j = (j + 1) % players.length) {
         doable = false;
         possibleSlot = [];
@@ -92,15 +92,29 @@ export function supprVirusToClean(
   let i: number;
   let j: number;
   let idx: number;
-  for (i = 0; i < toClean.length; i++) {
+  let toCleanlength = toClean.length;
+  for (i = 0; i < toCleanlength; i++) {
     if (toClean[i].srcSlotInd === slotSrc) {
-      toClean.slice(i, 1);
+      toClean.splice(i, 1);
+      i--;
+      toCleanlength--;
     } else {
-      for (j = 0; j < toClean[i].target.length; j++) {
-        if (toClean[i].target[j] === target) {
+      let targetLength = toClean[i].target.length;
+      for (j = 0; j < targetLength; j++) {
+        if (toClean[i].target[j].species === target.species) {
           idx = toClean[i].dstSlotInd[j].indexOf(slotDst);
           if (idx !== -1) {
-            toClean[i].dstSlotInd[j].slice(idx, 1);
+            toClean[i].dstSlotInd[j].splice(idx, 1);
+            if (toClean[i].dstSlotInd[j].length === 0) {
+              toClean[i].dstSlotInd.splice(j, 1);
+              j--;
+              targetLength--;
+              if (toClean[i].dstSlotInd.length === 0) {
+                toClean.splice(i, 1);
+                i--;
+                toCleanlength--;
+              }
+            }
           }
         }
       }

@@ -93,6 +93,10 @@
 
       var room;
 
+      socket.on("oops", (error) => {
+        console.log(error);
+      })
+
       socket.on("game id", (roomId) => {
         room = roomId;
         console.log(room);
