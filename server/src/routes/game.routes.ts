@@ -30,14 +30,14 @@ export function findPlayer(socketId: string, thisgame: Game): Player {
 module.exports = function (io: any) {
   io.on("connection", (socket: Socket) => {
     // TODO : Vérifier que l'user a un token d'authentification valide ?
+
     // When creating a new game
-    socket.on("create game", (pseudo: string, species: Species) => {
+    socket.on("create game", (pseudo: string, speciesIndx: number) => {
       // TODO : Empêcher de créer une partie si on est déjà dans une autre
       try {
         socket.join("ROOM-" + socket.id);
         let game = new Game("ROOM-" + socket.id);
-        let player = new Player(pseudo, species, socket.id);
-        // Assume that specie has already been chosen (to implement in client)
+        let player = new Player(pseudo, speciesIndx, socket.id);
         game.addPlayer(player);
         games.push(game);
         socket.emit("game id", game.roomId);
@@ -55,14 +55,20 @@ module.exports = function (io: any) {
         socket.join(thisgame.roomId);
 
         io.on("choose species", (species: Species) => {
-          let player = new Player(pseudo, species, socket.id);
-          thisgame.addPlayer(player);
-          socket.emit("game id", thisgame.roomId);
-          io.in(thisgame.roomId).emit(
-            "join game",
-            player.pseudo,
-            player.species
-          );
+          try {
+            let thisgame = findGame(roomId, games);
+            console.log("test");
+            let player = new Player(pseudo, species, socket.id);
+            thisgame.addPlayer(player);
+            socket.emit("game id", thisgame.roomId); // TODO : envoyer également les joueurs actuellement présents
+            io.in(thisgame.roomId).emit(
+              "join game",
+              player.pseudo,
+              player.species
+            );
+          } catch (err) {
+            socket.emit("oops", err);
+          }
         });
       } catch (err) {
         socket.emit("oops", err);

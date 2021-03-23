@@ -18,11 +18,23 @@ export class Player {
   hand: Card[] = [];
   base: GeneratorSlot[] = [];
 
-  constructor(pseudo: string, species: Species, id?: string) {
+  constructor(pseudo: string, species: number, id?: string) {
     let i: number;
 
     this.socketId = id || "";
-    this.species = species;
+    if (species == 0) {
+      this.species = Species.Hutex;
+    } else if (species == 1) {
+      this.species = Species.Sonyas;
+    } else if (species == 2) {
+      this.species = Species.Xmars;
+    } else if (species == 3) {
+      this.species = Species.Spectre;
+    } else if (species == 4) {
+      this.species = Species.Ulysse;
+    } else {
+      this.species = Species.Totox;
+    }
     this.pseudo = pseudo;
 
     for (i = 0; i < 5; i++) {
