@@ -99,7 +99,11 @@ module.exports = function (io: any) {
           thisgame.playAction(action);
           io.to(socket.id).emit("cardPlayed", thisgame.currentPlayer.hand);
 
-          io.in(roomId).emit("nextTurn", thisgame.currentPlayer);
+          if (thisgame.inProgress) {
+            io.in(roomId).emit("nextTurn", thisgame.currentPlayer);
+          } else {
+            io.in(roomId).emit("endGame", thisgame.winnerIdx);
+          }
         }
       } catch (err) {
         io.to(socket.id).emit("oops", err);
@@ -137,6 +141,16 @@ module.exports = function (io: any) {
       }
     });
 
+    // When a user forfeit from the game on purpose
+    socket.on("abbandon", (room: string) => {
+      try {
+        let player = findPlayer(socket.id, findGame(room, games));
+        forfeit(io, room, socket);
+      } catch (err) {
+        io.to(socket.id).emit("oops", err);
+      }
+    });
+
     // When a user sends a message on the chat
     socket.on("chat message", (roomId: string, msg: string) => {
       try {
@@ -151,27 +165,39 @@ module.exports = function (io: any) {
     socket.on("disconnecting", (_reason) => {
       for (const room of socket.rooms) {
         if (room == socket.id) {
-          try {
-            let thisgame = findGame(room, games);
-            let player = findPlayer(socket.id, thisgame);
-            let idx = thisgame.players.indexOf(player);
-
-            if (idx == thisgame.currentPlayerIdx) {
-              thisgame.resign();
-              socket.to(room).emit("disconnect", socket.id);
-              socket.to(room).emit("nextTurn", thisgame.currentPlayerIdx);
-            } else {
-              thisgame.resign(idx);
-              socket.to(room).emit("disconnect", socket.id);
-            }
-          } catch (err) {
-            io.to(socket.id).emit("oops", err);
-          }
+          forfeit(io, room, socket);
         }
       }
     });
   });
 };
 
+// Make a player resign and check for the end of the game
+function forfeit(io: any, room: string, playerSocket: Socket) {
+  try {
+    let thisgame = findGame(room, games);
+    let player = findPlayer(playerSocket.id, thisgame);
+    let idx = thisgame.players.indexOf(player);
+
+    if (idx == thisgame.currentPlayerIdx) {
+      thisgame.resign();
+      playerSocket.to(room).emit("disconnect", playerSocket.id);
+
+      if (thisgame.inProgress) {
+        io.in(room).emit("nextTurn", thisgame.currentPlayer);
+      } else {
+        io.in(room).emit("endGame", thisgame.winnerIdx);
+      }
+    } else {
+      thisgame.resign(idx);
+      playerSocket.to(room).emit("disconnect", playerSocket.id);
+
+      if (!thisgame.inProgress) {
+        io.in(room).emit("endGame", thisgame.winnerIdx);
+      }
+    }
+  } catch (err) {
+    io.to(playerSocket.id).emit("oops", err);
+  }
+}
 //TODO: optimiser l'envoi de paquets
-// TODO : Je crois qu'on peut remplacer les io.to par socket.emit quand on renvoie au sender

@@ -11,6 +11,7 @@ import { searchVirusToClean, supprVirusToClean } from "./SearchingVirus";
 /* A class representing a game */
 export class Game {
   players: Player[] = [];
+  winnerIdx: number = 0;
   deck: Card[] = [];
   roomId: string;
   currentPlayerIdx = 0;
@@ -182,22 +183,22 @@ export class Game {
   /* Check if someone won
 
      Return undefined if no one has
-     Return the player object of the winner if someone has
+     Return the winner's index if someone has
   */
   checkForWinner() {
     let winner: Player;
+    let ind = 0;
     for (winner of this.players) {
-      if (winner.checkWin()) return winner;
+      if (winner.checkWin()) return ind;
+      ind++;
     }
     return undefined;
   }
 
-  /* End the game and display the winner */
-  endGame(winner: Player) {
+  /* End the game */
+  endGame(winnerIndx: number) {
     this.inProgress = false;
-    console.log(
-      "Félicitation " + winner.pseudo + " ! Vous avez remporté la partie !"
-    );
+    this.winnerIdx = winnerIndx;
   }
 
   /* Check if the discard's indexes are valid */
@@ -245,15 +246,13 @@ export class Game {
      Discard its hand and its base
   */
   resign(index = this.currentPlayerIdx) {
-    console.log("Le joueur " + this.players[index].pseudo + " a abbandonné !");
-
     this.discardHand([0, 1, 2], this.players[index]);
     this.discardBase([0, 1, 2, 3, 4]);
 
     this.players.splice(this.currentPlayerIdx, 1);
 
     if (this.players.length == 1) {
-      this.endGame(this.players[0]);
+      this.endGame(0);
     } else if (index === this.currentPlayerIdx) {
       this.endTurn();
     }
@@ -266,9 +265,9 @@ export class Game {
   playAction(action: Action) {
     this.checkAction(action);
     action.card.action(this, action);
-    const winner = this.checkForWinner();
-    if (winner !== undefined) {
-      this.endGame(winner);
+    const winnerIdx = this.checkForWinner();
+    if (winnerIdx !== undefined) {
+      this.endGame(winnerIdx);
     } else {
       this.endTurn();
     }
