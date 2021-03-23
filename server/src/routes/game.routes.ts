@@ -20,7 +20,7 @@ export function findGame(roomId: string, games: Game[]): Game {
 // Finds a player in a game from a socketId
 export function findPlayer(socketId: string, thisgame: Game): Player {
   for (let player of thisgame.players) {
-    if (socketId == player.socketid) {
+    if (socketId == player.socketId) {
       return player;
     }
   }
@@ -75,7 +75,7 @@ module.exports = function (io: any) {
         let thisgame = findGame(roomId, games);
         thisgame.init();
         for (let player of thisgame.players) {
-          io.to(player.socketid).emit("hand", player.hand);
+          io.to(player.socketId).emit("hand", player.hand);
           io.in(thisgame.roomId).emit("base", player.base);
         }
       } catch (err) {
@@ -100,7 +100,7 @@ module.exports = function (io: any) {
           io.to(socket.id).emit("cardPlayed", thisgame.currentPlayer.hand);
 
           if (thisgame.inProgress) {
-            io.in(roomId).emit("nextTurn", thisgame.currentPlayer);
+            nextTurn(io, thisgame);
           } else {
             io.in(roomId).emit("endGame", thisgame.winnerIdx);
           }
@@ -129,12 +129,9 @@ module.exports = function (io: any) {
           }
 
           socket.to(roomId).emit("discard", indexDiscard, cards);
-
           thisgame.discardHand(indexDiscard);
-          io.to(socket.id).emit("discarded", thisgame.currentPlayer.hand);
 
-          thisgame.endTurn();
-          io.in(roomId).emit("nextTurn", thisgame.currentPlayer);
+          nextTurn(io, thisgame);
         }
       } catch (err) {
         io.to(socket.id).emit("oops", err);
@@ -184,7 +181,7 @@ function forfeit(io: any, room: string, playerSocket: Socket) {
       playerSocket.to(room).emit("disconnect", playerSocket.id);
 
       if (thisgame.inProgress) {
-        io.in(room).emit("nextTurn", thisgame.currentPlayer);
+        nextTurn(io, thisgame);
       } else {
         io.in(room).emit("endGame", thisgame.winnerIdx);
       }
@@ -200,4 +197,14 @@ function forfeit(io: any, room: string, playerSocket: Socket) {
     io.to(playerSocket.id).emit("oops", err);
   }
 }
-//TODO: optimiser l'envoi de paquets
+
+// Envoie l'index du prochain joueur et gère le cas de la distraction nucléaire
+function nextTurn(io: any, thisGame: Game) {
+  do {
+    thisGame.endTurn();
+
+    let current = thisGame.currentPlayer;
+    io.to(current.socketId).emit("hand", current.hand);
+    io.in(thisGame.roomId).emit("nextTurn", thisGame.currentPlayerIdx);
+  } while (thisGame.currentPlayer.hand.length === 0);
+}

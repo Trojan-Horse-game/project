@@ -170,14 +170,12 @@ export class Game {
      Make the player draw a valid number of cards
   */
   endTurn() {
-    do {
       const handLength = this.currentPlayer.hand.length;
       if (handLength != 3) {
         this.draw(3 - handLength);
       }
 
       this.currentPlayerIdx = (this.currentPlayerIdx + 1) % this.players.length;
-    } while (this.currentPlayer.hand.length === 0);
   }
 
   /* Check if someone won
@@ -253,8 +251,6 @@ export class Game {
 
     if (this.players.length == 1) {
       this.endGame(0);
-    } else if (index === this.currentPlayerIdx) {
-      this.endTurn();
     }
   }
 
@@ -268,8 +264,6 @@ export class Game {
     const winnerIdx = this.checkForWinner();
     if (winnerIdx !== undefined) {
       this.endGame(winnerIdx);
-    } else {
-      this.endTurn();
     }
   }
 

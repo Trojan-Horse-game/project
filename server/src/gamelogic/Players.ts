@@ -13,7 +13,7 @@ export enum Species {
 /* A class to represent a player */
 export class Player {
   pseudo: string;
-  socketid: string;
+  socketId: string;
   species: Species;
   hand: Card[] = [];
   base: GeneratorSlot[] = [];
@@ -21,7 +21,7 @@ export class Player {
   constructor(pseudo: string, species: Species, id?: string) {
     let i: number;
 
-    this.socketid = id || "";
+    this.socketId = id || "";
     this.species = species;
     this.pseudo = pseudo;
 
