@@ -27,6 +27,46 @@ export function findPlayer(socketId: string, thisgame: Game): Player {
   throw "ERROR: Could not find player !";
 }
 
+// Make a player resign and check for the end of the game
+function forfeit(io: any, room: string, playerSocket: Socket) {
+  try {
+    let thisgame = findGame(room, games);
+    let player = findPlayer(playerSocket.id, thisgame);
+    let idx = thisgame.players.indexOf(player);
+
+    if (idx == thisgame.currentPlayerIdx) {
+      thisgame.resign();
+      playerSocket.to(room).emit("leave game", playerSocket.id);
+
+      if (thisgame.inProgress) {
+        nextTurn(io, thisgame);
+      } else {
+        io.in(room).emit("endGame", thisgame.winnerIdx);
+      }
+    } else {
+      thisgame.resign(idx);
+      playerSocket.to(room).emit("leave game", playerSocket.id);
+
+      if (!thisgame.inProgress) {
+        io.in(room).emit("endGame", thisgame.winnerIdx);
+      }
+    }
+  } catch (err) {
+    io.to(playerSocket.id).emit("oops", err);
+  }
+}
+
+// Envoie l'index du prochain joueur et gère le cas de la distraction nucléaire
+function nextTurn(io: any, thisGame: Game) {
+  do {
+    thisGame.endTurn();
+
+    let current = thisGame.currentPlayer;
+    io.to(current.socketId).emit("hand", current.hand);
+    io.in(thisGame.roomId).emit("nextTurn", thisGame.currentPlayerIdx);
+  } while (thisGame.currentPlayer.hand.length === 0);
+}
+
 module.exports = function (io: any) {
   io.on("connection", (socket: Socket) => {
     // TODO : Vérifier que l'user a un token d'authentification valide ?
@@ -85,7 +125,7 @@ module.exports = function (io: any) {
           io.in(thisgame.roomId).emit("base", player.base);
         }
       } catch (err) {
-        io.to(socket.id).emit("oops", err);
+        socket.emit("oops", err);
       }
     });
 
@@ -97,13 +137,13 @@ module.exports = function (io: any) {
 
         if (player !== thisgame.currentPlayer) {
           let error = "Ce n'est pas le tour du joueur";
-          io.to(socket.id).emit("oops", error);
+          socket.emit("oops", error);
         } else {
           thisgame.checkAction(action);
           socket.to(roomId).emit("playCard", action);
 
           thisgame.playAction(action);
-          io.to(socket.id).emit("cardPlayed", thisgame.currentPlayer.hand);
+          socket.emit("cardPlayed", thisgame.currentPlayer.hand);
 
           if (thisgame.inProgress) {
             nextTurn(io, thisgame);
@@ -112,7 +152,7 @@ module.exports = function (io: any) {
           }
         }
       } catch (err) {
-        io.to(socket.id).emit("oops", err);
+        socket.emit("oops", err);
       }
     });
 
@@ -124,7 +164,7 @@ module.exports = function (io: any) {
 
         if (player !== thisgame.currentPlayer) {
           let error = "Ce n'est pas le tour du joueur";
-          io.to(socket.id).emit("oops", error);
+          socket.emit("oops", error);
         } else {
           thisgame.checkDiscard(indexDiscard);
 
@@ -140,17 +180,16 @@ module.exports = function (io: any) {
           nextTurn(io, thisgame);
         }
       } catch (err) {
-        io.to(socket.id).emit("oops", err);
+        socket.emit("oops", err);
       }
     });
 
     // When a user forfeit from the game on purpose
     socket.on("abbandon", (room: string) => {
       try {
-        let player = findPlayer(socket.id, findGame(room, games));
         forfeit(io, room, socket);
       } catch (err) {
-        io.to(socket.id).emit("oops", err);
+        socket.emit("oops", err);
       }
     });
 
@@ -160,7 +199,7 @@ module.exports = function (io: any) {
         let player = findPlayer(socket.id, findGame(roomId, games));
         io.in(roomId).emit("chat message", player.pseudo, msg);
       } catch (err) {
-        io.to(socket.id).emit("oops", err);
+        socket.emit("oops", err);
       }
     });
 
@@ -175,42 +214,4 @@ module.exports = function (io: any) {
   });
 };
 
-// Make a player resign and check for the end of the game
-function forfeit(io: any, room: string, playerSocket: Socket) {
-  try {
-    let thisgame = findGame(room, games);
-    let player = findPlayer(playerSocket.id, thisgame);
-    let idx = thisgame.players.indexOf(player);
-
-    if (idx == thisgame.currentPlayerIdx) {
-      thisgame.resign();
-      playerSocket.to(room).emit("disconnect", playerSocket.id);
-
-      if (thisgame.inProgress) {
-        nextTurn(io, thisgame);
-      } else {
-        io.in(room).emit("endGame", thisgame.winnerIdx);
-      }
-    } else {
-      thisgame.resign(idx);
-      playerSocket.to(room).emit("disconnect", playerSocket.id);
-
-      if (!thisgame.inProgress) {
-        io.in(room).emit("endGame", thisgame.winnerIdx);
-      }
-    }
-  } catch (err) {
-    io.to(playerSocket.id).emit("oops", err);
-  }
-}
-
-// Envoie l'index du prochain joueur et gère le cas de la distraction nucléaire
-function nextTurn(io: any, thisGame: Game) {
-  do {
-    thisGame.endTurn();
-
-    let current = thisGame.currentPlayer;
-    io.to(current.socketId).emit("hand", current.hand);
-    io.in(thisGame.roomId).emit("nextTurn", thisGame.currentPlayerIdx);
-  } while (thisGame.currentPlayer.hand.length === 0);
-}
+//TODO : En cas de distraction nucléaire, envoyer les cartes discard

@@ -247,7 +247,12 @@ export class Game {
     this.discardHand([0, 1, 2], this.players[index]);
     this.discardBase([0, 1, 2, 3, 4]);
 
-    this.players.splice(this.currentPlayerIdx, 1);
+    this.players.splice(index, 1);
+
+    if (index < this.currentPlayerIdx) {
+      this.currentPlayerIdx--;
+    }
+    this.currentPlayerIdx %= this.players.length;
 
     if (this.players.length == 1) {
       this.endGame(0);
