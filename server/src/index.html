@@ -64,18 +64,31 @@
   <body>
     <form action="" id="create">
       <input id="input0" placeholder="pseudo" autocomplete="off" />
+      <select id="input1" name="espece">
+        <option value="0">Hutex</option>
+        <option value="1">Sonyas</option>
+        <option value="2">Xmars</option>
+        <option value="3">Spectre</option>
+        <option value="4">Ulysse</option>
+        <option value="5">Totox</option>
+      </select>
       <button>create room</button>
     </form>
 
     <form id="join" action="">
-      <input id="input1" placeholder="pseudo" autocomplete="off" />
-      <input id="input2" placeholder="room id" autocomplete="off" />
+      <input id="input2" placeholder="pseudo" autocomplete="off" />
+      <input id="input3" placeholder="room id" autocomplete="off" />
       <button>join room</button>
+    </form>
+
+    <form action="" id="espece" style="visibility: hidden">
+      <select id="especeSelect" name="espece"></select>
+      <button>select species</button>
     </form>
 
     <ul id="messages"></ul>
 
-    <form id="form" action="">
+    <form id="form" action="" style="visibility: hidden">
       <input id="input" autocomplete="off" /><button>Send</button>
     </form>
 
@@ -89,21 +102,54 @@
       var input0 = document.getElementById("input0");
       var input1 = document.getElementById("input1");
       var input2 = document.getElementById("input2");
+      var input3 = document.getElementById("input3");
+      var espece = document.getElementById("espece");
+      var especeSelect = document.getElementById("especeSelect");
       var msg = document.getElementById("messages");
 
       var room;
 
       socket.on("oops", (error) => {
         console.log(error);
-      })
+      });
 
       socket.on("game id", (roomId) => {
         room = roomId;
+
+        join.style.visibility = "hidden";
+        create.style.visibility = "hidden";
+        espece.style.visibility = "hidden";
+        form.style.visibility = "visible";
+
         console.log(room);
       });
 
+      socket.on("available species", (available) => {
+        join.style.visibility = "hidden";
+        create.style.visibility = "hidden";
+        espece.style.visibility = "visible";
+        for (var i of available) {
+          var opt1 = document.createElement("option");
+          opt1.value = i;
+          if (i == 0) {
+            opt1.text = "Hutex";
+          } else if (i == 1) {
+            opt1.text = "Sonyas";
+          } else if (i == 2) {
+            opt1.text = "Xmars";
+          } else if (i == 3) {
+            opt1.text = "Spectre";
+          } else if (i == 4) {
+            opt1.text = "Ulysse";
+          } else {
+            opt1.text = "Totox";
+          }
+          especeSelect.add(opt1, null);
+        }
+      });
+
       socket.on("chat message", (pseudo, message) => {
-        var txt = document.createTextNode(pseudo + ":" + message);
+        var txt = document.createTextNode(pseudo + " : " + message);
         var p = document.createElement("p");
         p.appendChild(txt);
         msg.appendChild(p);
@@ -119,35 +165,28 @@
 
       join.addEventListener("submit", function (e) {
         e.preventDefault();
-        if (input1.value && input2.value) {
-          socket.emit("join game", input1.value, input2.value);
-          input1.value = "";
+        if (input2.value && input3.value) {
+          socket.emit("join game", input2.value, input3.value);
           input2.value = "";
+          input3.value = "";
         }
       });
 
       create.addEventListener("submit", function (e) {
         e.preventDefault();
-        if (input0.value) {
-          socket.emit("create game", input0.value);
+        if (input0.value && input1.value) {
+          socket.emit("create game", input0.value, input1.value);
           input0.value = "";
         }
       });
 
-      // let user = {
-      //   username: "username",
-      //   password: "password",
-      //   games: 0,
-      //   wins: 0,
-      // };
-
-      // async function getUsers() {
-      //   let response = await fetch("http://localhost:3000/api/users/");
-      //   let data = await response.json();
-      //   return data;
-      // }
-
-      // getUsers().then(data => console.log(data));
+      espece.addEventListener("submit", function (e) {
+        e.preventDefault();
+        if (especeSelect.value) {
+          socket.emit("choose species", especeSelect.value);
+          espece.style.visibility = "hidden";
+        }
+      });
     </script>
   </body>
 </html>

@@ -30,7 +30,9 @@ test("Nuclear Distraction", () => {
   expect(game.players[1].hand.length).toBe(0);
   expect(game.deck.length).toBe(66);
 
-  game.endTurn();
+  do {
+    game.endTurn();
+  } while (game.currentPlayer.hand.length === 0);
 
   expect(game.currentPlayerIdx).toBe(0);
   expect(game.players[1].hand.length).toBe(3);

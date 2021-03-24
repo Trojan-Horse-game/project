@@ -529,8 +529,15 @@ async function playTurn(game: Game) {
 
       case "Defausser":
         indexDiscard = await askDiscard(player);
-        indexDiscard.sort();
-        game.discardHand(indexDiscard);
+        try {
+          indexDiscard.sort();
+          game.checkDiscard(indexDiscard);
+          game.discardHand(indexDiscard);
+          game.endTurn();
+        } catch (err) {
+          console.log(err);
+          notDone = true;
+        }
         break;
 
       case "Abandon":
@@ -541,7 +548,6 @@ async function playTurn(game: Game) {
         notDone = true;
     }
   }
-  game.endTurn();
 }
 
 /* Start the game within the terminal 
