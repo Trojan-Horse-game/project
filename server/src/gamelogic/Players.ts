@@ -13,14 +13,28 @@ export enum Species {
 /* A class to represent a player */
 export class Player {
   pseudo: string;
+  socketId: string;
   species: Species;
   hand: Card[] = [];
   base: GeneratorSlot[] = [];
 
-  constructor(pseudo: string, species: Species) {
+  constructor(pseudo: string, species: number, id?: string) {
     let i: number;
 
-    this.species = species;
+    this.socketId = id || "";
+    if (species == 0) {
+      this.species = Species.Hutex;
+    } else if (species == 1) {
+      this.species = Species.Sonyas;
+    } else if (species == 2) {
+      this.species = Species.Xmars;
+    } else if (species == 3) {
+      this.species = Species.Spectre;
+    } else if (species == 4) {
+      this.species = Species.Ulysse;
+    } else {
+      this.species = Species.Totox;
+    }
     this.pseudo = pseudo;
 
     for (i = 0; i < 5; i++) {

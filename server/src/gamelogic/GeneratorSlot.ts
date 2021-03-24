@@ -34,9 +34,7 @@ export class GeneratorSlot {
     else if (this.state === State.Protected) this.state = State.Generator;
     else if (this.state === State.Generator) this.state = State.Virused;
     else
-      throw new Error(
-        "addVirus : state != Virused, Protected ou Generator avant infection par le virus"
-      );
+      throw "addVirus : state != Virused, Protected ou Generator avant infection par le virus";
 
     this.cards.push(virus);
     return this.state;
@@ -47,9 +45,7 @@ export class GeneratorSlot {
     else if (this.state === State.Protected) this.state = State.Immunized;
     else if (this.state === State.Virused) this.state = State.Generator;
     else
-      throw new Error(
-        "addFireWall : state != Virused,Protected ou Generator avant pose d'un parfeu"
-      );
+      throw "addFireWall : state != Virused,Protected ou Generator avant pose d'un parfeu";
 
     this.cards.push(fireWall);
     return this.state;
