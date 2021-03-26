@@ -30,10 +30,12 @@ export default class Game extends Phaser.Scene {
         this.load.image('xmars', 'src/assets/Xmars.png');
     }
 
+
     create() {
 
         const bg = this.add.image(0, 0, 'background').setOrigin(0, 0).setScale(1.09);
-        const numPlayers = 1;
+        const numPlayers = 6;
+        let joueurs = [[]];
 
         let self = this;
 
@@ -53,6 +55,62 @@ export default class Game extends Phaser.Scene {
         this.dealText2 = this.add.text(180, 300, ['DEAL ICONS']).setFontSize(18).setFontFamily('Trebuchet MS').setColor('#00ffff').setInteractive();
 
         this.dealIcons = () => {
+            //simplification du code a continuer plus tard.           
+            //Je crée pour chaque joueur ses 5 générateurs, dans l'ordre suivant : 
+            /*  indice 0 : foudre
+                indice 1 : air
+                indice 2 : goute
+                indice 3 : radiation
+                indice 4 : super*/
+            /*
+            for (let i = 0; i < numPlayers; i++) {
+                for (let j = 0; j < 5; j++) {
+                    joueurs[i][j] = new Generateur(this);                   
+                }
+            }
+
+            let displayGen = (generator, x, y, sprite, name) =>{
+                generator.gen_render(x, y, sprite);
+                this.foudre_renZ_1 = generator.gen_renderZone(195, 40, name);
+                this.foudre_renO_1 = generator.gen_renderOutline(this.foudre_renZ_1);
+            }
+
+            //First player
+            displayGen(joueurs[0][0], 195, 40, 'foudre', ("foudre_1" ));
+            displayGen(joueurs[0][1], 225,115, 'air', ("air_1" ));
+            displayGen(joueurs[0][2], 200, 185, 'goute', ("goute_1" ));
+            displayGen(joueurs[0][3], 150, 245, 'radiation', ("radiation_1" ));
+            displayGen(joueurs[0][4], 70, 245, 'super', ("super_1" ));
+
+            //2d player
+            displayGen(joueurs[0][0], x, y, 'foudre', ("foudre_1" ));
+            displayGen(joueurs[0][1], x, y, 'air', ("air_1" ));
+            displayGen(joueurs[0][2], x, y, 'goute', ("goute_1" ));
+            displayGen(joueurs[0][3], x, y, 'radiation', ("radiation_1" ));
+            displayGen(joueurs[0][4], x, y, 'super', ("super_1" ));
+
+            //3rd player
+            displayGen(joueurs[0][0], x, y, 'foudre', ("foudre_1" ));
+            displayGen(joueurs[0][1], x, y, 'air', ("air_1" ));
+            displayGen(joueurs[0][2], x, y, 'goute', ("goute_1" ));
+            displayGen(joueurs[0][3], x, y, 'radiation', ("radiation_1" ));
+            displayGen(joueurs[0][4], x, y, 'super', ("super_1" ));
+
+            //4th player
+            displayGen(joueurs[0][0], x, y, 'foudre', ("foudre_1" ));
+            displayGen(joueurs[0][1], x, y, 'air', ("air_1" ));
+            displayGen(joueurs[0][2], x, y, 'goute', ("goute_1" ));
+            displayGen(joueurs[0][3], x, y, 'radiation', ("radiation_1" ));
+            displayGen(joueurs[0][4], x, y, 'super', ("super_1" ));
+
+            //5th player
+            displayGen(joueurs[0][0], x, y, 'foudre', ("foudre_1" ));
+            displayGen(joueurs[0][1], x, y, 'air', ("air_1" ));
+            displayGen(joueurs[0][2], x, y, 'goute', ("goute_1" ));
+            displayGen(joueurs[0][3], x, y, 'radiation', ("radiation_1" ));
+            displayGen(joueurs[0][4], x, y, 'super', ("super_1" ));
+            */
+
             let foudre_1 = new Generateur(this);
             let air_1 = new Generateur(this);
             let goute_1 = new Generateur(this);
@@ -210,7 +268,7 @@ export default class Game extends Phaser.Scene {
             this.super_renO_6 = super_6.gen_renderOutline(this.super_renZ_6);
         }
 
-        //Ic�nes joueurs avec nicknames
+        //Ic�nes joueurs avec nicknames
         let perso_1 = new Perso(this);
         let perso_2 = new Perso(this);
         let perso_3 = new Perso(this);
@@ -219,11 +277,14 @@ export default class Game extends Phaser.Scene {
         let perso_6 = new Perso(this);
 
         perso_1.per_ren(100, 120, 'fawkes');
-        this.nick_1 = perso_1.per_ren_Nickname(65, 40, "SIHAM");
-        this.renZ_perso_1 = perso_1.per_renderZone(100, 120, "perso_1");
-        this.renO_perso_1 = perso_1.per_renderOutline(this.renZ_perso_1);
-        this.renZ_nick_perso_1 = perso_1.per_renderZone_nick(100, 120, "perso_1", this.nick_1);
-        this.renO_nick_perso_1 = perso_1.per_renderOutline_nick(this.renZ_nick_perso_1);
+//        this.nick_1 = perso_1.per_ren_Nickname(65, 20, "SIHAM");
+//        this.renZ_perso_1 = perso_1.per_renderZone(100, 120, "perso_1");
+        this.renO_perso_1 = perso_1.per_renderOutline(100, 120, 65/*this.renZ_perso_1*/);
+//        this.renZ_nick_perso_1 = perso_1.per_renderZone_nick(65, 20, "perso_1"/*,this.nick_1*/);
+        this.renO_nick_perso_1 = perso_1.per_renderOutline_nick(37,20/*this.renZ_nick_perso_1*/, 115, 25);
+        this.nick_1 = perso_1.per_ren_Nickname(65, 20, "SIHAM");
+
+
         //this.renZ_perso_2
         //this.renZ_perso_3
         //this.renZ_perso_4
@@ -231,7 +292,12 @@ export default class Game extends Phaser.Scene {
         //this.renZ_perso_6
 
         perso_2.per_ren(1200, 120, 'hutex');
-        perso_2.per_ren_Nickname(1150, 40, "NICOLAS");
+        this.nick_2 = perso_2.per_ren_Nickname(1150, 20, "NICOLAS");
+/*        this.renZ_perso_2 = perso_2.per_renderZone(1190, 120, "perso_2");
+        this.renO_perso_2 = perso_2.per_renderOutline(this.renZ_perso_2);
+        this.renZ_nick_perso_2 = perso_2.per_renderZone_nick(1150, 20, "perso_2",this.nick_2);
+        this.renO_nick_perso_2 = perso_2.per_renderOutline_nick(this.renZ_nick_perso_2, 120, 25);
+        this.nick_2 = perso_2.per_ren_Nickname(1150, 20, "NICOLAS");*/
 
         perso_3.per_ren(640, 120, 'robotec');
         perso_1.per_ren_Nickname(600, 40, "TREVOR", perso_1);
