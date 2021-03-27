@@ -117,13 +117,11 @@ export class Game {
      Shuffle the deck and distribute cards to the players
   */
   init() {
-    if (this.players.length >= 2 && this.players.length <= 6) {
+    if (this.players.length >= 2) {
       this.shuffleDeck();
       this.distribute();
       this.inProgress = true;
       this.currentPlayerIdx = Math.floor(Math.random() * this.players.length);
-    } else {
-      throw "You are not 2 to 6 players";
     }
   }
 

@@ -1,5 +1,4 @@
 import helmet from "helmet";
-import path from "path";
 import express, { NextFunction, Request, Response } from "express";
 import StatusCodes from "http-status-codes";
 import "express-async-errors";
@@ -13,7 +12,6 @@ const { BAD_REQUEST } = StatusCodes;
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-app.use(express.static(path.join(__dirname, "demo")));
 
 // Security
 if (process.env.NODE_ENV === "production") {
