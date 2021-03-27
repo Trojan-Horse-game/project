@@ -29,24 +29,23 @@ describe("small checkup", () => {
   const temparray1: any[] = [];
 
   test("Check if the % of erreur is lesser than 5% ", () => {
-    jest.spyOn(global.Math, 'random').mockReturnValue(0.5);
+    jest.spyOn(global.Math, "random").mockReturnValue(0.5);
     game.deck = [];
     game.createDeck();
     decklen = game.deck.length;
 
-    for (indx = 0; indx < decklen; ++indx)
-      temparray[indx] = game.deck[indx];
+    for (indx = 0; indx < decklen; ++indx) temparray[indx] = game.deck[indx];
 
     game.shuffleDeck();
-   
 
     for (indx = 0; indx < decklen; ++indx)
-      if ( game.deck[indx] === temparray[indx] &&
-         temparray[indx].color == game.deck[indx].color ){
-            similiarty++;
-        
+      if (
+        game.deck[indx] === temparray[indx] &&
+        temparray[indx].color == game.deck[indx].color
+      ) {
+        similiarty++;
       }
-    similiarty = (similiarty * decklen) / 100 ;
+    similiarty = (similiarty * decklen) / 100;
 
     expect(similiarty).toBeLessThan(5);
   });
@@ -58,12 +57,6 @@ describe("small checkup", () => {
     expect(cardrawed).toBe(game.currentPlayer.hand.length);
   });
   test("Check if the distribution went smoothly ", () => {
-    nberplayer = game.players.length;
-    while (nberplayer != 0) {
-      temparray[indx] = game.players[indx].hand.length;
-      nberplayer--;
-      game.players[indx++];
-    }
     //distribute 3 cards
     game.distribute();
     nberplayer = game.players.length;
