@@ -110,11 +110,9 @@ module.exports = function (io: any) {
               socket.emit("player", tmp.pseudo, tmp.species);
             }
 
-            io.in(thisgame.roomId).emit(
-              "join game",
-              player.pseudo,
-              player.species
-            );
+            socket
+              .to(thisgame.roomId)
+              .emit("player", player.pseudo, player.species);
           } catch (err) {
             socket.emit("oops", err);
           }
