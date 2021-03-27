@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title>Socket.IO chat</title>
+    <title>Demo socket</title>
     <style>
       body {
         margin: 0;
@@ -62,6 +62,7 @@
   </head>
 
   <body>
+    <button id="BtnLaunch" style="display: none">launch game</button>
     <form action="" id="create">
       <input id="input0" placeholder="pseudo" autocomplete="off" />
       <select id="input1" name="espece">
@@ -103,11 +104,13 @@
       var input1 = document.getElementById("input1");
       var input2 = document.getElementById("input2");
       var input3 = document.getElementById("input3");
-      var espece = document.getElementById("espece");
-      var especeSelect = document.getElementById("especeSelect");
+      var joueur = document.getElementById("espece");
+      var spcSelect = document.getElementById("especeSelect");
       var msg = document.getElementById("messages");
+      var BtnLaunch = document.getElementById("BtnLaunch") || exit();
 
-      var room;
+      var room = "";
+      var hote = false;
 
       socket.on("oops", (error) => {
         console.log(error);
@@ -118,16 +121,16 @@
 
         join.style.visibility = "hidden";
         create.style.visibility = "hidden";
-        espece.style.visibility = "hidden";
+        joueur.style.visibility = "hidden";
         form.style.visibility = "visible";
-
+        if (hote) BtnLaunch.style.display = "inline";
         console.log(room);
       });
 
       socket.on("available species", (available) => {
         join.style.visibility = "hidden";
         create.style.visibility = "hidden";
-        espece.style.visibility = "visible";
+        joueur.style.visibility = "visible";
         for (var i of available) {
           var opt1 = document.createElement("option");
           opt1.value = i;
@@ -144,7 +147,7 @@
           } else {
             opt1.text = "Totox";
           }
-          especeSelect.add(opt1, null);
+          spcSelect.add(opt1, null);
         }
       });
 
@@ -153,6 +156,24 @@
         var p = document.createElement("p");
         p.appendChild(txt);
         msg.appendChild(p);
+      });
+
+      socket.on("player", (psd, spc) => {
+        let species = "";
+        if (spc == 0) {
+          species = "Hutex";
+        } else if (spc == 1) {
+          species = "Sonyas";
+        } else if (spc == 2) {
+          species = "Xmars";
+        } else if (spc == 3) {
+          species = "Spectre";
+        } else if (spc == 4) {
+          species = "Ulysse";
+        } else {
+          species = "Totox";
+        }
+        console.log(psd + " joue les " + species);
       });
 
       form.addEventListener("submit", function (e) {
@@ -170,6 +191,7 @@
           input2.value = "";
           input3.value = "";
         }
+        hote = false;
       });
 
       create.addEventListener("submit", function (e) {
@@ -177,15 +199,20 @@
         if (input0.value && input1.value) {
           socket.emit("create game", input0.value, input1.value);
           input0.value = "";
+          hote = true;
         }
       });
 
-      espece.addEventListener("submit", function (e) {
+      joueur.addEventListener("submit", function (e) {
         e.preventDefault();
-        if (especeSelect.value) {
-          socket.emit("choose species", especeSelect.value);
-          espece.style.visibility = "hidden";
+        if (spcSelect.value) {
+          socket.emit("choose species", spcSelect.value);
+          joueur.style.visibility = "hidden";
         }
+      });
+
+      BtnLaunch.addEventListener("click", (e) => {
+        socket.emit("launch game", room);
       });
     </script>
   </body>

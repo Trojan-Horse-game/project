@@ -41,14 +41,14 @@ function forfeit(io: any, room: string, playerSocket: Socket) {
       if (thisgame.inProgress) {
         nextTurn(io, thisgame);
       } else {
-        io.in(room).emit("endGame", thisgame.winnerIdx);
+        io.in(room).emit("end game", thisgame.winnerIdx);
       }
     } else {
       thisgame.resign(idx);
       playerSocket.to(room).emit("leave game", playerSocket.id);
 
       if (!thisgame.inProgress) {
-        io.in(room).emit("endGame", thisgame.winnerIdx);
+        io.in(room).emit("end game", thisgame.winnerIdx);
       }
     }
   } catch (err) {
@@ -62,8 +62,12 @@ function nextTurn(io: any, thisGame: Game) {
     thisGame.endTurn();
 
     let current = thisGame.currentPlayer;
+    io.in(thisGame.roomId).emit("next turn", thisGame.currentPlayerIdx);
     io.to(current.socketId).emit("hand", current.hand);
-    io.in(thisGame.roomId).emit("nextTurn", thisGame.currentPlayerIdx);
+
+    if (thisGame.currentPlayer.hand.length === 0) {
+      //TODO: Envoyer les cartes discard par le jouer à cause de distraction nucléaire
+    }
   } while (thisGame.currentPlayer.hand.length === 0);
 }
 
@@ -75,9 +79,10 @@ module.exports = function (io: any) {
     socket.on("create game", (pseudo: string, speciesIndx: number) => {
       // TODO : Empêcher de créer une partie si on est déjà dans une autre
       try {
-        socket.join("ROOM-" + socket.id);
-        let game = new Game("ROOM-" + socket.id);
+        socket.join(socket.id);
+        let game = new Game(socket.id);
         let player = new Player(pseudo, speciesIndx, socket.id);
+
         game.addPlayer(player);
         games.push(game);
         socket.emit("game id", game.roomId);
@@ -94,13 +99,17 @@ module.exports = function (io: any) {
         socket.emit("available species", thisgame.availableSpecies);
         socket.join(thisgame.roomId);
 
-        io.on("choose species", (species: Species) => {
+        socket.on("choose species", (species: Species) => {
           try {
             let thisgame = findGame(roomId, games);
-            console.log("test");
             let player = new Player(pseudo, species, socket.id);
             thisgame.addPlayer(player);
-            socket.emit("game id", thisgame.roomId); // TODO : envoyer également les joueurs actuellement présents
+            socket.emit("game id", thisgame.roomId);
+
+            for (let tmp of thisgame.players) {
+              socket.emit("player", tmp.pseudo, tmp.species);
+            }
+
             io.in(thisgame.roomId).emit(
               "join game",
               player.pseudo,
@@ -119,11 +128,16 @@ module.exports = function (io: any) {
     socket.on("launch game", (roomId: string) => {
       try {
         let thisgame = findGame(roomId, games);
+        if (thisgame.roomId != socket.id) {
+          throw "Error: not the host";
+        }
+
         thisgame.init();
         for (let player of thisgame.players) {
           io.to(player.socketId).emit("hand", player.hand);
           io.in(thisgame.roomId).emit("base", player.base);
         }
+        io.in(thisgame.roomId).emit("next turn", thisgame.currentPlayerIdx);
       } catch (err) {
         socket.emit("oops", err);
       }
@@ -140,15 +154,15 @@ module.exports = function (io: any) {
           socket.emit("oops", error);
         } else {
           thisgame.checkAction(action);
-          socket.to(roomId).emit("playCard", action);
+          socket.to(roomId).emit("play card", action);
 
           thisgame.playAction(action);
-          socket.emit("cardPlayed", thisgame.currentPlayer.hand);
+          socket.emit("card played", thisgame.currentPlayer.hand);
 
           if (thisgame.inProgress) {
             nextTurn(io, thisgame);
           } else {
-            io.in(roomId).emit("endGame", thisgame.winnerIdx);
+            io.in(roomId).emit("end game", thisgame.winnerIdx);
           }
         }
       } catch (err) {
