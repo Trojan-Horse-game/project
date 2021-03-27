@@ -6,15 +6,11 @@
   font-display: swap;
 }
 
-html {
+html, body {
   max-height: 810px;
   max-width: 1440px;
   height: 810px;
   width: 1440px;
-}
-
-body {
-  min-height: 810px;
 }
 
 .v-application, body {
@@ -22,8 +18,7 @@ body {
 }
 
 #app {
-  background-color: #537895;
-  background-image: linear-gradient(315deg, #09203f 0%, #537895 74%);
+  background-color: #171717;
   color: #fff;
 }
 

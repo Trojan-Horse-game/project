@@ -25,27 +25,38 @@
         </map>
       </div>
 
+      <!-- Nom lastname - prenom firstName - username - mail -->
       <div id="content">
-        <table id="infos">
-          <tbody>
-            <tr>
-              <td class="element">Nom</td>
-              <td class="value">{{ lastName }}</td>
-            </tr>
-            <tr>
-              <td class="element">Prénom</td>
-              <td class="value">{{ firstName }}</td>
-            </tr>
-            <tr>
-              <td class="element">Username</td>
-              <td class="value">{{ username }}</td>
-            </tr>
-            <tr>
-              <td class="element">Mail</td>
-              <td class="value">{{ mail }}</td>
-            </tr>
-          </tbody>
-        </table>
+        <v-form id="infos">
+          <v-text-field
+            color="black"
+            :value="lastNameProp"
+            filled
+            :rules="[rules.required]"
+            label="Nom"
+          />
+          <v-text-field
+            color="black"
+            :value="firstNameProp"
+            filled
+            :rules="[rules.required]"
+            label="Prénom"
+          />
+          <v-text-field
+            color="black"
+            :value="usernameProp"
+            filled
+            :rules="[rules.required]"
+            label="Username"
+          />
+          <v-text-field
+            color="black"
+            :value="mailProp"
+            filled
+            :rules="[rules.required, rules.mail]"
+            label="Adresse mail"
+          />
+        </v-form>
 
         <table id="stats">
           <tr>
@@ -56,7 +67,7 @@
                 alt="Étoile noire"
               />Nombre de victoires
             </td>
-            <td class="value bg-none">{{ nbVictories }}</td>
+            <td class="value bg-none">{{ nbVictoriesProp }}</td>
           </tr>
           <tr>
             <td class="element">
@@ -66,7 +77,7 @@
                 alt="Étoile noire"
               />Nombre de défaites
             </td>
-            <td class="value bg-none">{{ nbDefeats }}</td>
+            <td class="value bg-none">{{ nbDefeatsProp }}</td>
           </tr>
         </table>
 
@@ -230,33 +241,37 @@ export default {
     showFriendInput: false,
     validInput: false,
     rules: {
-      required: value => !!value || "Champ requis"
+      required: value => !!value || "Champ requis",
+      mail: value => {
+        const mailPattern = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+        return (value && mailPattern.test(value)) || "Adresse mail invalide";
+      }
     }
   }),
 
   props: {
-    lastName: {
+    lastNameProp: {
       type: String,
       default: "Dorian"
     },
 
-    firstName: {
+    firstNameProp: {
       type: String,
       default: "Arno"
     },
-    username: {
+    usernameProp: {
       type: String,
       default: "frenchAssassin"
     },
-    mail: {
+    mailProp: {
       type: String,
       default: "frenchAssassin@outlook.com"
     },
-    nbVictories: {
+    nbVictoriesProp: {
       type: Number,
       default: 10
     },
-    nbDefeats: {
+    nbDefeatsProp: {
       type: Number,
       default: 2
     },
@@ -321,64 +336,38 @@ $gris: #b9bab9;
 
 #content {
   width: 540px;
-  height: 517px;
+  height: 497px;
   top: 156px;
   left: 459px;
   z-index: 0;
   color: #171717;
   padding: 5px 10px;
+  position: absolute;
+  background-color: #fff;
+  display: flex;
+  flex-direction: column;
+  align-content: space-around;
+  align-items: center;
 }
 
 #container {
   position: relative;
 }
 
-#content {
-  position: absolute;
-  background-color: #fff;
+#infos {
   display: flex;
   flex-direction: column;
-  align-content: space-around;
+  flex-grow: 1;
+  padding: 10px 0px 0px 0px;
+  width: 90%;
 }
 
-.element,
-.value {
-  font-size: 27px;
-}
-
-.value {
-  background-color: $gris;
-  min-width: max-content;
-  width: 100%;
-}
-
-.value.bg-none {
-  background-color: transparent;
-}
-
-table {
-  width: 100%;
-}
-
-#infos {
-  height: 70%;
-}
-
-#stats {
-  margin: 5px 0px;
-  height: 10%;
+.theme--light.v-label {
+  color: rgba(0, 0, 0, 0.6) !important;
 }
 
 #stats td {
   width: max-content;
-}
-
-#infos .element {
-  margin: 0px 10px 0px 0px;
-}
-
-#infos .value {
-  text-align: center;
 }
 
 #stats .element {
@@ -387,19 +376,23 @@ table {
   height: 100%;
 }
 
+#stats .value {
+  min-width: 50px;
+  text-align: center;
+}
+
 #stats img {
   margin: 0px 10px 0px 0px;
 }
 
 #buttons-row {
   display: flex;
-  justify-content: space-evenly;
+  justify-content: center;
 }
 
 #buttons-row .v-btn {
   background-color: transparent !important;
   color: #000 !important;
-  border: 1px solid #000;
 }
 
 li {
