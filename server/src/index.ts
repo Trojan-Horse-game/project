@@ -16,7 +16,7 @@ require("./routes/game.routes")(io);
 createConnection();
 
 app.get("/", function (req: Request, res: Response) {
-  res.sendFile(path.resolve("./src/index.html"));
+  res.sendFile(path.resolve("./src/demo/index.html"));
 });
 
 app.use(cors());
