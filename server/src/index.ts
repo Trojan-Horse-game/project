@@ -5,7 +5,8 @@ import "reflect-metadata";
 import app from "./Server";
 import cors from "cors";
 import path from "path";
-import { Request, Response } from "express";
+import express, { Request, Response } from "express";
+import usersRouter from "./routes/user.routes";
 import { createConnection } from "typeorm";
 import readline from "readline";
 import { exit } from "process";
@@ -28,7 +29,7 @@ function ask(quest: string): Promise<string> {
 
 (async function chooseDemo() {
   console.log("1. Demo gamelogic");
-  const answer = Number(await ask("2. Demo socket"));
+  const answer = Number(await ask("2. Demo bdd/socket"));
 
   if (isNaN(answer)) {
     console.log("Veuillez entrer un nombre valide !");
@@ -54,6 +55,9 @@ function ask(quest: string): Promise<string> {
     require("./routes/game.routes")(io);
 
     createConnection();
+    app.use("/api/users", usersRouter);
+    app.use(express.urlencoded({ extended: false }));
+    app.use(express.json());
 
     app.get("/", function (req: Request, res: Response) {
       res.sendFile(path.resolve("./src/index.html"));
