@@ -5,7 +5,8 @@ import "reflect-metadata";
 import app from "./Server";
 import cors from "cors";
 import path from "path";
-import { Request, Response } from "express";
+import express, { Request, Response } from "express";
+import usersRouter from "./routes/user.routes";
 import { createConnection } from "typeorm";
 
 const port = Number(process.env.PORT || 3000);
@@ -14,8 +15,11 @@ const io = require("socket.io")(http);
 require("./routes/game.routes")(io);
 
 createConnection();
+app.use("/api/users", usersRouter);
+app.use(express.urlencoded({ extended: false }));
+app.use(express.json());
 
-app.get("/", function (req: Request, res: Response) {
+app.get("/", function (req:Request, res:Response) {
   res.sendFile(path.resolve("./src/index.html"));
 });
 
