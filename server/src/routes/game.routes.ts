@@ -73,18 +73,20 @@ function nextTurn(io: any, thisGame: Game) {
 
 module.exports = function (io: any) {
   io.on("connection", (socket: Socket) => {
+    console.log("User " + socket.id + " connected");
     // TODO : Vérifier que l'user a un token d'authentification valide ?
 
     // When creating a new game
     socket.on("create game", (pseudo: string, speciesIndx: number) => {
       // TODO : Empêcher de créer une partie si on est déjà dans une autre
       try {
-        socket.join(socket.id);
-        let game = new Game(socket.id);
+        const room = "ROOM-"+socket.id
+        socket.join(room);
+        let game = new Game(room);
         let player = new Player(pseudo, speciesIndx, socket.id);
-
         game.addPlayer(player);
         games.push(game);
+        console.log(pseudo + " created the game : " + game.roomId);
         socket.emit("game id", game.roomId);
       } catch (err) {
         socket.emit("oops", err);
@@ -97,27 +99,23 @@ module.exports = function (io: any) {
       try {
         let thisgame = findGame(roomId, games);
         socket.emit("available species", thisgame.availableSpecies);
-        socket.join(thisgame.roomId);
 
         socket.on("choose species", (species: Species) => {
-          try {
-            let thisgame = findGame(roomId, games);
-            let player = new Player(pseudo, species, socket.id);
-            thisgame.addPlayer(player);
-            socket.emit("game id", thisgame.roomId);
+          let player = new Player(pseudo, species, socket.id);
+          thisgame.addPlayer(player);
+          socket.join(thisgame.roomId);
+          console.log(pseudo + " joined the game " + roomId);
+          socket.emit("game id", thisgame.roomId);
 
-            for (let tmp of thisgame.players) {
-              socket.emit("player", tmp.pseudo, tmp.species);
-            }
-
-            io.in(thisgame.roomId).emit(
-              "join game",
-              player.pseudo,
-              player.species
-            );
-          } catch (err) {
-            socket.emit("oops", err);
+          for (let tmp of thisgame.players) {
+            socket.emit("players", tmp.pseudo, tmp.species);
           }
+
+          io.in(thisgame.roomId).emit(
+            "join game",
+            player.pseudo,
+            player.species
+          );
         });
       } catch (err) {
         socket.emit("oops", err);
@@ -129,7 +127,7 @@ module.exports = function (io: any) {
       try {
         let thisgame = findGame(roomId, games);
         if (thisgame.roomId != socket.id) {
-          throw "Error: not the host";
+          throw "Permission denied : not the host";
         }
 
         thisgame.init();
@@ -177,8 +175,7 @@ module.exports = function (io: any) {
         let player = findPlayer(socket.id, thisgame);
 
         if (player !== thisgame.currentPlayer) {
-          let error = "Ce n'est pas le tour du joueur";
-          socket.emit("oops", error);
+          throw "Ce n'est pas le tour du joueur";
         } else {
           thisgame.checkDiscard(indexDiscard);
 
@@ -220,9 +217,10 @@ module.exports = function (io: any) {
     // When a user disconnects from the game
     socket.on("disconnecting", (_reason) => {
       for (const room of socket.rooms) {
-        if (room == socket.id) {
+        if (room !== socket.id) {
           forfeit(io, room, socket);
         }
+        console.log("User " + socket.id + " disconnected");
       }
     });
   });

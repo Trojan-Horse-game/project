@@ -62,7 +62,6 @@
   </head>
 
   <body>
-    <button id="BtnLaunch" style="display: none">launch game</button>
     <form action="" id="create">
       <input id="input0" placeholder="pseudo" autocomplete="off" />
       <select id="input1" name="espece">
@@ -107,10 +106,8 @@
       var joueur = document.getElementById("espece");
       var spcSelect = document.getElementById("especeSelect");
       var msg = document.getElementById("messages");
-      var BtnLaunch = document.getElementById("BtnLaunch") || exit();
 
       var room = "";
-      var hote = false;
 
       socket.on("oops", (error) => {
         console.log(error);
@@ -123,7 +120,6 @@
         create.style.visibility = "hidden";
         joueur.style.visibility = "hidden";
         form.style.visibility = "visible";
-        if (hote) BtnLaunch.style.display = "inline";
         console.log(room);
       });
 
@@ -191,7 +187,6 @@
           input2.value = "";
           input3.value = "";
         }
-        hote = false;
       });
 
       create.addEventListener("submit", function (e) {
@@ -199,7 +194,6 @@
         if (input0.value && input1.value) {
           socket.emit("create game", input0.value, input1.value);
           input0.value = "";
-          hote = true;
         }
       });
 
@@ -211,9 +205,6 @@
         }
       });
 
-      BtnLaunch.addEventListener("click", (e) => {
-        socket.emit("launch game", room);
-      });
     </script>
   </body>
 </html>
