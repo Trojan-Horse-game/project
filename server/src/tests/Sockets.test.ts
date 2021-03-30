@@ -63,10 +63,10 @@ describe("Back-front communication testing", () => {
 
   test("get roomdId should work", (done) => {
     clientSocket.on("game id", (roomId: string) => {
-      expect(roomId).toBe(clientSocket.id);
+      expect(roomId).toBe("ROOM-"+clientSocket.id);
       done();
     });
-    serverSocket.emit("game id", clientSocket.id);
+    serverSocket.emit("game id", "ROOM-"+clientSocket.id);
   });
 
   test("join game should work", (done) => {
