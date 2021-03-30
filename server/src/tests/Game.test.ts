@@ -24,9 +24,7 @@ describe("small checkup", () => {
   let similiarty = 0;
   let cardrawed = 3;
   let nberplayer = 0;
-  let tmpArrlen = 0;
   const temparray: any[] = [];
-  const temparray1: any[] = [];
 
   test("Check if the % of erreur is lesser than 5% ", () => {
     jest.spyOn(global.Math, "random").mockReturnValue(0.5);
@@ -57,23 +55,15 @@ describe("small checkup", () => {
     expect(cardrawed).toBe(game.currentPlayer.hand.length);
   });
   test("Check if the distribution went smoothly ", () => {
+    nberplayer = game.players.length;
+    for (indx = 0; indx < nberplayer; indx++)
+      temparray[indx] = game.players[indx].hand.length;
+
     //distribute 3 cards
     game.distribute();
-    nberplayer = game.players.length;
-    indx = 0;
 
-    while (nberplayer != 0) {
-      temparray1[indx] = game.players[indx].hand.length;
-      nberplayer--;
-      game.players[indx++];
-    }
-    indx = 0;
-    tmpArrlen = temparray.length;
-
-    while (tmpArrlen != 0) {
-      expect(temparray[indx] + 3).toBe(temparray1[indx]);
-      tmpArrlen--;
-    }
+    for (indx = 0; indx < nberplayer; indx++)
+      expect(temparray[indx] + 3).toBe(game.players[indx].hand.length);
   });
 });
 
