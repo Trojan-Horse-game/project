@@ -35,6 +35,9 @@ usersRouter.get("/:id", async (req: Request, res: Response) => {
 
 usersRouter.post("/signup", async (req: Request, res: Response) => {
   try {
+    if (!(req.body.username && req.body.password)) {
+      throw "Incorrect data format !";
+    }
     const salt = await bcrypt.genSalt(10);
     const hash = await bcrypt.hash(req.body.password, salt);
     const user = new User();
@@ -51,6 +54,9 @@ usersRouter.post("/signup", async (req: Request, res: Response) => {
 
 usersRouter.post("/signin", async (req: Request, res: Response) => {
   try {
+    if (!(req.body.username && req.body.password)) {
+      throw "Incorrect data format !";
+    }
     const user = await getConnection()
       .getRepository(User)
       .find({
@@ -77,13 +83,22 @@ usersRouter.post("/signin", async (req: Request, res: Response) => {
 // PUT users/:id
 usersRouter.put("/:id", async (req: Request, res: Response) => {
   try {
-    const user = await getConnection().getRepository(User).findOne(req.params.id);
-    if(user){
+    const user = await getConnection()
+      .getRepository(User)
+      .findOne(req.params.id);
+    if (user) {
+      if (req.body.password) {
+        const salt = await bcrypt.genSalt(10);
+        const hash = await bcrypt.hash(req.body.password, salt);
+        req.body.password = hash;
+      }
+      if (req.body.id) {
+        throw "Permisison denied !";
+      }
       await getConnection().getRepository(User).merge(user, req.body);
       const results = await getConnection().getRepository(User).save(user);
       return res.send(results);
-    }
-    else{
+    } else {
       throw "User not found !";
     }
   } catch (err) {
@@ -91,13 +106,13 @@ usersRouter.put("/:id", async (req: Request, res: Response) => {
   }
 });
 
-usersRouter.put("/games/:id", async (req: Request, res: Response) => {
+usersRouter.put("/looses/:id", async (req: Request, res: Response) => {
   try {
     const user = await getConnection()
       .getRepository(User)
       .findOne(req.params.id);
     if (user) {
-      user.games ++;
+      user.games++;
       const results = await getConnection().getRepository(User).save(user);
       return res.send(results);
     } else {
@@ -106,7 +121,7 @@ usersRouter.put("/games/:id", async (req: Request, res: Response) => {
   } catch (err) {
     res.status(400).send(err);
   }
-})
+});
 
 usersRouter.put("/wins/:id", async (req: Request, res: Response) => {
   try {
@@ -114,7 +129,8 @@ usersRouter.put("/wins/:id", async (req: Request, res: Response) => {
       .getRepository(User)
       .findOne(req.params.id);
     if (user) {
-      user.wins ++;
+      user.games++;
+      user.wins++;
       const results = await getConnection().getRepository(User).save(user);
       return res.send(results);
     } else {
@@ -123,11 +139,13 @@ usersRouter.put("/wins/:id", async (req: Request, res: Response) => {
   } catch (err) {
     res.status(400).send(err);
   }
-})
+});
 
 usersRouter.delete("/:id", async (req: Request, res: Response) => {
   try {
-    const results = await getConnection().getRepository(User).delete(req.params.id);
+    const results = await getConnection()
+      .getRepository(User)
+      .delete(req.params.id);
     res.status(200).send(results);
   } catch (err) {
     res.status(400).send(err);

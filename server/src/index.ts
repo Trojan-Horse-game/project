@@ -35,19 +35,9 @@ function ask(quest: string): Promise<string> {
     console.log("Veuillez entrer un nombre valide !");
     chooseDemo();
   } else if (answer == 1) {
-    // Start the server
-    const port = Number(process.env.PORT || 3000);
-    // eslint-disable-next-line @typescript-eslint/no-misused-promises
-    const server = app.listen(port, async () => {
-      console.log("Express server started on port: " + port);
+
       await startGame();
 
-      server.close(() => {
-        console.log("Express stopped server");
-      });
-      exit(0);
-    });
-    chooseDemo();
   } else if (answer == 2) {
     const port = Number(process.env.PORT || 3000);
     const http = require("http").Server(app);

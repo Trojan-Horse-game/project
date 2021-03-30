@@ -98,6 +98,9 @@ module.exports = function (io: any) {
       // TODO : Empêcher de rejoindre une partie si on est déjà dans une autre
       try {
         let thisgame = findGame(roomId, games);
+        if (thisgame.players.length=6){
+          throw "Room is full !";
+        }
         socket.emit("available species", thisgame.availableSpecies);
 
         socket.on("choose species", (species: Species) => {
@@ -127,7 +130,10 @@ module.exports = function (io: any) {
       try {
         let thisgame = findGame(roomId, games);
         if (thisgame.roomId != socket.id) {
-          throw "Permission denied : not the host";
+          throw "Permission denied : not the host !";
+        }
+        if(thisgame.players.length = 1){
+          throw "Not enough players !"
         }
 
         thisgame.init();

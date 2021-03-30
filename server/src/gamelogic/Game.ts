@@ -272,6 +272,7 @@ export class Game {
     if (winnerIdx !== undefined) {
       this.endGame(winnerIdx);
     }
+    this.endTurn();
   }
 
   /* Check if an action is valid
