@@ -21,6 +21,9 @@ usersRouter.get("/", async (req: Request, res: Response) => {
 
 usersRouter.get("/:id", async (req: Request, res: Response) => {
   try {
+    if (!req.params.id) {
+      throw "Specify id !";
+    }
     const results = await getConnection()
       .getRepository(User)
       .findOne(req.params.id);
@@ -37,6 +40,14 @@ usersRouter.post("/signup", async (req: Request, res: Response) => {
   try {
     if (!(req.body.username && req.body.password)) {
       throw "Incorrect data format !";
+    }
+    const takenUsername = await getConnection()
+      .getRepository(User)
+      .find({
+        where: { username: req.body.username },
+      });
+    if (takenUsername) {
+      throw "Username already taken !";
     }
     const salt = await bcrypt.genSalt(10);
     const hash = await bcrypt.hash(req.body.password, salt);
@@ -83,10 +94,23 @@ usersRouter.post("/signin", async (req: Request, res: Response) => {
 // PUT users/:id
 usersRouter.put("/:id", async (req: Request, res: Response) => {
   try {
+    if (!req.params.id) {
+      throw "Specify id !";
+    }
     const user = await getConnection()
       .getRepository(User)
       .findOne(req.params.id);
     if (user) {
+      if (req.body.username) {
+        const takenUsername = await getConnection()
+          .getRepository(User)
+          .find({
+            where: { username: req.body.username },
+          });
+        if (takenUsername) {
+          throw "Username already taken !";
+        }
+      }
       if (req.body.password) {
         const salt = await bcrypt.genSalt(10);
         const hash = await bcrypt.hash(req.body.password, salt);
@@ -108,6 +132,9 @@ usersRouter.put("/:id", async (req: Request, res: Response) => {
 
 usersRouter.put("/looses/:id", async (req: Request, res: Response) => {
   try {
+    if (!req.params.id) {
+      throw "Specify id !";
+    }
     const user = await getConnection()
       .getRepository(User)
       .findOne(req.params.id);
@@ -125,6 +152,9 @@ usersRouter.put("/looses/:id", async (req: Request, res: Response) => {
 
 usersRouter.put("/wins/:id", async (req: Request, res: Response) => {
   try {
+    if (!req.params.id) {
+      throw "Specify id !";
+    }
     const user = await getConnection()
       .getRepository(User)
       .findOne(req.params.id);
@@ -143,6 +173,9 @@ usersRouter.put("/wins/:id", async (req: Request, res: Response) => {
 
 usersRouter.delete("/:id", async (req: Request, res: Response) => {
   try {
+    if (!req.params.id) {
+      throw "Specify id !";
+    }
     const results = await getConnection()
       .getRepository(User)
       .delete(req.params.id);
