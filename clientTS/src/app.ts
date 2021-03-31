@@ -1,24 +1,18 @@
 import { GameScene } from "./gameScene";
 import "phaser";
-const config: GameConfig = {
+const config = {
   title: "Les cavaliers de troie",
-  width: 800,
-  height: 600,
+  width: 1280,
+  height: 780,
   parent: "game",
   scene: [GameScene],
-  physics: {
-    default: "arcade",
-    arcade: {
-      debug: false
-    }
-  },
-  backgroundColor: "#000033"
+  //backgroundColor: "#000033"
 };
 
 
 
 export class CavalierDeTroie extends Phaser.Game {
-  constructor(config: GameConfig) {
+  constructor(config) {
     super(config);
   }
 }
