@@ -8,7 +8,9 @@ export class GameScene extends Phaser.Scene {
     
     nbPlayers : number;
     nbCartesTas: number;
-
+    playerPosition: number [][] ;
+    players: Perso [] ;
+    namePlayers: string [];
 
     constructor() {
         super({
@@ -17,27 +19,49 @@ export class GameScene extends Phaser.Scene {
     }
     init(/*params: any*/): void {
         this.nbPlayers = 6;
+        this.playerPosition = [];
+        this.players = [] ;
+        this.namePlayers = [];
+        this.namePlayers[0] = "YOUNESS";
+        this.namePlayers[1] = "AGHILAS";
+        this.namePlayers[2] = "SIHAM";
+        this.namePlayers[3] = "ISA";
+        this.namePlayers[4] = "NICOLAS";
+        this.namePlayers[5] = "HAKIM";
+
     }
 
     preload(): void {
         this.load.image('background', 'src/assets/stars_background.jpg');
         this.load.image('carte_verso', 'src/assets/carte_verso.png');
+        this.load.image('fawkes', 'src/assets/Fawkes.png');
+        this.load.image('xmars', 'src/assets/Xmars.png');
+        this.load.image('hutex', 'src/assets/Hutex.png');
+        this.load.image('robotec', 'src/assets/Robotec.png');
+        this.load.image('spectre', 'src/assets/Spectre.png');
+        this.load.image('totox', 'src/assets/Totox.png');
 
 /*        this.load.image('foudre', 'src/assets/foudre_log.png');
         this.load.image('air', 'src/assets/air_log.png');
         this.load.image('goute', 'src/assets/goute_log.png');
         this.load.image('radiation', 'src/assets/radiation_log.png');
         this.load.image('super', 'src/assets/super_log.png');
-
-        this.load.image('fawkes', 'src/assets/Fawkes.png');
-        this.load.image('hutex', 'src/assets/Hutex.png');
-        this.load.image('robotec', 'src/assets/Robotec.png');
-        this.load.image('spectre', 'src/assets/Spectre.png');
-        this.load.image('totox', 'src/assets/Totox.png');
-        this.load.image('xmars', 'src/assets/Xmars.png');*/
+        */
     }
-
+    
     create(): void {
+        let {width, height} = this.sys.game.canvas;
+        //Here we compute the worst case, i.e 6 players are in the game
+        //and we will choose position according to the numbers of players
+        //the index is 0 for me, and 1,2,3,4,5 for the others, in clockwise direction
+        this.playerPosition.push([width/4, height - 100]);//position of main player
+        this.playerPosition.push([100, (height/4)*3 - 100]);//player2
+        this.playerPosition.push([100,120]);//position of player 3
+        this.playerPosition.push([width/2, 100]);//player4
+        this.playerPosition.push([width - 100, 100]);//player5
+        this.playerPosition.push([width - 100, (height/4)*3 - 100]);//player6
+
+
         const bg = this.add.image(0, 0, 'background').setOrigin(0, 0).setScale(1.09);
 
         //button distribution cards
@@ -97,6 +121,23 @@ export class GameScene extends Phaser.Scene {
                 outline.strokeRect(renderZone.x - renderZone.input.hitArea.width / 2, renderZone.y - renderZone.input.hitArea.height / 2, renderZone.input.hitArea.width, renderZone.input.hitArea.height);  
             }
         })
+
+        //affichage des personnages
+        for (let i = 0; i < this.nbPlayers; i++) {
+            this.players[i] = new Perso(this);
+        }
+
+        this.players[0].per_ren(this.playerPosition[0][0], this.playerPosition[0][1], 'xmars');
+        this.players[1].per_ren(this.playerPosition[1][0], this.playerPosition[1][1], 'totox');
+        this.players[2].per_ren(this.playerPosition[2][0], this.playerPosition[2][1], 'fawkes');
+        this.players[3].per_ren(this.playerPosition[3][0], this.playerPosition[3][1], 'robotec');
+        this.players[4].per_ren(this.playerPosition[4][0], this.playerPosition[4][1], 'hutex');
+        this.players[5].per_ren(this.playerPosition[5][0], this.playerPosition[5][1], 'spectre');
+
+        this.players[2].per_ren_Nickname(this.playerPosition[2][0] - 30 , this.playerPosition[2][1] - 100,this.namePlayers[2]);
+
+
+
     }
 
 

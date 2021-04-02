@@ -38,15 +38,15 @@ export default class Perso {
         return persoDropZone;
     }
 
-    per_renderOutline_nick (x,y/*persoDropZone*/,w,h) {
+    per_renderOutline_nick (x: number, y: number, w: number, h: number) {
         var persoDropZoneOutline = this.scene.add.graphics();
         persoDropZoneOutline.fillStyle(0x999999);
-        persoDropZoneOutline.fillRect(/*persoDropZone.*/x,/*persoDropZone.*/y,w,h/*persoDropZone.x - persoDropZone.input.hitArea.width / 2, persoDropZone.y - persoDropZone.input.hitArea.height / 2, persoDropZone.input.hitArea.width, persoDropZone.input.hitArea.height*/);
-        persoDropZoneOutline.strokeRect(/*persoDropZone.*/x,/*persoDropZone.*/y,w,h/*persoDropZone.x - persoDropZone.input.hitArea.width / 2, persoDropZone.y - persoDropZone.input.hitArea.height / 2, persoDropZone.input.hitArea.width, persoDropZone.input.hitArea.height*/);
+        persoDropZoneOutline.fillRect(x,y,w,h);
         return persoDropZoneOutline;
     }
 
 //    displayPlayer (xImage: number, yImage: number, image: string, radiusCircle: number, xName: number, yName: number, widthName: number, heightName: number,name: string) {
+//    displayPlayer (players: perso[], playerPosition: number [][], nbPlayers: number) {
  //       perso_1.per_ren(xImage, yImage, image);
 //        this.nick_1 = perso_1.per_ren_Nickname(65, 20, "SIHAM");
 //        this.renZ_perso_1 = perso_1.per_renderZone(100, 120, "perso_1");
