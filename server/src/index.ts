@@ -19,7 +19,7 @@ app.use("/api/users", usersRouter);
 app.use(express.urlencoded({ extended: false }));
 app.use(express.json());
 
-app.get("/", function (req:Request, res:Response) {
+app.get("/", function (req: Request, res: Response) {
   res.sendFile(path.resolve("./src/index.html"));
 });
 
