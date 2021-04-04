@@ -123,6 +123,10 @@
         console.log(room);
       });
 
+      socket.on("close tab", () => {
+        window.close();
+      })
+
       socket.on("available species", (available) => {
         join.style.visibility = "hidden";
         create.style.visibility = "hidden";
