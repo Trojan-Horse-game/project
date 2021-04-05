@@ -3,25 +3,24 @@ import {
   Column,
   PrimaryGeneratedColumn,
   ManyToOne,
-  OneToMany,
-  JoinColumn,
-  PrimaryColumn,
+  Unique,
 } from "typeorm";
-import { User } from "../entity/user";
+import { User } from "./user";
 
 @Entity()
+@Unique(["user1_id", "user2_id"])
 export class Friendship {
   @PrimaryGeneratedColumn()
-  id_friendship: number;
+  id: number;
 
-  //@ManyToOne(() => User, (user) => user.id)
+  @ManyToOne(() => User, (user: User) => user.id)
   @Column()
-  user1_id!: number;
+  user1_id: number;
 
-  // @ManyToOne(() => User, (user) => user.id)
+  @ManyToOne(() => User, (user: User) => user.id)
   @Column()
   user2_id: number;
 
-  @Column()
-  confirmed!: number;
+  @Column({ default: "pending" })
+  status: string;
 }

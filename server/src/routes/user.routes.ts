@@ -5,6 +5,7 @@ import { User } from "../entity/user";
 import { getConnection } from "typeorm";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
+import { Friendship } from "src/entity/friendship";
 
 // Router Definition
 const usersRouter = Router();
@@ -14,7 +15,6 @@ usersRouter.get("/", async (req: Request, res: Response) => {
     const users = await getConnection().getRepository(User).find();
     res.status(200).json(users);
   } catch (err) {
-    console.log(err);
     res.status(400).send(err);
   }
 });
@@ -39,14 +39,14 @@ usersRouter.get("/:id", async (req: Request, res: Response) => {
 usersRouter.post("/signup", async (req: Request, res: Response) => {
   try {
     if (!(req.body.username && req.body.password)) {
-      throw "Incorrect data format !";
+      throw "Invalid data format !";
     }
     const takenUsername = await getConnection()
       .getRepository(User)
       .find({
         where: { username: req.body.username },
       });
-    if (takenUsername) {
+    if (takenUsername.length > 0) {
       throw "Username already taken !";
     }
     const salt = await bcrypt.genSalt(10);
@@ -107,7 +107,7 @@ usersRouter.put("/:id", async (req: Request, res: Response) => {
           .find({
             where: { username: req.body.username },
           });
-        if (takenUsername) {
+        if (takenUsername.length > 0) {
           throw "Username already taken !";
         }
       }
@@ -176,6 +176,18 @@ usersRouter.delete("/:id", async (req: Request, res: Response) => {
     if (!req.params.id) {
       throw "Specify id !";
     }
+    const friendships = await getConnection()
+      .getRepository(Friendship)
+      .find({
+        where: [{ user1_id: req.params.id }, { user2_id: req.params.id }],
+      });
+
+    for(const one of friendships){
+      await getConnection()
+      .getRepository(Friendship)
+      .delete(one.id);
+    }
+
     const results = await getConnection()
       .getRepository(User)
       .delete(req.params.id);

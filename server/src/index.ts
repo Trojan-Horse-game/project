@@ -7,10 +7,8 @@ import cors from "cors";
 import path from "path";
 import express, { Request, Response } from "express";
 import usersRouter from "./routes/user.routes";
-import friendshipRouter from "./routes/friendship.routes";
+import friendshipsRouter from "./routes/friendship.routes";
 import { createConnection } from "typeorm";
-app.use("/api/users", usersRouter);
-app.use("/api/friendship", friendshipRouter);
 
 const port = Number(process.env.PORT || 3000);
 const http = require("http").Server(app);
@@ -19,6 +17,7 @@ require("./routes/game.routes")(io);
 
 createConnection();
 app.use("/api/users", usersRouter);
+app.use("/api/friendships", friendshipsRouter)
 app.use(express.urlencoded({ extended: false }));
 app.use(express.json());
 
