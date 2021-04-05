@@ -45,15 +45,13 @@ export default class Perso {
         return persoDropZoneOutline;
     }
 
-//    displayPlayer (xImage: number, yImage: number, image: string, radiusCircle: number, xName: number, yName: number, widthName: number, heightName: number,name: string) {
-//    displayPlayer (players: perso[], playerPosition: number [][], nbPlayers: number) {
- //       perso_1.per_ren(xImage, yImage, image);
-//        this.nick_1 = perso_1.per_ren_Nickname(65, 20, "SIHAM");
-//        this.renZ_perso_1 = perso_1.per_renderZone(100, 120, "perso_1");
-//        this.renO_perso_1 = perso_1.per_renderOutline(xImage, yImage, radiusCircle/*this.renZ_perso_1*/);
-//        this.renZ_nick_perso_1 = perso_1.per_renderZone_nick(65, 20, "perso_1"/*,this.nick_1*/);
-//        this.renO_nick_perso_1 = perso_1.per_renderOutline_nick((xName +10)/2, yName/*this.renZ_nick_perso_1*/, widthName, heightName);
-//        this.nick_1 = perso_1.per_ren_Nickname(xName, yName, name);
-//    }
+// NB: ici j'écris deux fois le prénom, je n'ai pas trouver de solution plus élégante pour que le fond se fit bien au nom
+    displayPlayers (players: Perso[], playerPosition: number [][], playerIdx: number, sprite: string, namePlayers: string[]) {
+        players[playerIdx].per_ren(playerPosition[playerIdx][0], playerPosition[playerIdx][1], sprite);
+        players[playerIdx].per_renderOutline(playerPosition[playerIdx][0], playerPosition[playerIdx][1], 65);
+        let nom = players[playerIdx].per_ren_Nickname(playerPosition[playerIdx][0] - 40 , playerPosition[playerIdx][1] - 100, namePlayers[playerIdx]);
+        players[playerIdx].per_renderOutline_nick(nom.x , nom.y  , nom.displayWidth , nom.displayHeight);//130, 25);
+        players[playerIdx].per_ren_Nickname(playerPosition[playerIdx][0] - 40 , playerPosition[playerIdx][1] - 100, namePlayers[playerIdx]);
+    }
     
 }

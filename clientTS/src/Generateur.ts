@@ -28,4 +28,9 @@ export default class Generateur {
     );
     return generateurDropZoneOutline;
   }
+  displayGenerator(x: number, y: number, sprite: string, name: string) {
+    this.gen_render(x, y, sprite);
+    let foudre_renZ_1 = this.gen_renderZone(x, y, name);
+    this.gen_renderOutline(foudre_renZ_1);
+  }
 }

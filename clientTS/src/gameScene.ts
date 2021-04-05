@@ -11,6 +11,7 @@ export class GameScene extends Phaser.Scene {
     playerPosition: number [][] ;
     players: Perso [] ;
     namePlayers: string [];
+    generators: Generateur [][]
 
     constructor() {
         super({
@@ -28,6 +29,7 @@ export class GameScene extends Phaser.Scene {
         this.namePlayers[3] = "ISA";
         this.namePlayers[4] = "NICOLAS";
         this.namePlayers[5] = "HAKIM";
+        this.generators = [];
 
     }
 
@@ -41,12 +43,11 @@ export class GameScene extends Phaser.Scene {
         this.load.image('spectre', 'src/assets/Spectre.png');
         this.load.image('totox', 'src/assets/Totox.png');
 
-/*        this.load.image('foudre', 'src/assets/foudre_log.png');
+        this.load.image('foudre', 'src/assets/foudre_log.png');
         this.load.image('air', 'src/assets/air_log.png');
-        this.load.image('goute', 'src/assets/goute_log.png');
+        this.load.image('eau', 'src/assets/goute_log.png');
         this.load.image('radiation', 'src/assets/radiation_log.png');
         this.load.image('super', 'src/assets/super_log.png');
-        */
     }
     
     create(): void {
@@ -122,24 +123,116 @@ export class GameScene extends Phaser.Scene {
             }
         })
 
-        //affichage des personnages
+        //Todo: ajouter éventuellement une drop zone sur les personnages
+        //affichage des personnages + leur noms
         for (let i = 0; i < this.nbPlayers; i++) {
             this.players[i] = new Perso(this);
         }
+        
+        this.players[0].displayPlayers(this.players, this.playerPosition, 0, 'xmars', this.namePlayers);
+        this.players[1].displayPlayers(this.players, this.playerPosition, 1, 'totox', this.namePlayers);
+        this.players[2].displayPlayers(this.players, this.playerPosition, 2, 'fawkes', this.namePlayers);
+        this.players[3].displayPlayers(this.players, this.playerPosition, 3, 'robotec', this.namePlayers);
+        this.players[4].displayPlayers(this.players, this.playerPosition, 4, 'hutex', this.namePlayers);
+        this.players[5].displayPlayers(this.players, this.playerPosition, 5, 'spectre', this.namePlayers);
+/*
+        indice 0 : foudre
+        indice 1 : air
+        indice 2 : goute
+        indice 3 : radiation
+        indice 4 : super
+*/            
+        for (let i = 0; i < this.nbPlayers; i++) {
+            this.generators.push([]);
+            for (let j = 0; j < 5; j++) {
+                this.generators[i][j] = new Generateur(this);                
+            }
+        }
 
-        this.players[0].per_ren(this.playerPosition[0][0], this.playerPosition[0][1], 'xmars');
-        this.players[1].per_ren(this.playerPosition[1][0], this.playerPosition[1][1], 'totox');
-        this.players[2].per_ren(this.playerPosition[2][0], this.playerPosition[2][1], 'fawkes');
-        this.players[3].per_ren(this.playerPosition[3][0], this.playerPosition[3][1], 'robotec');
-        this.players[4].per_ren(this.playerPosition[4][0], this.playerPosition[4][1], 'hutex');
-        this.players[5].per_ren(this.playerPosition[5][0], this.playerPosition[5][1], 'spectre');
+        //Player 0 (main player)
+        let x = this.playerPosition[0][0];
+        let y = this.playerPosition[0][1];
+        this.generators[0][0].displayGenerator(x + 170, y -155, 'foudre', "foudre_0");
+        this.generators[0][1].displayGenerator(x + 250, y -155 , 'air', "air_0");
+        this.generators[0][2].displayGenerator(x + 330, y -155 , 'eau', "eau_0");
+        this.generators[0][3].displayGenerator(x + 410, y -155 , 'radiation', "radiation_0");
+        this.generators[0][4].displayGenerator(x + 490, y -155 , 'super', "super_0");
 
-        this.players[2].per_ren_Nickname(this.playerPosition[2][0] - 30 , this.playerPosition[2][1] - 100,this.namePlayers[2]);
+        //player 1
+        x = this.playerPosition[1][0];
+        y = this.playerPosition[1][1];
+        this.generators[1][0].displayGenerator(x + 95, y - 80, 'foudre', "foudre_1");
+        this.generators[1][1].displayGenerator(x + 110, y , 'air', "air_1");
+        this.generators[1][2].displayGenerator(x + 95, y + 75 , 'eau', "eau_1");
+        this.generators[1][3].displayGenerator(x + 25, y + 110 , 'radiation', "radiation_1");
+        this.generators[1][4].displayGenerator(x - 50, y + 110 , 'super', "super_1");
 
+        //player 2
+        x = this.playerPosition[2][0];
+        y = this.playerPosition[2][1];
+        this.generators[2][0].displayGenerator(x + 95, y - 80, 'foudre', "foudre_2");
+        this.generators[2][1].displayGenerator(x + 110, y , 'air', "air_2");
+        this.generators[2][2].displayGenerator(x + 95, y + 75 , 'eau', "eau_2");
+        this.generators[2][3].displayGenerator(x + 25, y + 110 , 'radiation', "radiation_2");
+        this.generators[2][4].displayGenerator(x - 50, y + 110 , 'super', "super_2");
 
+        //player 3
+        x = this.playerPosition[3][0];
+        y = this.playerPosition[3][1];
+        this.generators[3][0].displayGenerator(x -110, y - 30, 'foudre', "foudre_3");
+        this.generators[3][1].displayGenerator(x -100, y + 65, 'air', "air_3");
+        this.generators[3][2].displayGenerator(x , y + 110 , 'eau', "eau_3");
+        this.generators[3][3].displayGenerator(x + 100, y + 65 , 'radiation', "radiation_3");
+        this.generators[3][4].displayGenerator(x +110, y - 30 , 'super', "super_3");
+
+        //player 4
+        x = this.playerPosition[4][0];
+        y = this.playerPosition[4][1];
+        this.generators[4][0].displayGenerator(x - 105, y - 60, 'foudre', "foudre_4");
+        this.generators[4][1].displayGenerator(x - 120, y + 15 , 'air', "air_4");
+        this.generators[4][2].displayGenerator(x - 110, y + 90 , 'eau', "eau_4");
+        this.generators[4][3].displayGenerator(x - 30, y + 110 , 'radiation', "radiation_4");
+        this.generators[4][4].displayGenerator(x + 50, y + 110 , 'super', "super_4");
+
+        //player 5
+        x = this.playerPosition[5][0];
+        y = this.playerPosition[5][1];
+        this.generators[5][0].displayGenerator(x - 95, y - 80, 'foudre', "foudre_5");
+        this.generators[5][1].displayGenerator(x - 110, y , 'air', "air_5");
+        this.generators[5][2].displayGenerator(x - 100, y + 75 , 'eau', "eau_5");
+        this.generators[5][3].displayGenerator(x - 30, y + 115 , 'radiation', "radiation_5");
+        this.generators[5][4].displayGenerator(x + 50, y + 110 , 'super', "super_5");
+
+/*
+        let foudre_1 = new Generateur(this);
+        let air_1 = new Generateur(this);
+        let goute_1 = new Generateur(this);
+        let radiation_1 = new Generateur(this);
+        let super_1 = new Generateur(this);
+
+        foudre_1.gen_render(195, 40, 'foudre');
+        let foudre_renZ_1 = foudre_1.gen_renderZone(195, 40, "foudre_1");
+        let foudre_renO_1 = foudre_1.gen_renderOutline(foudre_renZ_1);
+
+        air_1.gen_render(225,115, 'air');
+        let air_renZ_1 = air_1.gen_renderZone(225, 115, "air_1");
+        let air_renO_1 = air_1.gen_renderOutline(air_renZ_1);
+
+        goute_1.gen_render(200, 185, 'goute');
+        let goute_renZ_1 = goute_1.gen_renderZone(200, 185, "goute_1");
+        let goute_renO_1 = goute_1.gen_renderOutline(goute_renZ_1);
+
+        radiation_1.gen_render(150, 245, 'radiation');
+        let rad_renZ_1 = radiation_1.gen_renderZone(150, 245, "radiation_1");
+        let rad_renO_1 = radiation_1.gen_renderOutline(rad_renZ_1);
+
+        super_1.gen_render(70, 245, 'super');
+        let super_renZ_1 = super_1.gen_renderZone(70, 245, "super_1");
+        let super_renO_1 = super_1.gen_renderOutline(super_renZ_1);*/
 
     }
 
+    
 
     update(/*time: number*/): void {
 
