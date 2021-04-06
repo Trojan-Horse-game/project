@@ -30,7 +30,11 @@ usersRouter.get("/:id", async (req: Request, res: Response) => {
 
 // POST users/
 usersRouter.post("/signup", async (req: Request, res: Response) => {
-  if (await (await createConnection()).getRepository(User).findOne(req.body.username)) {
+  if (
+    await (await createConnection())
+      .getRepository(User)
+      .findOne(req.body.username)
+  ) {
     return res.status(401).json({ error: "Username existe déjà !" });
   }
   console.log("Hashing a new user's passwod");
@@ -38,7 +42,9 @@ usersRouter.post("/signup", async (req: Request, res: Response) => {
   const user = new User();
   user.username = req.body.username;
   // user.password = hash;
-  const results = await (await createConnection()).getRepository(User).save(user);
+  const results = await (await createConnection())
+    .getRepository(User)
+    .save(user);
   res.status(200).send(results);
 });
 
@@ -56,22 +62,19 @@ usersRouter.post("/signin", async (req: Request, res: Response) => {
   res.status(200).json({
     userId: user.id,
     token: jwt.sign({ userId: user.id }, "RANDOM_TOKEN_SECRET", {
-      expiresIn: "24h",
-    }),
+      expiresIn: "24h"
+    })
   });
 });
 
 // PUT users/:id
 usersRouter.put("/:id", async (req: Request, res: Response) => {
   await (await createConnection())
-  .createQueryBuilder()
-  .insert()
-  .into(User)
-  .values([
-      { username: 'username: req.body.username' }, 
-      
-   ])
-  .execute();
+    .createQueryBuilder()
+    .insert()
+    .into(User)
+    .values([{ username: "username: req.body.username" }])
+    .execute();
   return res.json("OK");
 });
 
@@ -90,10 +93,8 @@ usersRouter.put("/:id", async (req: Request, res: Response) => {
     .createQueryBuilder()
     .insert()
     .into(Friendship)
-    .values([
-        { user1_id: req.body.user1_id, user2_id: req.body.user2_id }
-     ])
-     .execute();
+    .values([{ user1_id: req.body.user1_id, user2_id: req.body.user2_id }])
+    .execute();
   return res.json("OK");
 });
 //supression d'un ami
@@ -102,19 +103,16 @@ usersRouter.delete("/:id", async (req: Request, res: Response) => {
     .createQueryBuilder()
     .delete()
     .from(Friendship)
-    .where("user1_id = :user1_id", { user1_id: req.body.user1_id})
+    .where("user1_id = :user1_id", { user1_id: req.body.user1_id })
     .execute();
-//mettre confirmed à 0 apres la suppression
-await(await getConnection())
+  //mettre confirmed à 0 apres la suppression
+  await (await getConnection())
     .createQueryBuilder()
     .update(Friendship)
-    .set({ confirmed : '0' })
-    .where("user1_id = :user1_id", { user1_id: req.body.user1_id})
+    .set({ confirmed: "0" })
+    .where("user1_id = :user1_id", { user1_id: req.body.user1_id })
     .execute();
   return res.json("OK");
 });
-
-
-
 
 export default usersRouter;

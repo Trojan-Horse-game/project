@@ -4,7 +4,7 @@
       <div id="background">
         <img src="Design/MenuPrincipal.gif" usemap="#image-map" />
         <map name="image-map">
-          <router-link to="#">
+          <router-link to="/Jeu">
             <area
               target="_self"
               alt="Lancer une partie"
@@ -13,7 +13,7 @@
               shape="rect"
             />
           </router-link>
-          <router-link to="#">
+          <router-link to="/rejoindrePartie">
             <area
               target="_self"
               alt="Rejoindre une partie"

@@ -72,7 +72,22 @@ export default {
         );
       }
     ]
-  })
+  }),
+
+  methods: {
+    signin() {
+      this.showError = false;
+      this.$store.dispatch("auth/signin", this.user).then(
+        () => {
+          this.$router.push("/menuPrincipal");
+        },
+        error => {
+          this.showError = true;
+          console.error(error);
+        }
+      );
+    }
+  }
 };
 </script>
 

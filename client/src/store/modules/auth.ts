@@ -36,6 +36,18 @@ export const auth = {
           return Promise.reject(error);
         }
       );
+    },
+    signin({ commit }, user) {
+      return AuthService.signin(user).then(
+        response => {
+          commit("signinSuccess");
+          return Promise.resolve(response.data);
+        },
+        error => {
+          commit("signupFailure");
+          return Promise.reject(error);
+        }
+      );
     }
   },
   mutations: {

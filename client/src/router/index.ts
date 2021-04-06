@@ -9,6 +9,8 @@ import Parametres from "../views/Parametres.vue";
 import Regles from "../views/Regles.vue";
 import Profil from "../views/Profil.vue";
 import Test from "../views/Test.vue";
+import Game from "../views/Game.vue";
+import rejoindrePartie from "../views/RejoindrePartie.vue";
 
 Vue.use(VueRouter);
 
@@ -18,65 +20,81 @@ const routes: Array<RouteConfig> = [
     name: "Landing Page",
     component: LandingPage,
     meta: {
-      title: "Les Cavaliers de Troie - Bienvenue",
-    },
+      title: "Les Cavaliers de Troie - Bienvenue"
+    }
   },
   {
     path: "/nouveauCompte",
     name: "Nouveau compte",
     component: NouveauCompte,
     meta: {
-      title: "Les Cavaliers de Troie - Nouveau compte",
-    },
+      title: "Les Cavaliers de Troie - Nouveau compte"
+    }
   },
   {
     path: "/menuPrincipal",
     name: "Menu principal",
     component: MenuPrincipal,
     meta: {
-      title: "Les Cavaliers de Troie - Menu principal",
-    },
+      title: "Les Cavaliers de Troie - Menu principal"
+    }
   },
   {
     path: "/login",
     name: "Login",
     component: Login,
     meta: {
-      title: "Les Cavaliers de Troie - Login",
-    },
+      title: "Les Cavaliers de Troie - Login"
+    }
   },
   {
     path: "/parametres",
     name: "Paramètres",
     component: Parametres,
     meta: {
-      title: "Les Cavaliers de Troie - Parametres",
-    },
+      title: "Les Cavaliers de Troie - Parametres"
+    }
   },
   {
     path: "/reglesDuJeu",
     name: "Règles du jeu",
     component: Regles,
     meta: {
-      title: "Les Cavaliers de Troie - Règles du jeu",
-    },
+      title: "Les Cavaliers de Troie - Règles du jeu"
+    }
   },
   {
     path: "/profil",
     name: "Profil",
     component: Profil,
     meta: {
-      title: "Les Cavaliers de Troie - Profil",
-    },
+      title: "Les Cavaliers de Troie - Profil"
+    }
   },
   {
     path: "/Test",
     name: "Test",
     component: Test,
     meta: {
-      title: "Les Cavaliers de Troie - Test",
-    },
+      title: "Les Cavaliers de Troie - Test"
+    }
   },
+  {
+    path: "/Jeu",
+    name: "Jeu",
+    component: Game,
+    meta: {
+      title: "Les Cavaliers de Troie - Jeu"
+    }
+  },
+  {
+    path: "/rejoindrePartie",
+    name: "Rejoindre partie",
+    component: rejoindrePartie,
+    meta: {
+      title: "Les Cavaliers de Troie - Rejoindre une partie"
+    }
+  }
 ];
 
 const router = new VueRouter({
@@ -93,13 +111,13 @@ router.beforeEach((to, from, next) => {
   const nearestWithTitle = to.matched
     .slice()
     .reverse()
-    .find((r) => r.meta && r.meta.title);
+    .find(r => r.meta && r.meta.title);
 
   // Find the nearest route element with meta tags.
   const nearestWithMeta = to.matched
     .slice()
     .reverse()
-    .find((r) => r.meta && r.meta.metaTags);
+    .find(r => r.meta && r.meta.metaTags);
 
   // If a route with a title was found, set the document (page) title to that value.
   if (nearestWithTitle) document.title = nearestWithTitle.meta.title;
@@ -107,17 +125,17 @@ router.beforeEach((to, from, next) => {
   // Remove any stale meta tags from the document using the key attribute we set below.
   Array.from(
     document.querySelectorAll("[data-vue-router-controlled]")
-  ).forEach((el) => el.remove());
+  ).forEach(el => el.remove());
 
   // Skip rendering meta tags if there are none.
   if (!nearestWithMeta) return next();
 
   // Turn the meta tag definitions into actual elements in the head.
   nearestWithMeta.meta.metaTags
-    .map((tagDef) => {
+    .map(tagDef => {
       const tag = document.createElement("meta");
 
-      Object.keys(tagDef).forEach((key) => {
+      Object.keys(tagDef).forEach(key => {
         tag.setAttribute(key, tagDef[key]);
       });
 
@@ -127,7 +145,7 @@ router.beforeEach((to, from, next) => {
       return tag;
     })
     // Add the meta tags to the document head.
-    .forEach((tag) => document.head.appendChild(tag));
+    .forEach(tag => document.head.appendChild(tag));
 
   next();
 });

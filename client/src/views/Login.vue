@@ -23,9 +23,11 @@
           <router-link to="/nouveauCompte">
             <v-btn title="Inscription">Inscription</v-btn></router-link
           >
-          <v-btn title="Valider" type="submit" :disabled="!this.validInput"
-            >Valider</v-btn
-          >
+          <router-link to="/menuPrincipal">
+            <v-btn title="Valider" type="submit" :disabled="!this.validInput"
+              >Valider</v-btn
+            >
+          </router-link>
         </div></v-form
       >
     </div>

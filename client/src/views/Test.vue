@@ -26,49 +26,61 @@
       </div>
 
       <div id="content">
-        <table id="infos">
-          <tbody>
+        <div id="infos">
+          <table>
             <tr>
               <td class="element">Nom</td>
-              <td class="value">{{ lastName }}</td>
+              <td class="value">
+                <v-text-field :value="lastName" dense hide-details />
+              </td>
             </tr>
             <tr>
               <td class="element">Prénom</td>
-              <td class="value">{{ firstName }}</td>
+              <td class="value">
+                <v-text-field :value="firstName" dense hide-details />
+              </td>
             </tr>
             <tr>
               <td class="element">Username</td>
-              <td class="value">{{ username }}</td>
+              <td class="value">
+                <v-text-field :value="username" dense hide-details />
+              </td>
             </tr>
             <tr>
               <td class="element">Mail</td>
-              <td class="value">{{ mail }}</td>
+              <td class="value">
+                <v-text-field :value="mail" dense hide-details />
+              </td>
             </tr>
-          </tbody>
-        </table>
+          </table>
+        </div>
 
-        <table id="stats">
-          <tr>
-            <td class="element">
-              <img
-                class="etoile"
-                src="Design/victoires.png"
-                alt="Étoile noire"
-              />Nombre de victoires
-            </td>
-            <td class="value bg-none">{{ nbVictories }}</td>
-          </tr>
-          <tr>
-            <td class="element">
-              <img
-                class="etoile"
-                src="Design/defaites.png"
-                alt="Étoile noire"
-              />Nombre de défaites
-            </td>
-            <td class="value bg-none">{{ nbDefeats }}</td>
-          </tr>
-        </table>
+        <div id="stats">
+          <table>
+            <tbody>
+              <tr>
+                <td class="element">
+                  <img
+                    class="etoile"
+                    src="Design/victoires.png"
+                    alt="Étoile noire"
+                  />Nombre de victoires
+                </td>
+                <td class="value">{{ nbVictories }}</td>
+              </tr>
+              <tr>
+                <td class="element">
+                  <img
+                    class="etoile"
+                    src="Design/defaites.png"
+                    alt="Étoile noire"
+                  />Nombre de défaites
+                </td>
+                <td class="value">{{ nbDefeats }}</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
 
         <div id="buttons-row">
           <v-dialog v-model="dialog" width="500">
@@ -321,19 +333,12 @@ $gris: #b9bab9;
 
 #content {
   width: 540px;
-  height: 497px;
+  height: 517px;
   top: 156px;
   left: 459px;
   z-index: 0;
   color: #171717;
   padding: 5px 10px;
-}
-
-#container {
-  position: relative;
-}
-
-#content {
   position: absolute;
   background-color: #fff;
   display: flex;
@@ -341,39 +346,56 @@ $gris: #b9bab9;
   align-content: space-around;
 }
 
+#container {
+  position: relative;
+}
+
+.v-text-field {
+  width: 360px;
+  background-color: #b9bab9;
+  padding: 0px !important;
+}
+
 .element,
-.value {
+.value,
+.v-text-field {
   font-size: 27px;
 }
 
 .value {
-  background-color: $gris;
   min-width: max-content;
   width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
-.value.bg-none {
-  background-color: transparent;
-}
-
+/*********** TABLE  ***********/
 table {
   width: 100%;
 }
 
 #infos {
-  height: 70%;
+  height: 330px;
+  display: flex;
+  align-items: center;
 }
 
 #stats {
-  height: 10%;
+  margin: 5px 0px;
+  height: 100px;
 }
 
 #stats td {
   width: max-content;
 }
 
-#infos .element {
+#infos td {
   margin: 0px 10px 0px 0px;
+}
+
+#infos .value {
+  text-align: center;
 }
 
 #stats .element {
@@ -386,14 +408,16 @@ table {
   margin: 0px 10px 0px 0px;
 }
 
+/*********** V-DIALOG  ***********/
 #buttons-row {
   display: flex;
-  justify-content: center;
+  justify-content: space-evenly;
 }
 
 #buttons-row .v-btn {
   background-color: transparent !important;
   color: #000 !important;
+  border: 1px solid #000;
 }
 
 li {
