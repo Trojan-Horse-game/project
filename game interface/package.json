@@ -8,7 +8,6 @@
   "start": "webpack --watch & live-server --port=8085"
 },
   "author": "Youness",
-  "license": "ISC",
   "devDependencies": {
     "live-server": "^1.2.1",
     "phaser": "^3.54.0",
