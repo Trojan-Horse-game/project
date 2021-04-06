@@ -12,6 +12,8 @@ export class GameScene extends Phaser.Scene {
     players: Perso [] ;
     namePlayers: string [];
     generators: Generateur [][]
+    graphicsGen: Phaser.GameObjects.Graphics [];
+    indexGen : number;
 
     constructor() {
         super({
@@ -30,6 +32,8 @@ export class GameScene extends Phaser.Scene {
         this.namePlayers[4] = "NICOLAS";
         this.namePlayers[5] = "HAKIM";
         this.generators = [];
+        this.graphicsGen = [];
+        this.indexGen = 0;
 
     }
 
@@ -114,15 +118,6 @@ export class GameScene extends Phaser.Scene {
         let renderZone = tas_zone.renderZone("tas");
         let outline = tas_zone.renderOutline(renderZone);
 
-        //highlight the pile of cards zone when dragenter
-        this.input.on('dragenter', function (pointer, gameObject, dropZone) {
-            if (dropZone.name == "tas") {
-                outline.clear();
-                outline.lineStyle(4, 0xff66ff);
-                outline.strokeRect(renderZone.x - renderZone.input.hitArea.width / 2, renderZone.y - renderZone.input.hitArea.height / 2, renderZone.input.hitArea.width, renderZone.input.hitArea.height);  
-            }
-        })
-
         //Todo: ajouter éventuellement une drop zone sur les personnages
         //affichage des personnages + leur noms
         for (let i = 0; i < this.nbPlayers; i++) {
@@ -145,7 +140,8 @@ export class GameScene extends Phaser.Scene {
         for (let i = 0; i < this.nbPlayers; i++) {
             this.generators.push([]);
             for (let j = 0; j < 5; j++) {
-                this.generators[i][j] = new Generateur(this);                
+                this.generators[i][j] = new Generateur(this,this.indexGen);    
+                this.indexGen++;            
             }
         }
 
@@ -203,32 +199,49 @@ export class GameScene extends Phaser.Scene {
         this.generators[5][3].displayGenerator(x - 30, y + 115 , 'radiation', "radiation_5");
         this.generators[5][4].displayGenerator(x + 50, y + 110 , 'super', "super_5");
 
-/*
-        let foudre_1 = new Generateur(this);
-        let air_1 = new Generateur(this);
-        let goute_1 = new Generateur(this);
-        let radiation_1 = new Generateur(this);
-        let super_1 = new Generateur(this);
+                //highlight the pile of cards zone when dragenter
+        this.input.on('dragenter', function (pointer, gameObject, dropZone) {
+            if (dropZone.name == "tas") {
+                outline.clear();
+                outline.lineStyle(4, 0xff66ff);
+                outline.strokeRect(renderZone.x - renderZone.input.hitArea.width / 2, renderZone.y - renderZone.input.hitArea.height / 2, renderZone.input.hitArea.width, renderZone.input.hitArea.height);  
+            }
+            //solution moche mais qui fonctionne sans pb de performances : rédessine au dessu de l'ancien cercle au lieu de l'éffacer
+            //pas de soucis de perf, apparament le garbage collector du navigateur fait le taff,
+            // mais il faudra quand meme trouver le moyen d'effacer l'ancien cercle.
+            //pb = je ne stock pas dans une variable l'objet graphique (solution eventuel => tous les mettre dans un tableau)
+            //et eventuellement incrémenter un compteur pour se retrouver ds le tableau, et mettre le numero dans un objet comme fait pr le type
+            if (dropZone.data.values.zoneType == "generateur") {
+                let circle = this.scene.add.graphics();
+                //let idx: number = dropZone.data.values.idx;
+                //this.graphicsGen[idx].clear()
+                circle.lineStyle(4, 0xff66ff);
+                circle.strokeCircle(
+                  dropZone.x,
+                  dropZone.y,
+                  dropZone.input.hitArea.radius
+                );
+            }
+        })
 
-        foudre_1.gen_render(195, 40, 'foudre');
-        let foudre_renZ_1 = foudre_1.gen_renderZone(195, 40, "foudre_1");
-        let foudre_renO_1 = foudre_1.gen_renderOutline(foudre_renZ_1);
+        this.input.on('dragleave', function (pointer, gameObject, dropZone) {
+            if (dropZone.name == "tas") {
+                outline.clear();
+                outline.lineStyle(4, 0x999999);
+                outline.strokeRect(renderZone);
+            }
+            //pareil ici, mm soucis que dans l'input d'au dessu, mais fonctionne bien quand meme
+            if(dropZone.data.values.zoneType == "generateur") {
+                let circle = this.scene.add.graphics();
+                circle.lineStyle(4, 0x999999);
+                circle.strokeCircle(
+                  dropZone.x,
+                  dropZone.y,
+                  dropZone.input.hitArea.radius
+                );
 
-        air_1.gen_render(225,115, 'air');
-        let air_renZ_1 = air_1.gen_renderZone(225, 115, "air_1");
-        let air_renO_1 = air_1.gen_renderOutline(air_renZ_1);
-
-        goute_1.gen_render(200, 185, 'goute');
-        let goute_renZ_1 = goute_1.gen_renderZone(200, 185, "goute_1");
-        let goute_renO_1 = goute_1.gen_renderOutline(goute_renZ_1);
-
-        radiation_1.gen_render(150, 245, 'radiation');
-        let rad_renZ_1 = radiation_1.gen_renderZone(150, 245, "radiation_1");
-        let rad_renO_1 = radiation_1.gen_renderOutline(rad_renZ_1);
-
-        super_1.gen_render(70, 245, 'super');
-        let super_renZ_1 = super_1.gen_renderZone(70, 245, "super_1");
-        let super_renO_1 = super_1.gen_renderOutline(super_renZ_1);*/
+            }
+        })
 
     }
 
