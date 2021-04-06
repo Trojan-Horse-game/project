@@ -228,7 +228,12 @@ export class GameScene extends Phaser.Scene {
             if (dropZone.name == "tas") {
                 outline.clear();
                 outline.lineStyle(4, 0x999999);
-                outline.strokeRect(renderZone);
+                outline.strokeRect(
+                  renderZone.x - renderZone.input.hitArea.width / 2,
+                  renderZone.y - renderZone.input.hitArea.height / 2,
+                  renderZone.input.hitArea.width,
+                  renderZone.input.hitArea.height
+                );
             }
             //pareil ici, mm soucis que dans l'input d'au dessu, mais fonctionne bien quand meme
             if(dropZone.data.values.zoneType == "generateur") {
