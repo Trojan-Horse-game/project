@@ -39,7 +39,7 @@
     - [Docker](https://git.unistra.fr/pi2021-ab/projet-integrateur/-/merge_requests/15)
     - [Ajouter des description templates sur GitLab](https://git.unistra.fr/pi2021-ab/projet-integrateur/-/merge_requests/13)
         
-## La semaine prochaine (semaine du 14/01/2021)
+## La semaine prochaine (semaine du 14/02/2021)
 - Implémenter la connexion (côté serveur et la finaliser côté client)
 - Continuer l'implémentation de la game logic (fonctions de déplacement des cartes et peut-être validation des actions de l'utilisateur et génération des évènements à envoyer aux clients)
 - Bases pour l'implémentation de l'interface du jeu

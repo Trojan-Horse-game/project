@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Demo socket</title>
+    <style>
+      body {
+        margin: 0;
+        padding-bottom: 3rem;
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+          Helvetica, Arial, sans-serif;
+      }
+
+      #form {
+        background: rgba(0, 0, 0, 0.15);
+        padding: 0.25rem;
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        display: flex;
+        height: 3rem;
+        box-sizing: border-box;
+        backdrop-filter: blur(10px);
+      }
+
+      #input {
+        border: none;
+        padding: 0 1rem;
+        flex-grow: 1;
+        border-radius: 2rem;
+        margin: 0.25rem;
+      }
+
+      #input:focus {
+        outline: none;
+      }
+
+      #form > button {
+        background: #333;
+        border: none;
+        padding: 0 1rem;
+        margin: 0.25rem;
+        border-radius: 3px;
+        outline: none;
+        color: #fff;
+      }
+
+      #messages {
+        list-style-type: none;
+        margin: 0;
+        padding: 0;
+      }
+
+      #messages > li {
+        padding: 0.5rem 1rem;
+      }
+
+      #messages > li:nth-child(odd) {
+        background: #efefef;
+      }
+    </style>
+  </head>
+
+  <body>
+    <form action="" id="create">
+      <input id="input0" placeholder="pseudo" autocomplete="off" />
+      <select id="input1" name="espece">
+        <option value="0">Hutex</option>
+        <option value="1">Sonyas</option>
+        <option value="2">Xmars</option>
+        <option value="3">Spectre</option>
+        <option value="4">Ulysse</option>
+        <option value="5">Totox</option>
+      </select>
+      <button>create room</button>
+    </form>
+
+    <form id="join" action="">
+      <input id="input2" placeholder="pseudo" autocomplete="off" />
+      <input id="input3" placeholder="room id" autocomplete="off" />
+      <button>join room</button>
+    </form>
+
+    <form action="" id="espece" style="visibility: hidden">
+      <select id="especeSelect" name="espece"></select>
+      <button>select species</button>
+    </form>
+
+    <ul id="messages"></ul>
+
+    <form id="form" action="" style="visibility: hidden">
+      <input id="input" autocomplete="off" /><button>Send</button>
+    </form>
+
+    <script src="/socket.io/socket.io.js"></script>
+    <script>
+      var socket = io();
+      var form = document.getElementById("form");
+      var join = document.getElementById("join");
+      var create = document.getElementById("create");
+      var input = document.getElementById("input");
+      var input0 = document.getElementById("input0");
+      var input1 = document.getElementById("input1");
+      var input2 = document.getElementById("input2");
+      var input3 = document.getElementById("input3");
+      var joueur = document.getElementById("espece");
+      var spcSelect = document.getElementById("especeSelect");
+      var msg = document.getElementById("messages");
+
+      var room = "";
+
+      socket.on("oops", (error) => {
+        console.log(error);
+      });
+
+      socket.on("game id", (roomId) => {
+        room = roomId;
+
+        join.style.visibility = "hidden";
+        create.style.visibility = "hidden";
+        joueur.style.visibility = "hidden";
+        form.style.visibility = "visible";
+        console.log(room);
+      });
+
+      socket.on("close tab", () => {
+        window.close();
+      })
+
+      socket.on("available species", (available) => {
+        join.style.visibility = "hidden";
+        create.style.visibility = "hidden";
+        joueur.style.visibility = "visible";
+        for (var i of available) {
+          var opt1 = document.createElement("option");
+          opt1.value = i;
+          if (i == 0) {
+            opt1.text = "Hutex";
+          } else if (i == 1) {
+            opt1.text = "Sonyas";
+          } else if (i == 2) {
+            opt1.text = "Xmars";
+          } else if (i == 3) {
+            opt1.text = "Spectre";
+          } else if (i == 4) {
+            opt1.text = "Ulysse";
+          } else {
+            opt1.text = "Totox";
+          }
+          spcSelect.add(opt1, null);
+        }
+      });
+
+      socket.on("chat message", (pseudo, message) => {
+        var txt = document.createTextNode(pseudo + " : " + message);
+        var p = document.createElement("p");
+        p.appendChild(txt);
+        msg.appendChild(p);
+      });
+
+      
+
+      socket.on("player", (psd, spc) => {
+        let species = "";
+        if (spc == 0) {
+          species = "Hutex";
+        } else if (spc == 1) {
+          species = "Sonyas";
+        } else if (spc == 2) {
+          species = "Xmars";
+        } else if (spc == 3) {
+          species = "Spectre";
+        } else if (spc == 4) {
+          species = "Ulysse";
+        } else {
+          species = "Totox";
+        }
+        console.log(psd + " joue les " + species);
+      });
+
+      form.addEventListener("submit", function (e) {
+        e.preventDefault();
+        if (input.value) {
+          socket.emit("chat message", room, input.value);
+          input.value = "";
+        }
+      });
+
+      join.addEventListener("submit", function (e) {
+        e.preventDefault();
+        if (input2.value && input3.value) {
+          socket.emit("join game", input2.value, input3.value);
+          input2.value = "";
+          input3.value = "";
+        }
+      });
+
+      create.addEventListener("submit", function (e) {
+        e.preventDefault();
+        if (input0.value && input1.value) {
+          socket.emit("create game", input0.value, input1.value);
+          input0.value = "";
+        }
+      });
+
+      joueur.addEventListener("submit", function (e) {
+        e.preventDefault();
+        if (spcSelect.value) {
+          socket.emit("choose species", spcSelect.value);
+          joueur.style.visibility = "hidden";
+        }
+      });
+
+    </script>
+  </body>
+</html>

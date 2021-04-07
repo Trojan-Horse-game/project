@@ -9,6 +9,8 @@
     "terminal.integrated.cursorBlinking": true,
     "workbench.iconTheme": "vscode-icons",
     "editor.defaultFormatter": "esbenp.prettier-vscode",
+    "jestrunner.jestPath": "/projet-integrateur/server/node_modules/.bin/jest",
+    // "jestrunner.projectPath": "/projet-integrateur/server/",
     "[javascript]": {
       "editor.defaultFormatter": "esbenp.prettier-vscode"
     },
@@ -29,7 +31,8 @@
     "esbenp.prettier-vscode",
     "coenraads.bracket-pair-colorizer-2",
     "dbaeumer.vscode-eslint",
-    "vscode-icons-team.vscode-icons"
+    "vscode-icons-team.vscode-icons",
+    "firsttris.vscode-jest-runner"
   ],
   // Use 'forwardPorts' to make a list of ports inside the container available locally.
   "forwardPorts": [3000, 8080]

@@ -1,13 +1,14 @@
 module.exports = {
   root: true,
   env: {
-    node: true
+    node: true,
   },
   parser: "@typescript-eslint/parser",
   plugins: ["@typescript-eslint", "jest"],
   extends: [
     "eslint:recommended",
     "plugin:vue/essential",
+    "plugin:vue/recommended",
     "plugin:@typescript-eslint/recommended",
     "prettier",
     "prettier/@typescript-eslint",
@@ -17,6 +18,6 @@ module.exports = {
     "eslint.workingDirectories": [
       { directory: "../server", changeProcessCWD: true },
       { directory: "../client", changeProcessCWD: true },
-    ]
-  }
+    ],
+  },
 };

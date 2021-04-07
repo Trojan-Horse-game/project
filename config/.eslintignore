@@ -9,3 +9,6 @@
 # don't lint .json
 ../*.json
 ../**/*.json
+
+# temp fix : don't lint test files on client
+../client/src/tests

@@ -5,6 +5,7 @@ node_modules
 server/node_modules
 server/package-lock.json
 server/dist
+server/coverage
 
 client/node_modules
 client/package-lock.json

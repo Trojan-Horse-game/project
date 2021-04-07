@@ -1,35 +1,33 @@
+/* eslint-disable @typescript-eslint/no-var-requires */
+/* eslint-disable @typescript-eslint/no-unsafe-call */
 import "./pre-start";
+import "reflect-metadata";
 import app from "./Server";
 import cors from "cors";
 import path from "path";
+import express, { Request, Response } from "express";
+import usersRouter from "./routes/user.routes";
+import friendshipsRouter from "./routes/friendship.routes";
+import { createConnection } from "typeorm";
 
-// Démarre le server
 const port = Number(process.env.PORT || 3000);
-
 const http = require("http").Server(app);
 const io = require("socket.io")(http);
+require("./routes/game.routes")(io);
 
-app.get("/", function (req: any, res: any) {
-  res.sendFile(path.resolve("../client/index.html"));
+createConnection();
+app.use("/api/users", usersRouter);
+app.use("/api/friendships", friendshipsRouter)
+app.use(express.urlencoded({ extended: false }));
+app.use(express.json());
+
+app.get("/", function (req: Request, res: Response) {
+  res.sendFile(path.resolve("./src/index.html"));
 });
 
 app.use(cors());
 
-io.on("connection", function (socket: any) {
-  // When a user connects
-  console.log("a user connected");
-
-  // When a user sends a message
-  socket.on("chat message", function (msg: any) {
-    console.log("message: " + msg);
-  });
-
-  // When a user disconnects
-  socket.on("disconnect", function () {
-    console.log("user disconnected");
-  });
-});
-
-http.listen(port, function () {
-  console.log("listening on *:" + port);
+// eslint-disable-next-line @typescript-eslint/no-misused-promises
+http.listen(port, async () => {
+  console.log("Express server started on port: " + port);
 });
