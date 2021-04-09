@@ -56,8 +56,7 @@ export class GameScene extends Phaser.Scene {
     //Here we compute the worst case, i.e 6 players are in the game
     //and we will choose position according to the numbers of players
     //the index is 0 for me, and 1,2,3,4,5 for the others, in clockwise direction
-    let players = 2; //nbPlayers deux truc a reglé
-    let i;
+    let players = 3; //nbPlayers deux trucz
     let perso = new Perso(this);
     this.playerPosition = perso.computePosition(players, width, height);
 
@@ -125,7 +124,7 @@ export class GameScene extends Phaser.Scene {
 
     //highlight the pile of cards zone when dragenter
     this.input.on("dragenter", function (pointer, gameObject, dropZone) {
-      if (dropZone.name == "tas") {
+      if(dropZone.name == "tas") {
         outline.clear();
         outline.lineStyle(4, 0xff66ff);
         outline.strokeRect(
@@ -139,7 +138,7 @@ export class GameScene extends Phaser.Scene {
 
     //Todo: ajouter éventuellement une drop zone sur les personnages
     //affichage des personnages + leur noms
-    for (i = 0; i < this.nbPlayers; i++) {
+    for (let i = 0; i < this.nbPlayers; i++) {
       this.players[i] = new Perso(this);
     }
 

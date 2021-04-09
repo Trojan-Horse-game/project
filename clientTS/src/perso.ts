@@ -1,30 +1,34 @@
 export default class Perso {
   scene: any;
-  playerPosition: number[][] =[];
   constructor(scene: any) {
     this.scene = scene;
   }
 
   computePosition(PlayersPlaying: number, width: number, height: number) {
+    let playerPosition: any[][] = [];
+    //Position3
+    let PX3 = width / 2;
+    let PY3 = 100;
     // the first two players are here no matter what
-    this.playerPosition.push([width / 4, height - 100]); //position of main player
-    this.playerPosition.push([width / 2, 100]); //position 3
-
+    playerPosition.push([width / 4, height - 100]); //position of main player
+    playerPosition.push([PX3, 100]); //position 3
+    console.log(playerPosition);
     //break as been avoided on purpose for a better memory optimization
     switch (
       PlayersPlaying // total of players playing
     ) {
       case 6:
-        this.playerPosition.push([width - 100, 100]); //position 4
+        playerPosition.push([100, (height / 4) * 3 - 100]); //position 1
       case 5:
-        this.playerPosition.push([100, (height / 4) * 3 - 100]); //  position 1
+        playerPosition.push([PX3, 100]); //position 3
       case 4:
-        this.playerPosition.push([100, 120]); //add position 2
+        playerPosition.push([width - 100, (height / 4) * 3 - 100]); //position 5
       case 3:
-        this.playerPosition.push([width - 100, (height / 4) * 3 - 100]); //5 position
+        playerPosition.push([100, 120]); //add position 2
+        playerPosition[1] = [width - 100, 100]; //position 4
       default:
     }
-    return this.playerPosition;
+    return playerPosition;
   }
 
   per_ren(x: number, y: number, sprite: any) {
