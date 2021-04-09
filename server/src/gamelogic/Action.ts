@@ -5,7 +5,6 @@ import { Card } from "./Card";
    The class is minimalist to permit fast network transmission of its data
    It can represents any usage of a card
 */
-
 export class Action {
   card: Card;
   indexInHand: number;

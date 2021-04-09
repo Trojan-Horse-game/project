@@ -17,6 +17,55 @@ beforeEach(() => {
   game.init();
   game.currentPlayerIdx = 0;
 });
+describe("small checkup", () => {
+  let indx = 0;
+  let decklen = 0;
+  let handlen = 0;
+  let similiarty = 0;
+  let cardrawed = 3;
+  let nberplayer = 0;
+  const temparray: any[] = [];
+
+  test("Check if the % of erreur is lesser than 5% ", () => {
+    jest.spyOn(global.Math, "random").mockReturnValue(0.5);
+    game.deck = [];
+    game.createDeck();
+    decklen = game.deck.length;
+
+    for (indx = 0; indx < decklen; ++indx) temparray[indx] = game.deck[indx];
+
+    game.shuffleDeck();
+
+    for (indx = 0; indx < decklen; ++indx)
+      if (
+        game.deck[indx] === temparray[indx] &&
+        temparray[indx].color == game.deck[indx].color
+      ) {
+        similiarty++;
+      }
+    similiarty = (similiarty * decklen) / 100;
+
+    expect(similiarty).toBeLessThan(5);
+  });
+  test("Check if people can draw cards ", () => {
+    handlen = game.currentPlayer.hand.length;
+    game.draw(cardrawed);
+    cardrawed = cardrawed + handlen;
+
+    expect(cardrawed).toBe(game.currentPlayer.hand.length);
+  });
+  test("Check if the distribution went smoothly ", () => {
+    nberplayer = game.players.length;
+    for (indx = 0; indx < nberplayer; indx++)
+      temparray[indx] = game.players[indx].hand.length;
+
+    //distribute 3 cards
+    game.distribute();
+
+    for (indx = 0; indx < nberplayer; indx++)
+      expect(temparray[indx] + 3).toBe(game.players[indx].hand.length);
+  });
+});
 
 describe("checkActionGenerator", () => {
   let action: Action;

@@ -7,6 +7,7 @@ import cors from "cors";
 import path from "path";
 import express, { Request, Response } from "express";
 import usersRouter from "./routes/user.routes";
+import friendshipsRouter from "./routes/friendship.routes";
 import { createConnection } from "typeorm";
 
 const port = Number(process.env.PORT || 3000);
@@ -16,10 +17,11 @@ require("./routes/game.routes")(io);
 
 createConnection();
 app.use("/api/users", usersRouter);
+app.use("/api/friendships", friendshipsRouter)
 app.use(express.urlencoded({ extended: false }));
 app.use(express.json());
 
-app.get("/", function (req:Request, res:Response) {
+app.get("/", function (req: Request, res: Response) {
   res.sendFile(path.resolve("./src/index.html"));
 });
 

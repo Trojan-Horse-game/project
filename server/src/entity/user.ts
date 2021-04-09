@@ -7,8 +7,7 @@ export class User {
   id: number;
 
   @Column({
-    unique: true,
-    type: "varchar"
+    unique: true
   })
   username: string;
 
