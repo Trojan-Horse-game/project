@@ -3,10 +3,10 @@
   "version": "1.0.0",
   "description": "\"Interface with phaser en typescript\"",
   "main": "index.js",
-"scripts": {
-  "build": "webpack",
-  "start": "webpack --watch & live-server --port=8085"
-},
+  "scripts": {
+    "build": "webpack",
+    "start": "webpack --watch & live-server --port=8085"
+  },
   "author": "Youness",
   "devDependencies": {
     "live-server": "^1.2.1",
