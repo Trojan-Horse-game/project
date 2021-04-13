@@ -5,7 +5,6 @@ import Zone from './Zone.ts';
 import Generateur from './Generateur.ts';
 
 export class GameScene extends Phaser.Scene {
-    
     nbPlayers : number;
     nbCartesTas: number;
     playerPosition: number [][] ;
@@ -16,7 +15,7 @@ export class GameScene extends Phaser.Scene {
 
     constructor() {
         super({
-        key: "GameScene"
+            key: "GameScene"
         });
     }
     init(/*params: any*/): void {
@@ -36,7 +35,17 @@ export class GameScene extends Phaser.Scene {
     }
 
     preload(): void {
-        this.load.image('background', 'src/assets/stars_background.jpg');
+        this.load.spritesheet(
+            "background",
+            "src/assets/spritesheets/bg_spritesheet.png",
+            //"../design/fenetres/Plateau/BackGround/spritesheet.png",
+            {
+              frameWidth: 1440,
+              frameHeight: 810,
+              endFrame: 59,
+            }
+        );
+
         this.load.image('carte_verso', 'src/assets/carte_verso.png');
         this.load.image('fawkes', 'src/assets/Fawkes.png');
         this.load.image('xmars', 'src/assets/Xmars.png');
@@ -65,10 +74,20 @@ export class GameScene extends Phaser.Scene {
         this.playerPosition.push([width - 100, 100]);//player5
         this.playerPosition.push([width - 100, (height/4)*3 - 100]);//player6
 
+        //Animation background
+        let config = {
+            key: "fond",
+            frames: this.anims.generateFrameNumbers("background", {
+            start: 0,
+            end: 59,
+            first: 59,
+            }),
+            frameRate: 10,
+            repeat: -1,
+        };
+        this.anims.create(config);
+        this.add.sprite(width / 2, height / 2, "background").play("fond");
 
-        const bg = this.add.image(0, 0, 'background').setOrigin(0, 0).setScale(1.09);
-        bg.displayHeight = height ;
-        bg.displayWidth = width;
         //button distribution cards
         let dealText = this.add.text(75, 300, ['DEAL CARDS']).setFontSize(18).setFontFamily('Trebuchet MS').setColor('#00ffff').setInteractive();
         dealText.on('pointerover', function () {
