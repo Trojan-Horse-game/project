@@ -58,7 +58,7 @@ export class GameScene extends Phaser.Scene {
         //Here we compute the worst case, i.e 6 players are in the game
         //and we will choose position according to the numbers of players
         //the index is 0 for me, and 1,2,3,4,5 for the others, in clockwise direction
-        this.playerPosition.push([width/4, height - 100]);//position of main player
+        this.playerPosition.push([(width/3) , height - 100]);//position of main player
         this.playerPosition.push([100, (height/4)*3 - 100]);//player2
         this.playerPosition.push([100,120]);//position of player 3
         this.playerPosition.push([width/2, 100]);//player4
@@ -67,6 +67,8 @@ export class GameScene extends Phaser.Scene {
 
 
         const bg = this.add.image(0, 0, 'background').setOrigin(0, 0).setScale(1.09);
+        bg.displayHeight = height ;
+        bg.displayWidth = width;
         //button distribution cards
         let dealText = this.add.text(75, 300, ['DEAL CARDS']).setFontSize(18).setFontFamily('Trebuchet MS').setColor('#00ffff').setInteractive();
         dealText.on('pointerover', function () {
@@ -81,7 +83,7 @@ export class GameScene extends Phaser.Scene {
         let dealCards = () => {
             for (let i = 0; i < 3; i++) {
                 let playerCard = new Card(this);
-                playerCard.displayCard(475 + (i * 180), 670, 'carte_verso');
+                playerCard.displayCard(this.playerPosition[0][0] + 160 + (i * 170), this.playerPosition[0][1] -5, 'carte_verso');
             }
         }
         dealText.on('pointerdown', function () {
@@ -113,7 +115,7 @@ export class GameScene extends Phaser.Scene {
 
         //pile of cards + dropzone + drawing limit of the dropzone
         let tas_zone = new Zone(this);
-        let renderZone = tas_zone.renderZone("tas");
+        let renderZone = tas_zone.renderZone(width/2, height/2, 150, 150, "tas");
         let outline = tas_zone.renderOutline(renderZone);
 
         //Todo: ajouter éventuellement une drop zone sur les personnages
