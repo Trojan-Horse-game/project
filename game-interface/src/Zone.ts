@@ -4,10 +4,8 @@ export default class Zone {
     this.scene = scene;
   }
 
-  renderZone(name: string) {
-    let dropZone = this.scene.add
-      .zone(640, 390, 150, 150)
-      .setRectangleDropZone(150, 150);
+  renderZone(x: number, y: number, w: number, h: number, name: string) {
+    let dropZone = this.scene.add.zone(x, y, w, h).setRectangleDropZone(w, h);
     dropZone.setData({ cards: 0 });
     dropZone.setName(name); //ici
     return dropZone;
