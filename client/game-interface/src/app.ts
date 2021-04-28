@@ -1,0 +1,27 @@
+import { GameScene } from "./gameScene";
+import "phaser";
+
+
+const config = {
+  title: "Les cavaliers de troie",
+
+  scale: {
+    parent: "game",
+    mode: Phaser.Scale.FIT,
+    width: window.innerWidth ,
+    height: window.innerHeight ,
+  },
+  scene: [GameScene],
+};
+
+
+export class CavalierDeTroie extends Phaser.Game {
+  constructor(config) {
+    super(config);
+  }
+}
+window.onload = () => {
+  var game = new CavalierDeTroie(config);
+
+};
+
