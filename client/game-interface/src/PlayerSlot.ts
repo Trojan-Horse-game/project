@@ -79,6 +79,25 @@ class PlayerProfilePicture extends Phaser.GameObjects.Container {
     let outerCircle = this.scene.add.circle(0, 0, radius);
     outerCircle.setStrokeStyle(strokeWidth, 0x565455, 1);
     this.add(outerCircle);
+
+    this.timerArc = this.scene.add.arc(0, 0, radius, -90, -90);
+    this.timerArc.closePath = false;
+    this.timerArc.setStrokeStyle(strokeWidth, 0x0082fd, 1);
+    this.add(this.timerArc);
+    this.timerPercentage = 0.78;
+  }
+
+  timerArc: Phaser.GameObjects.Arc;
+
+  _timerPercentage: number = 0;
+
+  get timerPercentage(): number {
+    return this._timerPercentage;
+  }
+
+  set timerPercentage(newValue: number) {
+    this._timerPercentage = newValue;
+    this.timerArc.endAngle = -90 + 360 * newValue;
   }
 }
 
