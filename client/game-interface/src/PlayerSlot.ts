@@ -6,14 +6,14 @@ export class PlayerSlot extends Phaser.GameObjects.Container {
     playerCircleRadius: number,
     slotLayout: SlotLayout,
     name: string,
-    texture: string
+    pictureName: string
   ) {
     super(scene);
     let layoutInfo = new LayoutInfo(slotLayout);
     let profilePicture = new PlayerProfilePicture(
       scene,
       playerCircleRadius,
-      texture
+      pictureName
     );
     this.add(profilePicture);
 
@@ -30,16 +30,17 @@ export class PlayerSlot extends Phaser.GameObjects.Container {
     this.add(nameText);
 
     // TODO: replace the circles with the actual generators
-    for (let i = 0; i < 5; i++) {
+    let i = 0;
+    for (let generator in GeneratorKind) {
       let generatorInfo = layoutInfo.generatorRotationBuilder(i);
-
       let basePivot = this.scene.add.container();
       let subPivot = this.scene.add.container();
-      let circle = this.scene.add.graphics();
-
-      circle.fillStyle(0xe61b84);
-      circle.fillCircle(0, 0, 30);
-      subPivot.setY(-115);
+      let circle = new Generator(
+        scene,
+        0.428 * playerCircleRadius,
+        GeneratorKind[generator]
+      );
+      subPivot.setY(-1.642 * playerCircleRadius);
       circle.setY(generatorInfo.yOffsetFactor * playerCircleRadius);
 
       basePivot.rotation = generatorInfo.rotation;
@@ -47,32 +48,67 @@ export class PlayerSlot extends Phaser.GameObjects.Container {
       subPivot.add(circle);
       basePivot.add(subPivot);
       this.add(basePivot);
+      i++;
     }
   }
 }
 
 class PlayerProfilePicture extends Phaser.GameObjects.Container {
-  constructor(scene: Phaser.Scene, radius: number, texture: string) {
+  constructor(scene: Phaser.Scene, radius: number, pictureName: string) {
     super(scene);
     let strokeWidth = radius * 0.15;
+
+    // The width of the black inner stroke that separates the
+    // character picture from the main border
     let innerStrokeWidth = strokeWidth / 1.7;
 
     // Create and add image
-    let image = this.scene.add.image(0, 0, texture);
+    let image = this.scene.add.image(0, 0, pictureName);
     let imageSize = radius * 2 - strokeWidth;
     image.displayWidth = imageSize;
     image.displayHeight = imageSize;
     this.add(image);
 
     // Create borders
-    let graphics = this.scene.add.graphics();
-
-    graphics.lineStyle(innerStrokeWidth, 0x0);
-    graphics.strokeCircle(0, 0, radius - innerStrokeWidth);
-    graphics.lineStyle(strokeWidth, 0x565455);
-    graphics.strokeCircle(0, 0, radius);
-    this.add(graphics);
+    let borderGraphics = this.scene.add.graphics();
+    borderGraphics.lineStyle(innerStrokeWidth, 0x0);
+    borderGraphics.strokeCircle(0, 0, radius - innerStrokeWidth);
+    borderGraphics.lineStyle(strokeWidth, 0x565455);
+    borderGraphics.strokeCircle(0, 0, radius);
+    this.add(borderGraphics);
   }
+}
+
+class Generator extends Phaser.GameObjects.Container {
+  constructor(
+    scene: Phaser.Scene,
+    radius: number,
+    generatorKind: GeneratorKind
+  ) {
+    super(scene);
+    let strokeWidth = radius * 0.14;
+
+    // Make and add generator image
+    let generatorImage = this.scene.add.image(0, 0, generatorKind);
+    let imageSize = (radius * 2 - strokeWidth) * 0.85;
+    generatorImage.displayWidth = imageSize;
+    generatorImage.displayHeight = imageSize;
+    this.add(generatorImage);
+
+    // Make border
+    let borderGraphics = this.scene.add.graphics();
+    borderGraphics.lineStyle(strokeWidth, 0x565455);
+    borderGraphics.strokeCircle(0, 0, radius);
+    this.add(borderGraphics);
+  }
+}
+
+enum GeneratorKind {
+  Joker = "super",
+  Shield = "radiation",
+  Water = "eau",
+  Air = "air",
+  Electricity = "foudre",
 }
 
 export enum SlotLayout {
@@ -83,6 +119,14 @@ export enum SlotLayout {
   BottomRight,
 }
 
+/**
+ * This class enables computing where elements should be positioned in
+ * function of the given `slotLayout`.
+ *
+ * Most properties are factors instead of absolute values, meaning they must
+ * be multiplied by a base size (the main circle radius) to get actual
+ * coordinates.
+ */
 class LayoutInfo {
   constructor(slotLayout: SlotLayout) {
     switch (slotLayout) {
@@ -95,6 +139,7 @@ class LayoutInfo {
           4
         );
         break;
+
       case SlotLayout.BottomRight:
         this.textYOrigin = 0;
         this.textYPositionFactor = LayoutInfo.baseYPositionFactor;
@@ -104,16 +149,19 @@ class LayoutInfo {
           0
         );
         break;
+
       case SlotLayout.TopLeft:
         this.textYOrigin = 1;
         this.textYPositionFactor = -LayoutInfo.baseYPositionFactor;
         this.generatorRotationBuilder = LayoutInfo.makeGenPosBuild(0.875, 0.7);
         break;
+
       case SlotLayout.TopRight:
         this.textYOrigin = 1;
         this.textYPositionFactor = -LayoutInfo.baseYPositionFactor;
         this.generatorRotationBuilder = LayoutInfo.makeGenPosBuild(-3.675, 0.7);
         break;
+
       case SlotLayout.Middle:
         this.textYOrigin = 1;
         this.textYPositionFactor = -LayoutInfo.baseYPositionFactor;
