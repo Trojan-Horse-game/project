@@ -68,11 +68,14 @@ export class GameScene extends Phaser.Scene {
         let {width, height} = this.sys.game.canvas;
         let graphicsGen : any[] = [];
 
+        /*
         let playerSlot = new PlayerSlot(this, 70, SlotLayout.Middle, "Aghilas", "fawkes_tete")
         playerSlot.x = 420
         playerSlot.y = 270
+        playerSlot.timerPercentage = 0.2;
         this.add.existing(playerSlot)
         playerSlot.setDepth(1000)
+        */
 
         //Here we compute the worst case, i.e 6 players are in the game
         //and we will choose position according to the numbers of players

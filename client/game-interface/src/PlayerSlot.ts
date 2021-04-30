@@ -10,24 +10,24 @@ export class PlayerSlot extends Phaser.GameObjects.Container {
   ) {
     super(scene);
     let layoutInfo = new LayoutInfo(slotLayout);
-    let profilePicture = new PlayerProfilePicture(
+    this.profilePicture = new PlayerProfilePicture(
       scene,
       playerCircleRadius,
       pictureName
     );
-    this.add(profilePicture);
+    this.add(this.profilePicture);
 
-    let nameText = this.scene.add.text(0, 0, name.toUpperCase());
-    nameText.setOrigin(0.5, layoutInfo.textYOrigin);
-    nameText.setY(layoutInfo.textYPositionFactor * playerCircleRadius);
-    nameText.setFontSize(playerCircleRadius * 0.38);
-    nameText.setFontFamily("Gagalin");
+    this.nameText = this.scene.add.text(0, 0, name.toUpperCase());
+    this.nameText.setOrigin(0.5, layoutInfo.textYOrigin);
+    this.nameText.setY(layoutInfo.textYPositionFactor * playerCircleRadius);
+    this.nameText.setFontSize(playerCircleRadius * 0.38);
+    this.nameText.setFontFamily("Gagalin");
     let padding = playerCircleRadius * 0.0857;
-    nameText.setPadding(padding, 0, padding, padding);
-    nameText.style.setAlign("center");
-    nameText.style.setColor("FFFFFF");
-    nameText.style.setBackgroundColor("555455");
-    this.add(nameText);
+    this.nameText.setPadding(padding, 0, padding, padding);
+    this.nameText.style.setAlign("center");
+    this.nameText.style.setColor("FFFFFF");
+    this.nameText.style.setBackgroundColor("555455");
+    this.add(this.nameText);
 
     // TODO: replace the circles with the actual generators
     let i = 0;
@@ -52,7 +52,23 @@ export class PlayerSlot extends Phaser.GameObjects.Container {
       i++;
     }
   }
+
+  nameText: Phaser.GameObjects.Text;
+  profilePicture: PlayerProfilePicture;
   generators = new Map<string, Generator>();
+
+  get timerPercentage(): number {
+    return this.profilePicture.timerPercentage;
+  }
+
+  set timerPercentage(newValue: number) {
+    this.profilePicture.timerPercentage = newValue;
+    if (newValue == 0) {
+      this.nameText.setBackgroundColor("555455");
+    } else {
+      this.nameText.setBackgroundColor("0082FD");
+    }
+  }
 }
 
 class PlayerProfilePicture extends Phaser.GameObjects.Container {
