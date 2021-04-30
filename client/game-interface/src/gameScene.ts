@@ -67,7 +67,7 @@ export class GameScene extends Phaser.Scene {
         let {width, height} = this.sys.game.canvas;
         let graphicsGen : any[] = [];
 
-        let playerSlot = new PlayerSlot(this, 70, SlotLayout.BottomRight, "Aghilas", "fawkes_tete")
+        let playerSlot = new PlayerSlot(this, 70, SlotLayout.Middle, "Aghilas", "fawkes_tete")
         playerSlot.x = 420
         playerSlot.y = 270
         this.add.existing(playerSlot)
