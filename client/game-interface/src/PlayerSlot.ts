@@ -31,26 +31,28 @@ export class PlayerSlot extends Phaser.GameObjects.Container {
 
     // TODO: replace the circles with the actual generators
     let i = 0;
-    for (let generator in GeneratorKind) {
+    for (let generatorKind in GeneratorKind) {
       let generatorInfo = layoutInfo.generatorRotationBuilder(i);
       let basePivot = this.scene.add.container();
       let subPivot = this.scene.add.container();
-      let circle = new Generator(
+      let generator = new Generator(
         scene,
         0.428 * playerCircleRadius,
-        GeneratorKind[generator]
+        GeneratorKind[generatorKind]
       );
+      this.generators.set(generatorKind, generator);
       subPivot.setY(-1.642 * playerCircleRadius);
-      circle.setY(generatorInfo.yOffsetFactor * playerCircleRadius);
+      generator.setY(generatorInfo.yOffsetFactor * playerCircleRadius);
 
       basePivot.rotation = generatorInfo.rotation;
       subPivot.rotation = -generatorInfo.rotation;
-      subPivot.add(circle);
+      subPivot.add(generator);
       basePivot.add(subPivot);
       this.add(basePivot);
       i++;
     }
   }
+  generators = new Map<string, Generator>();
 }
 
 class PlayerProfilePicture extends Phaser.GameObjects.Container {
@@ -70,12 +72,13 @@ class PlayerProfilePicture extends Phaser.GameObjects.Container {
     this.add(image);
 
     // Create borders
-    let borderGraphics = this.scene.add.graphics();
-    borderGraphics.lineStyle(innerStrokeWidth, 0x0);
-    borderGraphics.strokeCircle(0, 0, radius - innerStrokeWidth);
-    borderGraphics.lineStyle(strokeWidth, 0x565455);
-    borderGraphics.strokeCircle(0, 0, radius);
-    this.add(borderGraphics);
+    let innerCircle = this.scene.add.circle(0, 0, radius - innerStrokeWidth);
+    innerCircle.setStrokeStyle(innerStrokeWidth, 0x0, 1);
+    this.add(innerCircle);
+
+    let outerCircle = this.scene.add.circle(0, 0, radius);
+    outerCircle.setStrokeStyle(strokeWidth, 0x565455, 1);
+    this.add(outerCircle);
   }
 }
 
@@ -86,20 +89,64 @@ class Generator extends Phaser.GameObjects.Container {
     generatorKind: GeneratorKind
   ) {
     super(scene);
-    let strokeWidth = radius * 0.14;
+    this.strokeWidth = radius * 0.14;
+
+    // Make and add background circle
+    this.backgroundCircle = this.scene.add.circle(0, 0, radius);
+    this.add(this.backgroundCircle);
 
     // Make and add generator image
-    let generatorImage = this.scene.add.image(0, 0, generatorKind);
-    let imageSize = (radius * 2 - strokeWidth) * 0.85;
-    generatorImage.displayWidth = imageSize;
-    generatorImage.displayHeight = imageSize;
-    this.add(generatorImage);
+    this.generatorImage = this.scene.add.image(0, 0, generatorKind);
+    let imageSize = (radius * 2 - this.strokeWidth) * 0.85;
+    this.generatorImage.displayWidth = imageSize;
+    this.generatorImage.displayHeight = imageSize;
+    this.add(this.generatorImage);
 
     // Make border
-    let borderGraphics = this.scene.add.graphics();
-    borderGraphics.lineStyle(strokeWidth, 0x565455);
-    borderGraphics.strokeCircle(0, 0, radius);
-    this.add(borderGraphics);
+    this.border = this.scene.add.circle(0, 0, radius);
+    this.add(this.border);
+
+    // Generators begin with None state
+    this.setGeneratorState(GeneratorState.None);
+  }
+
+  strokeWidth: number;
+  backgroundCircle: Phaser.GameObjects.Arc;
+  border: Phaser.GameObjects.Arc;
+  generatorImage: Phaser.GameObjects.Image;
+
+  setGeneratorState(state: GeneratorState) {
+    switch (state) {
+      case GeneratorState.None:
+        this.backgroundCircle.setFillStyle(0, 0);
+        this.border.setStrokeStyle(this.strokeWidth, 0x565455, 1);
+        this.generatorImage.setAlpha(0.3);
+        break;
+
+      case GeneratorState.Enabled:
+        this.backgroundCircle.setFillStyle(0, 0);
+        this.border.setStrokeStyle(this.strokeWidth, 0x565455, 1);
+        this.generatorImage.setAlpha(1);
+        break;
+
+      case GeneratorState.Protected:
+        this.backgroundCircle.setFillStyle(0, 0);
+        this.border.setStrokeStyle(this.strokeWidth, 0x84f214, 1);
+        this.generatorImage.setAlpha(1);
+        break;
+
+      case GeneratorState.AlwaysProtected:
+        this.backgroundCircle.setFillStyle(0x84f214, 0.3);
+        this.border.setStrokeStyle(this.strokeWidth, 0x84f214, 1);
+        this.generatorImage.setAlpha(1);
+        break;
+
+      case GeneratorState.Attacked:
+        this.backgroundCircle.setFillStyle(0, 0);
+        this.border.setStrokeStyle(this.strokeWidth, 0xe61515, 1);
+        this.generatorImage.setAlpha(1);
+        break;
+    }
   }
 }
 
@@ -109,6 +156,14 @@ enum GeneratorKind {
   Water = "eau",
   Air = "air",
   Electricity = "foudre",
+}
+
+enum GeneratorState {
+  None,
+  Enabled,
+  Attacked,
+  Protected,
+  AlwaysProtected,
 }
 
 export enum SlotLayout {
