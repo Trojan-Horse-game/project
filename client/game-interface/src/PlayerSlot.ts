@@ -84,7 +84,6 @@ class PlayerProfilePicture extends Phaser.GameObjects.Container {
     this.timerArc.closePath = false;
     this.timerArc.setStrokeStyle(strokeWidth, 0x0082fd, 1);
     this.add(this.timerArc);
-    this.timerPercentage = 0.78;
   }
 
   timerArc: Phaser.GameObjects.Arc;
