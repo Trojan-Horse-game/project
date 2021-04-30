@@ -20,10 +20,10 @@ export class PlayerSlot extends Phaser.GameObjects.Container {
     let nameText = this.scene.add.text(0, 0, name.toUpperCase());
     nameText.setOrigin(0.5, layoutInfo.textYOrigin);
     nameText.setY(layoutInfo.textYPositionFactor * playerCircleRadius);
-    nameText.setFontSize(playerCircleRadius * 0.27);
-    nameText.setFontFamily("sans-serif");
+    nameText.setFontSize(playerCircleRadius * 0.38);
+    nameText.setFontFamily("Gagalin");
     let padding = playerCircleRadius * 0.0857;
-    nameText.setPadding(padding, padding, padding, padding);
+    nameText.setPadding(padding, 0, padding, padding);
     nameText.style.setAlign("center");
     nameText.style.setColor("FFFFFF");
     nameText.style.setBackgroundColor("555455");
