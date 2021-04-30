@@ -61,6 +61,7 @@ export class GameScene extends Phaser.Scene {
         this.load.image('eau', 'src/assets/goute_log.png');
         this.load.image('radiation', 'src/assets/radiation_log.png');
         this.load.image('super', 'src/assets/super_log.png');
+        this.load.image('super_sign', 'src/assets/super.png');
     }
     
     create(): void {

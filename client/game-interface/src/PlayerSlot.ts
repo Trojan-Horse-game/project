@@ -106,16 +106,31 @@ class Generator extends Phaser.GameObjects.Container {
     this.border = this.scene.add.circle(0, 0, radius);
     this.add(this.border);
 
+    this.superImage = this.scene.add.image(
+      radius * 0.75,
+      radius * 0.75,
+      "super_sign"
+    );
+    let superImageWidth = radius * 0.8;
+    this.superImage.setDisplaySize(superImageWidth, superImageWidth * 1.38);
+    this.add(this.superImage);
+
     // Generators begin with None state
-    this.setGeneratorState(GeneratorState.None);
+    this.setGeneratorState(GeneratorState.Enabled);
   }
 
   strokeWidth: number;
   backgroundCircle: Phaser.GameObjects.Arc;
   border: Phaser.GameObjects.Arc;
   generatorImage: Phaser.GameObjects.Image;
+  superImage: Phaser.GameObjects.Image;
 
-  setGeneratorState(state: GeneratorState) {
+  setGeneratorState(state: GeneratorState, isSuper: boolean = false) {
+    if (isSuper) {
+      this.superImage.setAlpha(1);
+    } else {
+      this.superImage.setAlpha(0);
+    }
     switch (state) {
       case GeneratorState.None:
         this.backgroundCircle.setFillStyle(0, 0);
