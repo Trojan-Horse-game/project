@@ -72,11 +72,8 @@ export class NewScene extends ResponsiveScene {
 
   resize(width: number, height: number) {
     this.updateSlotsPositions(width, height);
-    console.log("Resize called");
-    console.log(this.opponentsSlots);
     for (let i = 0; i < this.opponentsSlots.length; i++) {
       let position = this.playerPosition(i);
-      console.log("Position", position);
       this.opponentsSlots[i].setPosition(position.x, position.y);
     }
     this.playerSlot.setPosition(
@@ -124,7 +121,6 @@ export class NewScene extends ResponsiveScene {
       index = (index + 1) % this.players.length;
       opponentIndex++;
     }
-    console.log("Created slots", this.opponentsSlots);
   }
 
   slotLayoutForOpponent(opponentIndex: number): SlotLayout {
