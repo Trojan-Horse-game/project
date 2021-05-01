@@ -1,44 +1,42 @@
 <template>
-  <div id="container">
-    <logo title="Les Cavaliers de Troie" />
+  <v-app>
+    <div id="background-image" />
+    <div id="container">
+      <logo title="Menu principal" />
+      <button id="lancer" />
+      <button id="rejoindre" />
 
-    <div id="boutons">
-      <div id="boutons-partie">
-        <v-btn title="Nouvelle partie">Nouvelle partie</v-btn>
-        <v-btn title="Rejoindre une partie">Rejoindre une partie</v-btn>
-
-        <div id="boutons-divers">
-          <router-link to="/parametres"
-            ><v-btn title="Paramètres" x-large icon
-              ><v-icon>mdi-cog</v-icon></v-btn
-            ></router-link
-          >
-          <router-link to="/reglesDuJeu">
-            <v-btn title="Aide" x-large icon
-              ><v-icon>mdi-help-circle</v-icon></v-btn
-            ></router-link
-          >
-          <router-link to="/Profil">
-            <v-btn title="Profil" x-large icon
-              ><v-icon>mdi-account-box</v-icon></v-btn
-            ></router-link
-          >
-        </div>
+      <div id="buttons">
+        <router-link to="/reglesDuJeu">
+          <img src="../../public/Design/regles.png" alt="Règles du jeu" />
+        </router-link>
+        <router-link to="/Profil">
+          <img src="../../public/Design/profil.png" alt="Profil" />
+        </router-link>
       </div>
     </div>
-  </div>
+  </v-app>
 </template>
 
 <script>
-import Logo from "../components/Logo.vue";
+import Logo from "../components/Logo";
 export default {
-  components: { logo: Logo }
+  components: { Logo: Logo }
 };
 </script>
+<style scoped>
+#app {
+  width: 100vw;
+  height: 100vh;
+}
 
-<style lang="css" scoped>
-#boutons-divers .v-btn {
-  background-color: transparent !important;
+#logo img {
+  width: 20vw;
+  height: auto;
+}
+
+#background-image {
+  background-image: url("../../public/Design/default-bck.gif");
 }
 
 #container {
@@ -46,31 +44,36 @@ export default {
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  height: 100vh;
 }
 
-#boutons {
-  width: 450px;
+#buttons {
+  width: 10vw;
   display: flex;
-  flex-direction: column;
+  justify-content: space-evenly;
+  margin: 2% 0% 0% 0%;
 }
 
-#boutons div {
-  width: 100%;
-  display: flex;
+#container > button {
+  width: 300px;
+  height: 123px;
+  background-size: contain;
+  margin: 2% 0% 0% 0%;
 }
 
-#boutons-partie {
-  flex-direction: column;
+#buttons img {
+  height: 50px;
+  width: auto;
 }
 
-#boutons-partie .v-btn {
-  margin: 0px 0px 20px 0px;
+#lancer {
+  background-image: url("../../public/Design/lancer_partie.png");
 }
 
-#boutons-divers {
-  flex-direction: row;
-  justify-content: space-around;
-  font-size: 32px;
+#rejoindre {
+  background-image: url("../../public/Design/rejoindre_partie.png");
+}
+
+#buttons img {
+  filter: grayscale(100%);
 }
 </style>

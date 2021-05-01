@@ -17,12 +17,21 @@ require("./routes/game.routes")(io);
 
 createConnection();
 app.use("/api/users", usersRouter);
-app.use("/api/friendships", friendshipsRouter)
+app.use("/api/friendships", friendshipsRouter);
 app.use(express.urlencoded({ extended: false }));
 app.use(express.json());
 
 app.get("/", function (req: Request, res: Response) {
   res.sendFile(path.resolve("./src/index.html"));
+});
+
+app.use((req, res, next) => {
+  res.setHeader("Access-Control-Allow-Origin", "*");
+  res.header(
+    "Access-Control-Allow-Headers",
+    "Origin, X-Requested-With, Content-Type, Accept"
+  );
+  next();
 });
 
 app.use(cors());
