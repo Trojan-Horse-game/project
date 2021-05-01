@@ -30,7 +30,7 @@ export class Generator extends Phaser.GameObjects.Container {
       "super_sign"
     );
     let superImageWidth = radius * 0.8;
-    this.superImage.setDisplaySize(superImageWidth, superImageWidth * 1.38);
+    this.superImage.setDisplaySize(superImageWidth, superImageWidth);
     this.add(this.superImage);
 
     // Generators begin with None state
