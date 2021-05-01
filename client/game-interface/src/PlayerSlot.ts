@@ -1,6 +1,15 @@
 import "phaser";
 import { ProfilePicture, TextPosition } from "./ProfilePicture";
-import { Generator, GeneratorKind, GeneratorState } from "./Generator";
+import { Generator, GeneratorState } from "./Generator";
+import {
+  GeneratorKind,
+  Card,
+  ActionCard,
+  ActionCardKind,
+  GeneratorCard,
+  GeneratorCardKind
+} from "./Card";
+import { CardSprite } from "./CardSprite";
 
 export class PlayerSlot extends Phaser.GameObjects.Container {
   constructor(
@@ -18,7 +27,8 @@ export class PlayerSlot extends Phaser.GameObjects.Container {
     let margin = 10 * window.devicePixelRatio;
     let offsets = [-width - margin, 0, +width + margin];
     for (let offset of offsets) {
-      let card = scene.add.sprite(0, 0, "carte_verso");
+      // let card = scene.add.sprite(0, 0, "carte_verso");
+      let card = new CardSprite(scene, new ActionCard(ActionCardKind.Spread));
       card.setDisplaySize(width, height);
       card.setOrigin(0.5, 1);
       card.setX(offset);

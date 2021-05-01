@@ -1,6 +1,7 @@
 import "phaser";
 import { OpponentSlot, SlotLayout } from "./OpponentSlot";
 import { PlayerSlot } from "./PlayerSlot";
+import { Card, ActionCardKind, GeneratorKind, GeneratorCardKind } from "./Card";
 
 export class ResponsiveScene extends Phaser.Scene {
   resize(width: number, height: number) {}
@@ -30,12 +31,28 @@ export class NewScene extends ResponsiveScene {
     this.load.image("totox_tete", "src/assets/Totox_tete.png");
     this.load.image("xmars_tete", "src/assets/Xmars_tete.png");
 
-    this.load.image("foudre", "src/assets/foudre_log.png");
+    this.load.image("electricity", "src/assets/foudre_log.png");
     this.load.image("air", "src/assets/air_log.png");
-    this.load.image("eau", "src/assets/goute_log.png");
-    this.load.image("radiation", "src/assets/radiation_log.png");
-    this.load.image("super", "src/assets/super_log.png");
+    this.load.image("water", "src/assets/goute_log.png");
+    this.load.image("shield", "src/assets/radiation_log.png");
+    this.load.image("joker", "src/assets/super_log.png");
     this.load.image("super_sign", "src/assets/super.png");
+
+    // Action cards assets
+    for (let actionName in ActionCardKind) {
+      this.load.image(actionName, "src/assets/" + actionName + ".jpg");
+    }
+
+    // Generator card assets
+    let suffixes = ["G", "P", "V"];
+    for (let suffix of suffixes) {
+      for (let generatorName in GeneratorKind) {
+        this.load.image(
+          generatorName + "_" + suffix,
+          "src/assets/" + generatorName + "_" + suffix + ".jpg"
+        );
+      }
+    }
   }
 
   create() {
@@ -100,6 +117,8 @@ export class NewScene extends ResponsiveScene {
     this.players.splice(removedPlayerIndex, 1);
     this.createPlayers();
   }
+
+  distributeCards(cards: Card[]) {}
 
   createPlayers() {
     // Remove any previously existing opponent slot
