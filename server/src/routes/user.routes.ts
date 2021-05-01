@@ -5,7 +5,7 @@ import { User } from "../entity/user";
 import { getConnection } from "typeorm";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
-import { Friendship } from "src/entity/friendship";
+import { Friendship } from "../entity/friendship";
 
 // Router Definition
 const usersRouter = Router();
@@ -44,7 +44,7 @@ usersRouter.post("/signup", async (req: Request, res: Response) => {
     const takenUsername = await getConnection()
       .getRepository(User)
       .find({
-        where: { username: req.body.username },
+        where: { username: req.body.username }
       });
     if (takenUsername.length > 0) {
       throw "Username already taken !";
@@ -71,7 +71,7 @@ usersRouter.post("/signin", async (req: Request, res: Response) => {
     const user = await getConnection()
       .getRepository(User)
       .find({
-        where: { username: req.body.username },
+        where: { username: req.body.username }
       });
     if (!user) {
       throw "User not found !";
@@ -83,8 +83,8 @@ usersRouter.post("/signin", async (req: Request, res: Response) => {
     res.status(200).json({
       userId: user[0].id,
       token: jwt.sign({ userId: user[0].id }, "RANDOM_TOKEN_SECRET", {
-        expiresIn: "24h",
-      }),
+        expiresIn: "24h"
+      })
     });
   } catch (err) {
     res.status(400).send(err);
@@ -105,7 +105,7 @@ usersRouter.put("/:id", async (req: Request, res: Response) => {
         const takenUsername = await getConnection()
           .getRepository(User)
           .find({
-            where: { username: req.body.username },
+            where: { username: req.body.username }
           });
         if (takenUsername.length > 0) {
           throw "Username already taken !";
@@ -179,13 +179,11 @@ usersRouter.delete("/:id", async (req: Request, res: Response) => {
     const friendships = await getConnection()
       .getRepository(Friendship)
       .find({
-        where: [{ user1_id: req.params.id }, { user2_id: req.params.id }],
+        where: [{ user1_id: req.params.id }, { user2_id: req.params.id }]
       });
 
-    for(const one of friendships){
-      await getConnection()
-      .getRepository(Friendship)
-      .delete(one.id);
+    for (const one of friendships) {
+      await getConnection().getRepository(Friendship).delete(one.id);
     }
 
     const results = await getConnection()

@@ -2,7 +2,7 @@
 import { Router } from "express";
 import { Request, Response } from "express";
 import { getConnection } from "typeorm";
-import { Friendship } from "src/entity/friendship";
+import { Friendship } from "../entity/friendship";
 
 const friendshipsRouter = Router();
 
@@ -23,7 +23,7 @@ friendshipsRouter.get("/:id", async (req: Request, res: Response) => {
     const results = await getConnection()
       .getRepository(Friendship)
       .find({
-        where: [{ user1_id: req.params.id }, { user2_id: req.params.id }],
+        where: [{ user1_id: req.params.id }, { user2_id: req.params.id }]
       });
     if (!results) {
       throw "User has no friends !";
@@ -46,9 +46,9 @@ friendshipsRouter.post("/add", async (req: Request, res: Response) => {
           { user1_id: req.body.user1_id, user2_id: req.body.user2_id },
           {
             user2_id: req.body.user1_id,
-            user1_id: req.params.user2_id,
-          },
-        ],
+            user1_id: req.params.user2_id
+          }
+        ]
       });
 
     if (friendshipExists.length > 0) {
@@ -87,9 +87,9 @@ friendshipsRouter.put(
             { user1_id: req.params.id1, user2_id: req.params.id2 },
             {
               user2_id: req.params.id1,
-              user1_id: req.params.id2,
-            },
-          ],
+              user1_id: req.params.id2
+            }
+          ]
         });
       if (!friendship) {
         throw "Friendship not found";
@@ -127,9 +127,9 @@ friendshipsRouter.delete("/:id1/:id2", async (req: Request, res: Response) => {
           { user1_id: req.params.id1, user2_id: req.params.id2 },
           {
             user2_id: req.params.id1,
-            user1_id: req.params.id2,
-          },
-        ],
+            user1_id: req.params.id2
+          }
+        ]
       });
     if (friendship.length == 0) {
       throw "Friendship not found !";
