@@ -39,7 +39,7 @@ export class NewScene extends ResponsiveScene {
   }
 
   create() {
-    let noms = ["Youness", "Aghilas", "Siham", "Isa", "Nicolas", "Walid"];
+    let noms = ["Aghilas", "Siham", "Youness", "Isa", "Nicolas", "Walid"];
     let textures = [
       "fawkes_tete",
       "hutex_tete",
@@ -54,7 +54,7 @@ export class NewScene extends ResponsiveScene {
       players.push(new Player(noms[i], textures[i]));
     }
 
-    this.updatePlayers(players, 0);
+    this.updatePlayers(players, 2);
 
     let profileRadius = 55 * window.devicePixelRatio;
     this.playerSlot = new PlayerSlot(
