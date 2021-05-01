@@ -1,8 +1,9 @@
 import "phaser";
-import Perso from "./perso.ts"
-import Card from './card.ts';
-import Zone from './Zone.ts';
-import Generateur from './Generateur.ts';
+import Perso from "./perso"
+import Card from './card';
+import Zone from './Zone';
+import Generateur from './Generateur';
+import { PlayerSlot, SlotLayout } from './PlayerSlot';
 
 export class GameScene extends Phaser.Scene {
     nbPlayers : number;
@@ -48,6 +49,7 @@ export class GameScene extends Phaser.Scene {
 
         this.load.image('carte_verso', 'src/assets/carte_verso.png');
         this.load.image('fawkes', 'src/assets/Fawkes.png');
+        this.load.image('fawkes_tete', 'src/assets/Fawkes_tete.png');
         this.load.image('xmars', 'src/assets/Xmars.png');
         this.load.image('hutex', 'src/assets/Hutex.png');
         this.load.image('robotec', 'src/assets/Robotec.png');
@@ -59,11 +61,22 @@ export class GameScene extends Phaser.Scene {
         this.load.image('eau', 'src/assets/goute_log.png');
         this.load.image('radiation', 'src/assets/radiation_log.png');
         this.load.image('super', 'src/assets/super_log.png');
+        this.load.image('super_sign', 'src/assets/super.png');
     }
     
     create(): void {
         let {width, height} = this.sys.game.canvas;
         let graphicsGen : any[] = [];
+
+        /*
+        let playerSlot = new PlayerSlot(this, 70, SlotLayout.Middle, "Aghilas", "fawkes_tete")
+        playerSlot.x = 420
+        playerSlot.y = 270
+        playerSlot.timerPercentage = 0.2;
+        this.add.existing(playerSlot)
+        playerSlot.setDepth(1000)
+        */
+
         //Here we compute the worst case, i.e 6 players are in the game
         //and we will choose position according to the numbers of players
         //the index is 0 for me, and 1,2,3,4,5 for the others, in clockwise direction

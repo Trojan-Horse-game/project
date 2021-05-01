@@ -1,15 +1,18 @@
 import { GameScene } from "./gameScene";
 import "phaser";
 
-
-const config = {
+const config: Phaser.Types.Core.GameConfig = {
+  type: Phaser.WEBGL,
+  render: {
+    antialias: true,
+    antialiasGL: true,
+  },
   title: "Les cavaliers de troie",
-
   scale: {
     parent: "game",
-    mode: Phaser.Scale.FIT,
-    width: window.innerWidth ,
-    height: window.innerHeight ,
+    mode: Phaser.Scale.ScaleModes.FIT,
+    width: window.innerWidth,
+    height: window.innerHeight,
   },
   scene: [GameScene],
 };

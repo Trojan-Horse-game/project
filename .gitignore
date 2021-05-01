@@ -10,4 +10,5 @@ server/coverage
 client/node_modules
 client/package-lock.json
 client/dist
+client/game-interface/dist
 client/dist_electron
