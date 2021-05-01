@@ -1,6 +1,6 @@
 import "phaser";
 import { ProfilePicture, TextPosition } from "./ProfilePicture";
-import { Generator, GeneratorKind } from "./Generator";
+import { Generator, GeneratorKind, GeneratorState } from "./Generator";
 
 export class PlayerSlot extends Phaser.GameObjects.Container {
   constructor(

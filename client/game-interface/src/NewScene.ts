@@ -46,15 +46,15 @@ export class NewScene extends ResponsiveScene {
       "robotec_tete",
       "spectre_tete",
       "totox_tete",
-      "xmars_tete",
+      "xmars_tete"
     ];
 
     let players: Player[] = [];
-    for (let i = 0; i < 3; i++) {
+    for (let i = 0; i < 6; i++) {
       players.push(new Player(noms[i], textures[i]));
     }
 
-    this.updatePlayers(players, 2);
+    this.updatePlayers(players, 0);
 
     let profileRadius = 55 * window.devicePixelRatio;
     this.playerSlot = new PlayerSlot(
@@ -88,12 +88,17 @@ export class NewScene extends ResponsiveScene {
     this.createPlayers();
   }
 
-  appendPlayer(newPlayer: Player) {}
+  appendPlayer(newPlayer: Player) {
+    this.players.push(newPlayer);
+    this.createPlayers();
+  }
 
   removePlayer(removedPlayerIndex: number) {
     if (removedPlayerIndex < this.playerIndex) {
       this.playerIndex--;
     }
+    this.players.splice(removedPlayerIndex, 1);
+    this.createPlayers();
   }
 
   createPlayers() {
@@ -135,15 +140,15 @@ export class NewScene extends ResponsiveScene {
     this.positions = [
       {
         x: horizontalDistance,
-        y: Math.max(height - heightDiff, minHeight),
+        y: Math.max(height - heightDiff, minHeight)
       },
       { x: horizontalDistance, y: verticalDistance },
       { x: width / 2, y: verticalDistance },
       { x: width - horizontalDistance, y: verticalDistance },
       {
         x: width - horizontalDistance,
-        y: Math.max(height - heightDiff, minHeight),
-      },
+        y: Math.max(height - heightDiff, minHeight)
+      }
     ];
   }
 
@@ -157,7 +162,7 @@ export class NewScene extends ResponsiveScene {
     3: [1, 3],
     4: [0, 2, 4],
     5: [0, 1, 3, 4],
-    6: [0, 1, 2, 3, 4],
+    6: [0, 1, 2, 3, 4]
   };
 
   static slotsLayouts = {
@@ -168,15 +173,15 @@ export class NewScene extends ResponsiveScene {
       SlotLayout.BottomLeft,
       SlotLayout.TopLeft,
       SlotLayout.TopRight,
-      SlotLayout.BottomRight,
+      SlotLayout.BottomRight
     ],
     6: [
       SlotLayout.BottomLeft,
       SlotLayout.TopLeft,
       SlotLayout.Middle,
       SlotLayout.TopRight,
-      SlotLayout.BottomRight,
-    ],
+      SlotLayout.BottomRight
+    ]
   };
 }
 
