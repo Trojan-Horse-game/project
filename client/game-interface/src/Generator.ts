@@ -30,7 +30,7 @@ export class Generator extends Phaser.GameObjects.Container {
       "super_sign"
     );
     let superImageWidth = radius * 0.8;
-    this.superImage.setDisplaySize(superImageWidth, superImageWidth * 1.38);
+    this.superImage.setDisplaySize(superImageWidth, superImageWidth);
     this.add(this.superImage);
 
     // Generators begin with None state
@@ -53,12 +53,12 @@ export class Generator extends Phaser.GameObjects.Container {
       case GeneratorState.None:
         this.backgroundCircle.setFillStyle(0, 0);
         this.border.setStrokeStyle(this.strokeWidth, 0x565455, 1);
-        this.generatorImage.setAlpha(0.3);
+        this.generatorImage.setAlpha(0.2);
         break;
 
       case GeneratorState.Enabled:
         this.backgroundCircle.setFillStyle(0, 0);
-        this.border.setStrokeStyle(this.strokeWidth, 0x565455, 1);
+        this.border.setStrokeStyle(this.strokeWidth, 0xa8a8a8, 1);
         this.generatorImage.setAlpha(1);
         break;
 
@@ -69,7 +69,7 @@ export class Generator extends Phaser.GameObjects.Container {
         break;
 
       case GeneratorState.AlwaysProtected:
-        this.backgroundCircle.setFillStyle(0x84f214, 0.3);
+        this.backgroundCircle.setFillStyle(0x84f214, 0.5);
         this.border.setStrokeStyle(this.strokeWidth, 0x84f214, 1);
         this.generatorImage.setAlpha(1);
         break;

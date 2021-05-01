@@ -1,6 +1,4 @@
-import { Sleeping } from "matter";
 import "phaser";
-import { AUTO } from "phaser";
 import { OpponentSlot, SlotLayout } from "./OpponentSlot";
 import { PlayerSlot } from "./PlayerSlot";
 
@@ -21,14 +19,11 @@ export class NewScene extends ResponsiveScene {
 
   playerSlot: PlayerSlot;
   opponentsSlots: OpponentSlot[] = [];
-  background: Phaser.GameObjects.Image
+  background:Phaser.GameObjects.Image
 
   preload() {
     this.load.image("carte_verso", "src/assets/carte_verso.png");
     this.load.image("bground", "src/assets/bground.gif");
-    this.load.image("winner", "src/assets/winner.gif");
-    this.load.image("game_over", "src/assets/game_over.gif");
-
     this.load.image("fawkes_tete", "src/assets/Fawkes_tete.png");
     this.load.image("hutex_tete", "src/assets/Hutex_tete.png");
     this.load.image("robotec_tete", "src/assets/Robotec_tete.png");
@@ -45,7 +40,7 @@ export class NewScene extends ResponsiveScene {
   }
 
   create() {
-    let noms = ["Youness", "Aghilas", "Siham", "Isa", "Nicolas", "Walid"];
+    let noms = ["Aghilas", "Siham", "Youness", "Isa", "Nicolas", "Walid"];
     let textures = [
       "fawkes_tete",
       "hutex_tete",
@@ -54,24 +49,18 @@ export class NewScene extends ResponsiveScene {
       "totox_tete",
       "xmars_tete",
     ];
-
-    /*let windowWidth = window.innerWidth;
-let widnowHeight = window.innerHeight;
- let bg =this.add.image(windowWidth / 2, widnowHeight / 2, 'winner');
- this.bg.setDisplaySize(windowWidth, widnowHeight);*/
-this.background = this.add.image(this.cameras.main.width / 2, this.cameras.main.height / 2, 'bground')
+    this.background = this.add.image(this.cameras.main.width / 2, this.cameras.main.height / 2, 'bground')
 let scaleX = this.cameras.main.width / this.background.width
 let scaleY = this.cameras.main.height / this.background.height
 let scale = Math.max(scaleX, scaleY)
 this.background.setScale(scale).setScrollFactor(0)
 
-
     let players: Player[] = [];
-    for (let i = 0; i < 6; i++) {
+    for (let i = 0; i < 3; i++) {
       players.push(new Player(noms[i], textures[i]));
     }
 
-    this.updatePlayers(players, 0);
+    this.updatePlayers(players, 2);
 
     let profileRadius = 55 * window.devicePixelRatio;
     this.playerSlot = new PlayerSlot(

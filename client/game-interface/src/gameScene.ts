@@ -65,15 +65,6 @@ export class GameScene extends Phaser.Scene {
   create(): void {
     let { width, height } = this.sys.game.canvas;
     let graphicsGen: any[] = [];
-    let victory = this.add.text(75, 300, ['victory']).setFontSize(18).setFontFamily('Trebuchet MS').setColor('#88ff00').setInteractive();
-        victory.on('pointerover', function () {
-            victory.setColor('#ff69b4');
-        })
-        victory.on('pointerout', function () {
-            victory.setColor('#00ffff');
-        })
-     
- 
 
     /*
         let playerSlot = new PlayerSlot(this, 70, SlotLayout.Middle, "Aghilas", "fawkes_tete")
@@ -93,8 +84,6 @@ export class GameScene extends Phaser.Scene {
     this.playerPosition.push([width / 2, 100]); //player4
     this.playerPosition.push([width - 100, 100]); //player5
     this.playerPosition.push([width - 100, (height / 4) * 3 - 100]); //player6
-
-    
 
     //Animation background
     let config = {
@@ -123,9 +112,6 @@ export class GameScene extends Phaser.Scene {
     dealText.on("pointerout", function() {
       dealText.setColor("#00ffff");
     });
-
-     
-
 
     //distribution of the cards
     let dealCards = () => {
@@ -489,8 +475,6 @@ export class GameScene extends Phaser.Scene {
         a.strokeCircle(dropZone.x, dropZone.y, dropZone.input.hitArea.radius);
       }
     });
-        
-
   }
 
   update(/*time: number*/): void {}

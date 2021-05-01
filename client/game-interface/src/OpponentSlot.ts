@@ -1,6 +1,6 @@
 import "phaser";
 import { ProfilePicture, TextPosition } from "./ProfilePicture";
-import { Generator, GeneratorKind } from "./Generator";
+import { Generator, GeneratorKind, GeneratorState } from "./Generator";
 
 export class OpponentSlot extends Phaser.GameObjects.Container {
   constructor(
@@ -23,7 +23,7 @@ export class OpponentSlot extends Phaser.GameObjects.Container {
 
     let i = 0;
     for (let generatorKind in GeneratorKind) {
-      let generatorInfo = layoutInfo.generatorRotationBuilder(i);
+      let generatorAngle = layoutInfo.generatorRotationBuilder(i);
       let basePivot = this.scene.add.container();
       let subPivot = this.scene.add.container();
       let generator = new Generator(
@@ -33,10 +33,8 @@ export class OpponentSlot extends Phaser.GameObjects.Container {
       );
       this.generators.set(generatorKind, generator);
       subPivot.setY(-1.642 * playerCircleRadius);
-      generator.setY(generatorInfo.yOffsetFactor * playerCircleRadius);
-
-      basePivot.rotation = generatorInfo.rotation;
-      subPivot.rotation = -generatorInfo.rotation;
+      basePivot.rotation = generatorAngle;
+      subPivot.rotation = -generatorAngle;
       subPivot.add(generator);
       basePivot.add(subPivot);
       this.add(basePivot);
@@ -87,12 +85,12 @@ class LayoutInfo {
 
       case SlotLayout.TopLeft:
         this.textPosition = TextPosition.Top;
-        this.generatorRotationBuilder = LayoutInfo.makeGenPosBuild(0.875, 0.7);
+        this.generatorRotationBuilder = LayoutInfo.makeGenPosBuild(1.25, 0.62);
         break;
 
       case SlotLayout.TopRight:
         this.textPosition = TextPosition.Top;
-        this.generatorRotationBuilder = LayoutInfo.makeGenPosBuild(-3.675, 0.7);
+        this.generatorRotationBuilder = LayoutInfo.makeGenPosBuild(-3.73, 0.62);
         break;
 
       case SlotLayout.Middle:
@@ -106,32 +104,16 @@ class LayoutInfo {
   }
 
   textPosition: TextPosition;
-  generatorRotationBuilder: (index: number) => GeneratorPosition;
+  generatorRotationBuilder: (index: number) => number;
 
   static baseYPositionFactor: number = 1.15;
 
   static makeGenPosBuild(
     start: number,
-    increment: number,
-    offsetIndex?: number
-  ): (index: number) => GeneratorPosition {
-    return (index: number): GeneratorPosition => {
-      if (offsetIndex == undefined || offsetIndex != index) {
-        return new GeneratorPosition(start + increment * index, 0);
-      } else {
-        let builder = LayoutInfo.makeGenPosBuild(start, increment, offsetIndex);
-        let last = builder(offsetIndex == 0 ? index + 1 : index - 1);
-        return new GeneratorPosition(last.rotation, 1.05);
-      }
+    increment: number
+  ): (index: number) => number {
+    return (index: number): number => {
+      return start + increment * index;
     };
   }
-}
-
-class GeneratorPosition {
-  constructor(rotation: number, yOffsetFactor: number) {
-    this.rotation = rotation;
-    this.yOffsetFactor = yOffsetFactor;
-  }
-  rotation: number;
-  yOffsetFactor: number;
 }
