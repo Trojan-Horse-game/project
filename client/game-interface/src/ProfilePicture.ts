@@ -46,8 +46,8 @@ export class ProfilePicture extends Phaser.GameObjects.Container {
     let padding = radius * 0.0857;
     this.nameText.setPadding(padding, 0, padding, padding);
     this.nameText.style.setAlign("center");
-    this.nameText.style.setColor("FFFFFF");
-    this.nameText.style.setBackgroundColor("555455");
+    this.nameText.style.setColor("#FFFFFF");
+    this.nameText.style.setBackgroundColor("#555455");
     this.add(this.nameText);
   }
 
