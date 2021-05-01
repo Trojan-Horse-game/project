@@ -11,6 +11,7 @@ export class PlayerSlot extends Phaser.GameObjects.Container {
   ) {
     super(scene);
 
+    // Cards
     let ratio = 0.7069;
     let height = profilePictureRadius * 3.5;
     let width = height * ratio;
@@ -25,6 +26,7 @@ export class PlayerSlot extends Phaser.GameObjects.Container {
       this.cards.push(card);
     }
 
+    // Profile picture
     let profile = new ProfilePicture(
       scene,
       profilePictureRadius,
@@ -32,9 +34,10 @@ export class PlayerSlot extends Phaser.GameObjects.Container {
       texture,
       name
     );
-
     profile.setPosition(-width * 2.25, -height * 0.46);
     this.add(profile);
+
+    // Generators
     let generatorRadius = 0.58 * profilePictureRadius;
     let increment = generatorRadius * 2 * 1.4;
     let offset = -increment * 2;
