@@ -1,6 +1,14 @@
 import "phaser";
 import { GeneratorKind } from "./Card";
 
+export enum GeneratorState {
+  None,
+  Enabled,
+  Attacked,
+  Protected,
+  AlwaysProtected
+}
+
 export class Generator extends Phaser.GameObjects.Container {
   constructor(
     scene: Phaser.Scene,
@@ -16,7 +24,7 @@ export class Generator extends Phaser.GameObjects.Container {
 
     // Make and add generator image
     this.generatorImage = this.scene.add.image(0, 0, generatorKind);
-    let imageSize = (radius * 2 - this.strokeWidth) * 0.85;
+    const imageSize = (radius * 2 - this.strokeWidth) * 0.85;
     this.generatorImage.displayWidth = imageSize;
     this.generatorImage.displayHeight = imageSize;
     this.add(this.generatorImage);
@@ -30,7 +38,7 @@ export class Generator extends Phaser.GameObjects.Container {
       radius * 0.75,
       "super_sign"
     );
-    let superImageWidth = radius * 0.8;
+    const superImageWidth = radius * 0.8;
     this.superImage.setDisplaySize(superImageWidth, superImageWidth);
     this.add(this.superImage);
 
@@ -44,7 +52,7 @@ export class Generator extends Phaser.GameObjects.Container {
   generatorImage: Phaser.GameObjects.Image;
   superImage: Phaser.GameObjects.Image;
 
-  setGeneratorState(state: GeneratorState, isSuper: boolean = false) {
+  setGeneratorState(state: GeneratorState, isSuper = false) {
     if (isSuper) {
       this.superImage.setAlpha(1);
     } else {
@@ -82,12 +90,4 @@ export class Generator extends Phaser.GameObjects.Container {
         break;
     }
   }
-}
-
-export enum GeneratorState {
-  None,
-  Enabled,
-  Attacked,
-  Protected,
-  AlwaysProtected
 }
