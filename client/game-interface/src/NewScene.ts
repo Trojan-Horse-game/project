@@ -2,6 +2,7 @@ import "phaser";
 import { OpponentSlot, SlotLayout } from "./OpponentSlot";
 import { PlayerSlot } from "./PlayerSlot";
 import { Card, ActionCardKind, GeneratorKind, GeneratorCardKind } from "./Card";
+import { StackCards } from "./StackCards";
 
 export class ResponsiveScene extends Phaser.Scene {
   resize(width: number, height: number) {}
@@ -19,6 +20,7 @@ export class NewScene extends ResponsiveScene {
   positions: Position[];
 
   playerSlot: PlayerSlot;
+  stackCards: StackCards;
   opponentsSlots: OpponentSlot[] = [];
 
   preload() {
@@ -70,7 +72,7 @@ export class NewScene extends ResponsiveScene {
     ];
 
     let players: Player[] = [];
-    for (let i = 0; i < 2; i++) {
+    for (let i = 0; i < 6; i++) {
       players.push(new Player(noms[i], textures[i]));
     }
 
@@ -85,6 +87,13 @@ export class NewScene extends ResponsiveScene {
     );
     this.add.existing(this.playerSlot);
 
+    //Stack cards
+    this.stackCards = new StackCards(this, profileRadius);
+    this.add.existing(this.stackCards);
+
+    console.log(this.opponentsSlots.length);
+    console.log(window.devicePixelRatio);
+
     let width = this.cameras.main.width;
     let height = this.cameras.main.height;
     this.resize(width, height);
@@ -98,8 +107,11 @@ export class NewScene extends ResponsiveScene {
     }
     this.playerSlot.setPosition(
       width / 2,
-      height - 15 * window.devicePixelRatio
+      height - 20 * window.devicePixelRatio
     );
+    if (this.opponentsSlots.length % 2 == 1)
+      this.stackCards.setPosition(width / 2, height / 1.75);
+    else this.stackCards.setPosition(width / 2, height / 2);
   }
 
   updatePlayers(newValue: Player[], playerIndex: number) {
