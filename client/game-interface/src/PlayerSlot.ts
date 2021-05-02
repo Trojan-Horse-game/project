@@ -10,7 +10,6 @@ export class PlayerSlot extends Phaser.GameObjects.Container {
     profilePictureRadius: number,
     name: string,
     texture: string,
-    stackPosition: number,
     numberPlayers: number
   ) {
     super(scene);
@@ -22,7 +21,6 @@ export class PlayerSlot extends Phaser.GameObjects.Container {
     const margin = 10 * window.devicePixelRatio;
     const offsets = [-width - margin, 0, +width + margin];
     for (const offset of offsets) {
-      // let card = scene.add.sprite(0, 0, "carte_verso");
       const card = new CardSprite(
         scene,
         new GeneratorCard(GeneratorCardKind.Medicine, GeneratorKind.Shield)
@@ -31,10 +29,8 @@ export class PlayerSlot extends Phaser.GameObjects.Container {
       card.setDisplaySize(width, height);
       card.setOrigin(0.5, 1);
 
-      console.log("ici");
-      console.log(numberPlayers);
-      if (numberPlayers % 2 == 1) card.setY(-stackPosition / 2.5);
-      else card.setY(-stackPosition / 2);
+      if (numberPlayers % 2 == 1) card.setY(-scene.cameras.main.height / 2.5);
+      else card.setY(-scene.cameras.main.height / 2);
 
       scene.tweens.add({
         targets: card,

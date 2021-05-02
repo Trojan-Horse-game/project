@@ -72,7 +72,7 @@ export class NewScene extends ResponsiveScene {
     ];
 
     let players: Player[] = [];
-    for (let i = 0; i < 3; i++) {
+    for (let i = 0; i < 5; i++) {
       players.push(new Player(noms[i], textures[i]));
     }
 
@@ -90,7 +90,6 @@ export class NewScene extends ResponsiveScene {
       profileRadius,
       this.players[this.playerIndex].name,
       this.players[this.playerIndex].specie,
-      height,
       this.opponentsSlots.length
     );
     this.add.existing(this.playerSlot);
