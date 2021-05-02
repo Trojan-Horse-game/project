@@ -1,6 +1,8 @@
 import "phaser";
 import { ProfilePicture, TextPosition } from "./ProfilePicture";
 import { Generator, GeneratorState } from "./Generator";
+import { StackCards } from "./StackCards";
+import { OpponentSlot } from "./OpponentSlot";
 import {
   GeneratorKind,
   Card,
@@ -20,7 +22,8 @@ export class PlayerSlot extends Phaser.GameObjects.Container {
     scene: Phaser.Scene,
     profilePictureRadius: number,
     name: string,
-    texture: string
+    texture: string,
+    stackPosition: number
   ) {
     super(scene);
 
@@ -95,7 +98,19 @@ export class PlayerSlot extends Phaser.GameObjects.Container {
 
       card.setDisplaySize(width, height);
       card.setOrigin(0.5, 1);
-      card.setX(offset);
+
+      if (OpponentSlot.length % 2 == 1) card.setY(-stackPosition / 2.5);
+      else card.setY(-stackPosition / 2);
+
+      scene.tweens.add({
+        targets: card,
+        x: offset,
+        y: 0,
+        duration: 4000,
+        ease: "Power2",
+        delay: 500
+      });
+
       this.add(card);
       this.cards.push(card);
     }

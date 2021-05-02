@@ -79,23 +79,21 @@ export class NewScene extends ResponsiveScene {
     this.updatePlayers(players, 0);
 
     let profileRadius = 55 * window.devicePixelRatio;
-    this.playerSlot = new PlayerSlot(
-      this,
-      profileRadius,
-      this.players[this.playerIndex].name,
-      this.players[this.playerIndex].specie
-    );
-    this.add.existing(this.playerSlot);
-
+    let width = this.cameras.main.width;
+    let height = this.cameras.main.height;
     //Stack cards
     this.stackCards = new StackCards(this, profileRadius);
     this.add.existing(this.stackCards);
 
-    console.log(this.opponentsSlots.length);
-    console.log(window.devicePixelRatio);
+    this.playerSlot = new PlayerSlot(
+      this,
+      profileRadius,
+      this.players[this.playerIndex].name,
+      this.players[this.playerIndex].specie,
+      height
+    );
+    this.add.existing(this.playerSlot);
 
-    let width = this.cameras.main.width;
-    let height = this.cameras.main.height;
     this.resize(width, height);
   }
 

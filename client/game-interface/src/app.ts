@@ -1,6 +1,5 @@
 import { NewScene, ResponsiveScene, Player } from "./NewScene";
 import "phaser";
-import { PlayerSlot } from "./PlayerSlot";
 
 const config: Phaser.Types.Core.GameConfig = {
   type: Phaser.WEBGL,
@@ -11,9 +10,9 @@ const config: Phaser.Types.Core.GameConfig = {
     mode: Phaser.Scale.ScaleModes.NONE,
     width: window.innerWidth * window.devicePixelRatio,
     height: window.innerHeight * window.devicePixelRatio,
-    zoom: 1 / window.devicePixelRatio,
+    zoom: 1 / window.devicePixelRatio
   },
-  scene: [new NewScene([new Player("Youness", "xmars_tete")], 0)],
+  scene: [new NewScene([new Player("Youness", "xmars_tete")], 0)]
 };
 
 window.onload = () => {
