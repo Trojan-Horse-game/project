@@ -105,7 +105,7 @@ export class NewScene extends ResponsiveScene {
     }
     this.playerSlot.setPosition(
       width / 2,
-      height - 20 * window.devicePixelRatio
+      height - 15 * window.devicePixelRatio
     );
     if (this.opponentsSlots.length % 2 == 1)
       this.stackCards.setPosition(width / 2, height / 1.75);
