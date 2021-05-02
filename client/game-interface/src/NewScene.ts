@@ -20,9 +20,12 @@ export class NewScene extends ResponsiveScene {
 
   playerSlot: PlayerSlot;
   opponentsSlots: OpponentSlot[] = [];
+  background:Phaser.GameObjects.Image
 
   preload() {
     this.load.image("carte_verso", "src/assets/carte_verso.png");
+    this.load.image("bground", "src/assets/bground.gif");
+    this.load.image("winner", "src/assets/winner.gif");
 
     this.load.image("fawkes_tete", "src/assets/Fawkes_tete.png");
     this.load.image("hutex_tete", "src/assets/Hutex_tete.png");
@@ -68,6 +71,13 @@ export class NewScene extends ResponsiveScene {
       "totox_tete",
       "xmars_tete"
     ];
+
+        background:Phaser.GameObjects.Image
+    this.background = this.add.image(this.cameras.main.width / 2, this.cameras.main.height / 2, 'bground')
+let scaleX = this.cameras.main.width / this.background.width
+let scaleY = this.cameras.main.height / this.background.height
+let scale = Math.max(scaleX, scaleY)
+this.background.setScale(scale).setScrollFactor(0)
 
     let players: Player[] = [];
     for (let i = 0; i < 2; i++) {
