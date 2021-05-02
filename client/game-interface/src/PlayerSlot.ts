@@ -1,6 +1,19 @@
 import "phaser";
 import { ProfilePicture, TextPosition } from "./ProfilePicture";
-import { Generator, GeneratorKind } from "./Generator";
+import { Generator, GeneratorState } from "./Generator";
+import {
+  GeneratorKind,
+  Card,
+  ActionCard,
+  ActionCardKind,
+  GeneratorCard,
+  GeneratorCardKind
+} from "./Card";
+import { CardSprite } from "./CardSprite";
+
+function dist(x1: number, y1: number, x2: number, y2: number): number {
+  return Math.sqrt(Math.pow(x2 - x2, 2) + Math.pow(y2 - y1, 2));
+}
 
 export class PlayerSlot extends Phaser.GameObjects.Container {
   constructor(
@@ -18,7 +31,68 @@ export class PlayerSlot extends Phaser.GameObjects.Container {
     let margin = 10 * window.devicePixelRatio;
     let offsets = [-width - margin, 0, +width + margin];
     for (let offset of offsets) {
-      let card = scene.add.sprite(0, 0, "carte_verso");
+      // let card = scene.add.sprite(0, 0, "carte_verso");
+      let card = new CardSprite(
+        scene,
+        new GeneratorCard(GeneratorCardKind.Medicine, GeneratorKind.Shield)
+      );
+      card.setDepth(100);
+      card.setInteractive();
+      scene.input.setDraggable(card);
+      let originX = 0;
+      let originY = 0;
+      let originScale = 0;
+      scene.input.on(
+        "drag",
+        (
+          pointer,
+          gameObject: Phaser.GameObjects.Sprite,
+          dragX: number,
+          dragY: number
+        ) => {
+          gameObject.setPosition(dragX, dragY);
+          let distance = dist(originX, originY, dragX, dragY);
+          gameObject.setScale(
+            Math.max(originScale - Math.min(distance / 800, 1), 0.35)
+          );
+        }
+      );
+
+      scene.input.on(
+        "dragstart",
+        (
+          pointer,
+          gameObject: Phaser.GameObjects.Sprite,
+          dragX: number,
+          dragY: number
+        ) => {
+          console.log("scale", gameObject.scale);
+          originX = gameObject.x;
+          originY = gameObject.y;
+          originScale = gameObject.scale;
+        }
+      );
+
+      scene.input.on(
+        "dragend",
+        (
+          pointer,
+          gameObject: Phaser.GameObjects.Sprite,
+          dragX: number,
+          dragY: number
+        ) => {
+          console.log(originX);
+          var tween = scene.tweens.add({
+            targets: gameObject,
+            x: originX,
+            y: originY,
+            scale: originScale,
+            duration: 400,
+            ease: "power4"
+          });
+        }
+      );
+
       card.setDisplaySize(width, height);
       card.setOrigin(0.5, 1);
       card.setX(offset);

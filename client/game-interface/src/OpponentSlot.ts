@@ -1,6 +1,7 @@
 import "phaser";
 import { ProfilePicture, TextPosition } from "./ProfilePicture";
-import { Generator, GeneratorKind, GeneratorState } from "./Generator";
+import { Generator, GeneratorState } from "./Generator";
+import { GeneratorKind } from "./Card";
 
 export class OpponentSlot extends Phaser.GameObjects.Container {
   constructor(
@@ -59,7 +60,7 @@ export enum SlotLayout {
   TopLeft,
   Middle,
   TopRight,
-  BottomRight,
+  BottomRight
 }
 
 /**

@@ -1,4 +1,5 @@
 import "phaser";
+import { GeneratorKind } from "./Card";
 
 export class Generator extends Phaser.GameObjects.Container {
   constructor(
@@ -83,18 +84,10 @@ export class Generator extends Phaser.GameObjects.Container {
   }
 }
 
-export enum GeneratorKind {
-  Joker = "super",
-  Shield = "radiation",
-  Water = "eau",
-  Air = "air",
-  Electricity = "foudre",
-}
-
 export enum GeneratorState {
   None,
   Enabled,
   Attacked,
   Protected,
-  AlwaysProtected,
+  AlwaysProtected
 }
