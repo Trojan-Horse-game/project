@@ -40,7 +40,10 @@ export class NewScene extends ResponsiveScene {
 
     // Action cards assets
     for (let actionName in ActionCardKind) {
-      this.load.image(actionName, "src/assets/" + actionName + ".jpg");
+      this.load.image(
+        ActionCardKind[actionName],
+        "src/assets/" + ActionCardKind[actionName] + ".jpg"
+      );
     }
 
     // Generator card assets
@@ -48,8 +51,8 @@ export class NewScene extends ResponsiveScene {
     for (let suffix of suffixes) {
       for (let generatorName in GeneratorKind) {
         this.load.image(
-          generatorName + "_" + suffix,
-          "src/assets/" + generatorName + "_" + suffix + ".jpg"
+          GeneratorKind[generatorName] + "_" + suffix,
+          "src/assets/" + GeneratorKind[generatorName] + "_" + suffix + ".jpg"
         );
       }
     }
@@ -67,7 +70,7 @@ export class NewScene extends ResponsiveScene {
     ];
 
     let players: Player[] = [];
-    for (let i = 0; i < 6; i++) {
+    for (let i = 0; i < 2; i++) {
       players.push(new Player(noms[i], textures[i]));
     }
 

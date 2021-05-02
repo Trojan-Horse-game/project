@@ -6,6 +6,7 @@ export class CardSprite extends Phaser.GameObjects.Sprite {
     let textureName: string;
     if (card instanceof GeneratorCard) {
       textureName = card.generator + "_" + card.kind;
+      console.log(textureName);
     } else if (card instanceof ActionCard) {
       textureName = card.kind;
     }
