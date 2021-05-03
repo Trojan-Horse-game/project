@@ -2,16 +2,41 @@ import "phaser";
 import { ActionCard, GeneratorCard, Card } from "./Card";
 import { Generator, GeneratorState } from "./Generator";
 
-export class CardSprite extends Phaser.GameObjects.Sprite {
-  constructor(scene: Phaser.Scene, card: Card) {
+export class CardSprite extends Phaser.GameObjects.Container {
+  constructor(scene: Phaser.Scene, card: Card, width: number, height: number) {
+    super(scene);
     let textureName: string;
     if (card instanceof GeneratorCard) {
       textureName = card.generator + "_" + card.kind;
     } else if (card instanceof ActionCard) {
       textureName = card.kind;
     }
-    super(scene, 0, 0, textureName);
-    this.setInteractive();
+    let sprite = scene.add.sprite(0, -height / 2, textureName);
+    sprite.setDisplaySize(width, height);
+    let hitArea = scene.add.rectangle(
+      -width / 2,
+      -height,
+      width,
+      height,
+      0xff0000,
+      1
+    );
+
+    this.setInteractive(hitArea, Phaser.Geom.Rectangle.Contains);
+    scene.input.setDraggable(this);
+    console.log("hitare", this.input.hitArea);
+
+    let rectangle = scene.add.rectangle(
+      0,
+      -height / 2,
+      width + 15,
+      height + 15
+    );
+    rectangle.setStrokeStyle(5, 0x399fff, 1);
+    this.add(rectangle);
+
+    this.add(sprite);
+    // this.add(hitArea);
     this.on(
       "drag",
       (pointer: Phaser.Input.Pointer, dragX: number, dragY: number) => {
@@ -29,8 +54,8 @@ export class CardSprite extends Phaser.GameObjects.Sprite {
           dragY
         );
         let local = this.parentContainer.getLocalPoint(
-          position.x + 80,
-          position.y + 230
+          position.x + 70,
+          position.y + 190
         );
         let proportion = 1 - Math.min(distance / 300, 1);
         let x = proportion * dragX + (1 - proportion) * local.x;
@@ -53,7 +78,7 @@ export class CardSprite extends Phaser.GameObjects.Sprite {
     this.on("dragstart", (pointer: Phaser.Input.Pointer) => {
       this.startX = this.x;
       this.startY = this.y;
-      this.startScale = this.scale;
+      this.startScale = 1;
     });
 
     this.on("dragend", () => {

@@ -17,16 +17,16 @@ export class PlayerSlot extends Phaser.GameObjects.Container {
     const ratio = 0.7069;
     const height = profilePictureRadius * 3.5;
     const width = height * ratio;
-    const margin = 10 * window.devicePixelRatio;
+    const margin = 20 * window.devicePixelRatio;
     const offsets = [-width - margin, 0, +width + margin];
     for (const offset of offsets) {
       const card = new CardSprite(
         scene,
-        new GeneratorCard(GeneratorCardKind.Virus, GeneratorKind.Joker)
+        new GeneratorCard(GeneratorCardKind.Virus, GeneratorKind.Joker),
+        width,
+        height
       );
-      scene.input.setDraggable(card);
-      card.setDisplaySize(width, height);
-      card.setOrigin(0.5, 1);
+
       card.setX(offset);
       this.add(card);
       this.cards.push(card);
