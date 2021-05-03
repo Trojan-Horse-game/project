@@ -1,6 +1,7 @@
 import "phaser";
 import { ActionCard, GeneratorCard, Card } from "./Card";
 import { Generator, GeneratorState } from "./Generator";
+import { PlayerSlot } from "./PlayerSlot";
 
 export class CardSprite extends Phaser.GameObjects.Container {
   constructor(scene: Phaser.Scene, card: Card, width: number, height: number) {
@@ -24,19 +25,17 @@ export class CardSprite extends Phaser.GameObjects.Container {
 
     this.setInteractive(hitArea, Phaser.Geom.Rectangle.Contains);
     scene.input.setDraggable(this);
-    console.log("hitare", this.input.hitArea);
-
-    let rectangle = scene.add.rectangle(
+    this.selectionOutline = scene.add.rectangle(
       0,
       -height / 2,
       width + 15,
       height + 15
     );
-    rectangle.setStrokeStyle(5, 0x399fff, 1);
-    this.add(rectangle);
+    this.selectionOutline.setStrokeStyle(5, 0x399fff, 1);
+    this.selectionOutline.setAlpha(0);
+    this.add(this.selectionOutline);
 
     this.add(sprite);
-    // this.add(hitArea);
     this.on(
       "drag",
       (pointer: Phaser.Input.Pointer, dragX: number, dragY: number) => {
@@ -54,22 +53,28 @@ export class CardSprite extends Phaser.GameObjects.Container {
           dragY
         );
         let local = this.parentContainer.getLocalPoint(
-          position.x + 70,
-          position.y + 190
+          position.x + 100,
+          position.y + 250
         );
-        let proportion = 1 - Math.min(distance / 300, 1);
+        let minThreshold;
+        if (this.parentContainer instanceof PlayerSlot) {
+          if (this.parentContainer.selectedCards.length <= 1) {
+            minThreshold = 0;
+          } else {
+            minThreshold = 150 * window.devicePixelRatio;
+          }
+        }
+        let threshold = 75 * window.devicePixelRatio;
+        let proportion =
+          1 - Math.min(Math.max(0, distance - minThreshold) / threshold, 1);
         let x = proportion * dragX + (1 - proportion) * local.x;
         let y = proportion * dragY + (1 - proportion) * local.y;
         this.setPosition(x, y);
-        // this.setAlpha(1 - 0.2 * (1 - proportion));
-
-        // this.setPosition(dragX, dragY);
 
         this.setScale(
           Math.max(
-            this.startScale -
-              Math.min((distance / 600) * window.devicePixelRatio, 1),
-            0.35
+            1 - Math.min((distance / 600) * window.devicePixelRatio, 1),
+            0.5
           )
         );
       }
@@ -78,24 +83,26 @@ export class CardSprite extends Phaser.GameObjects.Container {
     this.on("dragstart", (pointer: Phaser.Input.Pointer) => {
       this.startX = this.x;
       this.startY = this.y;
-      this.startScale = 1;
+    });
+
+    this.on("pointerup", () => {
+      this.selected = !this.selected;
     });
 
     this.on("dragend", () => {
+      let threshold = 5 * window.devicePixelRatio;
       scene.tweens.add({
         targets: this,
         x: this.startX,
         y: this.startY,
         alpha: 1,
-        scale: this.startScale,
+        scale: 1,
         duration: 400,
         ease: "power4"
       });
     });
 
-    this.on("drop", () => {
-      console.log("drop");
-    });
+    this.on("drop", () => {});
 
     this.on(
       "dragenter",
@@ -122,11 +129,25 @@ export class CardSprite extends Phaser.GameObjects.Container {
       }
     );
   }
-  private startX: number;
-  private startY: number;
+
+  selectedCallback: (boolean) => void;
+  private _selected: boolean = false;
+  get selected(): boolean {
+    return this._selected;
+  }
+
+  set selected(newValue) {
+    this._selected = newValue;
+    this.selectionOutline.setAlpha(newValue ? 1 : 0);
+    this.selectedCallback(newValue);
+  }
+
+  private selectionOutline: Phaser.GameObjects.Rectangle;
+
+  startX: number;
+  startY: number;
   private offsetX: number;
   private offsetY: number;
-  private startScale: number;
   static dist(x1: number, y1: number, x2: number, y2: number): number {
     return Math.sqrt(Math.pow(x2 - x1, 2) + Math.pow(y2 - y1, 2));
   }
