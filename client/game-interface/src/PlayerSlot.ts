@@ -1,6 +1,6 @@
 import "phaser";
 import { ProfilePicture, TextPosition } from "./ProfilePicture";
-import { Generator } from "./Generator";
+import { Generator, GeneratorState } from "./Generator";
 import { GeneratorKind, GeneratorCard, GeneratorCardKind } from "./Card";
 import { CardSprite } from "./CardSprite";
 
@@ -20,10 +20,9 @@ export class PlayerSlot extends Phaser.GameObjects.Container {
     const margin = 10 * window.devicePixelRatio;
     const offsets = [-width - margin, 0, +width + margin];
     for (const offset of offsets) {
-      // let card = scene.add.sprite(0, 0, "carte_verso");
       const card = new CardSprite(
         scene,
-        new GeneratorCard(GeneratorCardKind.Medicine, GeneratorKind.Shield)
+        new GeneratorCard(GeneratorCardKind.Virus, GeneratorKind.Joker)
       );
       scene.input.setDraggable(card);
       card.setDisplaySize(width, height);
@@ -52,9 +51,11 @@ export class PlayerSlot extends Phaser.GameObjects.Container {
       const generator = new Generator(
         scene,
         generatorRadius,
-        GeneratorKind[generatorKind]
+        GeneratorKind[generatorKind],
+        true
       );
       generator.setPosition(offset, -height * 1.3);
+      generator.setGeneratorState(GeneratorState.Enabled);
       offset += increment;
       this.add(generator);
     }
