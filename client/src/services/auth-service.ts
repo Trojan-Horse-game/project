@@ -1,4 +1,5 @@
 import axios from "axios";
+import userService from "./user-service";
 
 const API_URL = "http://localhost:3000";
 
@@ -30,6 +31,19 @@ class AuthService {
       username: user.username,
       password: user.password
     });
+  }
+
+  postInfos(user) {
+    return axios.post(API_URL + "", {
+      firstName: user.firstName,
+      name: user.name,
+      username: user.username,
+      mail: user.mail
+    });
+  }
+
+  addFriend(username) {
+    //On cherche l'user id de l'username
   }
 }
 
