@@ -27,7 +27,6 @@ export class PlayerSlot extends Phaser.GameObjects.Container {
         width,
         height
       );
-      card.setAngle(0);
       card.selectedCallback = (selected: boolean) => {
         if (selected) {
           this.selectedCards.push(card);

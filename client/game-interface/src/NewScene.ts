@@ -2,10 +2,11 @@ import "phaser";
 import { OpponentSlot, SlotLayout } from "./OpponentSlot";
 import { PlayerSlot } from "./PlayerSlot";
 import { Card, ActionCardKind, GeneratorKind, GeneratorCardKind } from "./Card";
+import { GameSceneDelegate } from "./GameSceneDelegate";
 
 export class ResponsiveScene extends Phaser.Scene {
   resize(width: number, height: number) {
-    console.error("Method must be overriden")
+    console.error("Method must be overriden");
   }
 }
 export class NewScene extends ResponsiveScene {
@@ -22,6 +23,8 @@ export class NewScene extends ResponsiveScene {
 
   playerSlot: PlayerSlot;
   opponentsSlots: OpponentSlot[] = [];
+
+  delegate: GameSceneDelegate;
 
   preload() {
     this.load.image("carte_verso", "src/assets/carte_verso.png");
@@ -123,7 +126,9 @@ export class NewScene extends ResponsiveScene {
     this.createPlayers();
   }
 
-  distributeCards(cards: Card[]) {}
+  distributeCards(cards: Card[]) {
+    
+  }
 
   createPlayers() {
     // Remove any previously existing opponent slot
