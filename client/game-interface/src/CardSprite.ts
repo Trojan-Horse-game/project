@@ -97,18 +97,11 @@ export class CardSprite extends Phaser.GameObjects.Container {
     );
 
     this.on("dragstart", (pointer: Phaser.Input.Pointer) => {
-      // console.log("dragstart - cardsprite");
       this.startX = this.x;
       this.startY = this.y;
     });
 
-    this.on("pointerup", () => {
-      // console.log("pointerup - cardsprite");
-      // this.selected = !this.selected;
-    });
-
     this.on("dragend", () => {
-      // console.log("dragend - cardsprite");
       let threshold = 5 * window.devicePixelRatio;
       scene.tweens.add({
         targets: this,
@@ -129,12 +122,11 @@ export class CardSprite extends Phaser.GameObjects.Container {
         pointer: Phaser.Input.Pointer,
         target: Phaser.GameObjects.GameObject
       ) => {
-        if (!(target.parentContainer instanceof PlayerSlot)) {
+        if (!(this.parentContainer instanceof PlayerSlot)) {
           return;
         }
-        console.log("dragenter", target.parentContainer.selectedCards);
         if (
-          target.parentContainer.selectedCards.length <= 1 &&
+          this.parentContainer.selectedCards.length <= 1 &&
           target instanceof Generator
         ) {
           const nextState = target.nextState(card);

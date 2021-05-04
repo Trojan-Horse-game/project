@@ -6,7 +6,6 @@ import { CardSprite } from "./CardSprite";
 import { MouseEventFSM } from "./MouseEventFSM";
 
 export class PlayerSlot extends Phaser.GameObjects.Container {
-  fsm: MouseEventFSM;
 
   constructor(
     scene: Phaser.Scene,
@@ -15,7 +14,6 @@ export class PlayerSlot extends Phaser.GameObjects.Container {
     texture: string
   ) {
     super(scene);
-    this.fsm = new MouseEventFSM();
     // Cards
     const ratio = 0.7069;
     const height = profilePictureRadius * 3.5;
@@ -29,7 +27,6 @@ export class PlayerSlot extends Phaser.GameObjects.Container {
         width,
         height
       );
-      this.fsm.linkToGameObject(card);
       card.setAngle(0);
       card.selectedCallback = (selected: boolean) => {
         if (selected) {
@@ -41,7 +38,6 @@ export class PlayerSlot extends Phaser.GameObjects.Container {
       };
 
       card.on("dragstart", () => {
-        // console.log("dragstart - playerslot");
         this.otherSelected = this.selectedCards.filter(value => {
           return value !== card;
         });
@@ -52,7 +48,6 @@ export class PlayerSlot extends Phaser.GameObjects.Container {
       });
 
       card.on("dragend", () => {
-        // console.log("dragend - playerslot");
         for (const otherCard of this.otherSelected) {
           scene.tweens.add({
             targets: otherCard,
@@ -69,7 +64,6 @@ export class PlayerSlot extends Phaser.GameObjects.Container {
       card.on(
         "drag",
         (pointer: Phaser.Input.Pointer, dragX: number, dragY: number) => {
-          // console.log("drag - playerslot");
           let xTranslation = pointer.x - pointer.downX;
           let yTranslation = pointer.y - pointer.downY;
           let distance = Math.sqrt(

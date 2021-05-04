@@ -5,6 +5,7 @@ export class MouseEventFSM {
     this.state = MouseEventFSMState.Base;
   }
 
+  private id: number = Math.floor(Math.random() * 10000);
   private _state: MouseEventFSMState;
 
   pointerUp: (
@@ -58,20 +59,12 @@ export class MouseEventFSM {
         if (event == PhaserEvent.Drag) {
           this.state = MouseEventFSMState.Drag;
         } else if (event == PhaserEvent.DragEnd) {
-          this.state = MouseEventFSMState.DragEnd;
-        }
-        break;
-      case MouseEventFSMState.DragEnd:
-      case MouseEventFSMState.PointerUp:
-        if (event == PhaserEvent.DragThreshold) {
-          this.state = MouseEventFSMState.DragStart;
-        } else if (event == PhaserEvent.PointerDown) {
-          this.state = MouseEventFSMState.PointerDown;
+          this.state = MouseEventFSMState.Base;
         }
         break;
       case MouseEventFSMState.PointerDown:
         if (event == PhaserEvent.PointerUp) {
-          this.state = MouseEventFSMState.PointerUp;
+          this.state = MouseEventFSMState.Base;
         } else if (event == PhaserEvent.DragThreshold) {
           this.state = MouseEventFSMState.DragStart;
         }
@@ -106,10 +99,10 @@ export class MouseEventFSM {
     gameObject.on(
       "dragend",
       (pointer: Phaser.Input.Pointer, dragX: number, dragY: number) => {
-        this.reactTo(PhaserEvent.DragEnd);
-        if (this.state == MouseEventFSMState.DragEnd) {
+        if (this.state == MouseEventFSMState.Drag) {
           this.dragStart(pointer, dragX, dragY);
         }
+        this.reactTo(PhaserEvent.DragEnd);
       }
     );
 
@@ -125,8 +118,10 @@ export class MouseEventFSM {
         localY: number,
         event: Phaser.Types.Input.EventData
       ) => {
+        if (this.state == MouseEventFSMState.PointerDown) {
+          this.pointerUp(pointer, localX, localY, event);
+        }
         this.reactTo(PhaserEvent.PointerUp);
-        this.pointerUp(pointer, localX, localY, event);
       }
     );
   }
@@ -136,9 +131,7 @@ enum MouseEventFSMState {
   Base = "base",
   DragStart = "dragstart",
   Drag = "drag",
-  DragEnd = "dragend",
-  PointerDown = "pointerdown",
-  PointerUp = "pointerup"
+  PointerDown = "pointerdown"
 }
 
 enum PhaserEvent {
