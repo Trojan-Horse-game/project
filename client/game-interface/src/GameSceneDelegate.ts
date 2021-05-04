@@ -1,12 +1,17 @@
-import { GeneratorKind } from "./Card";
+import { Card } from "./Card";
 
 export interface GameSceneDelegate {
-  didCreateGame(pseudo: string, specie: Species);
-  didJoinGame(pseudo: string, roomId: string);
-  didChooseSpecie(specie: Species);
-  didLaunchGame(roomId: string);
-  didDropCard(cardIndex: number, playerIndex: number, generator: GeneratorKind);
-  didDiscard(cardsIndices: number[]);
+  createGame(pseudo: string, specie: Species): void;
+  joinGame(pseudo: string, roomId: string): void;
+  chooseSpecie(specie: Species): void;
+  launchGame(roomId: string): void;
+  didDropCard(
+    card: Card,
+    cardIndex: number,
+    playerIndex: number,
+    generatorIdx: number
+  ): void;
+  didDiscard(cardsIndices: number[]): void;
 }
 
 // vérifier les noms de species et actuzliser la liste "texture"
