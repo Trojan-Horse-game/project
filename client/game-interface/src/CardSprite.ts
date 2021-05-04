@@ -2,10 +2,12 @@ import "phaser";
 import { ActionCard, GeneratorCard, Card } from "./Card";
 import { Generator, GeneratorState } from "./Generator";
 import { PlayerSlot } from "./PlayerSlot";
+import { MouseEventFSM } from "./MouseEventFSM";
 
 export class CardSprite extends Phaser.GameObjects.Container {
   constructor(scene: Phaser.Scene, card: Card, width: number, height: number) {
     super(scene);
+    this.eventFSM = new MouseEventFSM();
     let textureName: string;
     if (card instanceof GeneratorCard) {
       textureName = card.generator + "_" + card.kind;
@@ -25,6 +27,7 @@ export class CardSprite extends Phaser.GameObjects.Container {
 
     this.setInteractive(hitArea, Phaser.Geom.Rectangle.Contains);
     scene.input.setDraggable(this);
+    this.eventFSM.linkToGameObject(this);
     this.selectionOutline = scene.add.rectangle(
       0,
       -height / 2,
@@ -36,6 +39,19 @@ export class CardSprite extends Phaser.GameObjects.Container {
     this.add(this.selectionOutline);
 
     this.add(sprite);
+
+    this.eventFSM.drag = () => {
+      if (this.parentContainer instanceof PlayerSlot) {
+        if (this.parentContainer.selectedCards.indexOf(this) == -1) {
+          this.selected = true;
+        }
+      }
+    };
+
+    this.eventFSM.pointerUp = () => {
+      this.selected = !this.selected;
+    };
+
     this.on(
       "drag",
       (pointer: Phaser.Input.Pointer, dragX: number, dragY: number) => {
@@ -81,15 +97,18 @@ export class CardSprite extends Phaser.GameObjects.Container {
     );
 
     this.on("dragstart", (pointer: Phaser.Input.Pointer) => {
+      // console.log("dragstart - cardsprite");
       this.startX = this.x;
       this.startY = this.y;
     });
 
     this.on("pointerup", () => {
-      this.selected = !this.selected;
+      // console.log("pointerup - cardsprite");
+      // this.selected = !this.selected;
     });
 
     this.on("dragend", () => {
+      // console.log("dragend - cardsprite");
       let threshold = 5 * window.devicePixelRatio;
       scene.tweens.add({
         targets: this,
@@ -110,7 +129,14 @@ export class CardSprite extends Phaser.GameObjects.Container {
         pointer: Phaser.Input.Pointer,
         target: Phaser.GameObjects.GameObject
       ) => {
-        if (target instanceof Generator) {
+        if (!(target.parentContainer instanceof PlayerSlot)) {
+          return;
+        }
+        console.log("dragenter", target.parentContainer.selectedCards);
+        if (
+          target.parentContainer.selectedCards.length <= 1 &&
+          target instanceof Generator
+        ) {
           const nextState = target.nextState(card);
           target.setGeneratorDisplayState(nextState[0], nextState[1]);
         }
@@ -130,6 +156,7 @@ export class CardSprite extends Phaser.GameObjects.Container {
     );
   }
 
+  eventFSM: MouseEventFSM;
   selectedCallback: (boolean) => void;
   private _selected: boolean = false;
   get selected(): boolean {

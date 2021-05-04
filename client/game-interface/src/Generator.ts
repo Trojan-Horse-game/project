@@ -191,6 +191,7 @@ export class Generator extends Phaser.GameObjects.Container {
           case GeneratorState.AlwaysProtected:
             return [this.generatorState, this.isSuper];
         }
+        return [this.generatorState, this.isSuper];
       }
     } else {
       return [this.generatorState, this.isSuper];
