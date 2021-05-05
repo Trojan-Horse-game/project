@@ -31,6 +31,19 @@ class AuthService {
       password: user.password
     });
   }
+
+  postInfos(user) {
+    return axios.post(API_URL + "", {
+      firstName: user.firstName,
+      name: user.name,
+      username: user.username,
+      mail: user.mail
+    });
+  }
+
+  addFriend(username) {
+    //On cherche l'user id de l'username
+  }
 }
 
 export default new AuthService();

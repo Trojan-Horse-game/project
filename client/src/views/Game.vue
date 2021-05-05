@@ -45,7 +45,7 @@ export default {
           },
 
           preload: function() {
-            //this.load.image("background", "assets/bck.png");
+            this.load.image("background", "assets/BCK.gif");
             this.load.image("carte_verso", "assets/carte_verso.png");
 
             this.load.image("foudre", "assets/foudre_log.png");
@@ -62,11 +62,10 @@ export default {
             this.load.image("xmars", "assets/Xmars.png");
           },
           create: function() {
-            /*const bg: Phaser.GameObjects.Image = this.add
+            const bg: Phaser.GameObjects.Image = this.add
               .image(0, 0, "background")
               .setOrigin(0, 0)
               .setScale(1.09);
-              */
 
             //button distribution cards
             const dealText: Phaser.GameObjects.Text = this.add
