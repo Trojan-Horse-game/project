@@ -112,31 +112,6 @@
               <span class="text">{{ selected.description }}</span>
             </span>
           </div>
-          <!--
-            <table id="fiche">
-              <tr>
-                <td>Espèce</td>
-                <td class="text">{{ selected.name }}</td>
-              </tr>
-              <tr>
-                <td>Origine</td>
-                <td class="text">{{ selected.origin }}</td>
-              </tr>
-              <tr>
-                <td>Force</td>
-                <td class="text">{{ selected.strength }}</td>
-              </tr>
-            </table>
-
-            <div id="description">
-              <span>
-                Description
-              </span>
-              <span class="text">
-                {{ selected.description }}
-              </span>
-            </div>
-            -->
 
           <div id="boutons">
             <button id="prev" @click="prev()" />

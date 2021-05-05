@@ -3,8 +3,8 @@
     <div id="background-image" />
     <div id="container">
       <logo title="Menu principal" />
-      <button id="lancer" />
-      <button id="rejoindre" />
+      <router-link to="/choixEspece"><button id="lancer"/></router-link>
+      <router-link to="/rejoindrePartie"><button id="rejoindre"/></router-link>
 
       <div id="buttons">
         <router-link to="/reglesDuJeu">
@@ -53,7 +53,7 @@ export default {
   margin: 2% 0% 0% 0%;
 }
 
-#container > button {
+#container button {
   width: 300px;
   height: 123px;
   background-size: contain;
