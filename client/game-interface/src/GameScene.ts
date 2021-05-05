@@ -14,6 +14,7 @@ export class GameScene implements GameSceneDelegate {
   winnerIndex: number;
 
   constructor() {
+    this.scene = new NewScene(this.players, this.players.length);
     this.socket = io("localhost:3000");
 
     this.socket.on("oops", (err) => {
@@ -105,7 +106,6 @@ export class GameScene implements GameSceneDelegate {
       // specie index or string ??
       let player = new Player(pseudo, specie);
       this.players.push(player);
-      this.scene = new NewScene(this.players, 0);
     } catch (err) {
       console.log(err);
     }
