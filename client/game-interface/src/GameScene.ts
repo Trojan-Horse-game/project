@@ -14,7 +14,7 @@ export class GameScene implements GameSceneDelegate {
   winnerIndex: number;
 
   constructor() {
-    this.socket = io();
+    this.socket = io("localhost:3000");
 
     this.socket.on("oops", (err) => {
       console.log(err);
