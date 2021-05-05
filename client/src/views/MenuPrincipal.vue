@@ -22,11 +22,11 @@
 /*
 - Importer le fichier GameScene
 - Créer une instance de GameScene :
-  gameScene = new GameScene();
+  gameScene = new GameScene(pseudo);
   la scène sera accessible par gameScene.scene
 
-- si le joueur choisit de créer une partie, appeler la fonction "createGame(pseudo, Specie)"
-- Sinon appeler "joinGame(pseudo)" puis "chooseSpecie(specie) quand il aura choisit son espèce"
+- si le joueur choisit de créer une partie, appeler la fonction "createGame(specie)"
+- Sinon appeler "joinGame(roomId)" puis "chooseSpecie(specie) quand il aura choisit son espèce"
 
 La liste des espèces disponibles est stockée dans l'attribut gameScene.availableSpecies
 Libre a toi d'appeler les méthodes dans les bons fichiers mais à première vue je dirai de créer l'instance GameScene dans menuPrincipal.vue et appeler gameScene.scene dans Game.vue

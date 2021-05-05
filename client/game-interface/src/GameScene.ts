@@ -5,6 +5,7 @@ import { NewScene, Player } from "./NewScene";
 
 export class GameScene implements GameSceneDelegate {
   private socket: Socket;
+  pseudo: string;
   scene: NewScene;
   players: Player[] = [];
   playersCards: Card[] = [];
@@ -13,7 +14,8 @@ export class GameScene implements GameSceneDelegate {
   playerIndex: number;
   winnerIndex: number;
 
-  constructor() {
+  constructor(pseudo:string) {
+    this.pseudo = pseudo;
     this.scene = new NewScene(this.players, this.players.length);
     this.socket = io("localhost:3000");
 
@@ -100,20 +102,20 @@ export class GameScene implements GameSceneDelegate {
     }
   }
 
-  createGame(pseudo: string, specie: Species) {
+  createGame(specie: Species) {
     try {
-      this.socket.emit("create game", pseudo, specie);
+      this.socket.emit("create game", this.pseudo, specie);
       // specie index or string ??
-      let player = new Player(pseudo, specie);
+      let player = new Player(this.pseudo, specie);
       this.players.push(player);
     } catch (err) {
       console.log(err);
     }
   }
 
-  joinGame(pseudo: string, roomId: string) {
+  joinGame(roomId: string) {
     try {
-      this.socket.emit("join game", pseudo, roomId);
+      this.socket.emit("join game", this.pseudo, roomId);
     } catch (err) {
       console.log(err);
     }
