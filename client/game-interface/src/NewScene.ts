@@ -1,15 +1,19 @@
 import "phaser";
 import { OpponentSlot, SlotLayout } from "./OpponentSlot";
 import { PlayerSlot } from "./PlayerSlot";
+import { Card, ActionCardKind, GeneratorKind, GeneratorCardKind } from "./Card";
+import { GameSceneDelegate } from "./GameSceneDelegate";
 
 export class ResponsiveScene extends Phaser.Scene {
-  resize(width: number, height: number) {}
+  resize(width: number, height: number) {
+    console.error("Method must be overriden");
+  }
 }
 export class NewScene extends ResponsiveScene {
   constructor(players: Player[], playerIndex: number) {
     super({});
     this.players = players;
-    this.playerIndex = 0;
+    this.playerIndex = playerIndex;
   }
 
   players: Player[];
@@ -19,6 +23,8 @@ export class NewScene extends ResponsiveScene {
 
   playerSlot: PlayerSlot;
   opponentsSlots: OpponentSlot[] = [];
+
+  delegate: GameSceneDelegate;
 
   preload() {
     this.load.image("carte_verso", "src/assets/carte_verso.png");
@@ -30,12 +36,31 @@ export class NewScene extends ResponsiveScene {
     this.load.image("totox_tete", "src/assets/Totox_tete.png");
     this.load.image("xmars_tete", "src/assets/Xmars_tete.png");
 
-    this.load.image("foudre", "src/assets/foudre_log.png");
+    this.load.image("electricity", "src/assets/foudre_log.png");
     this.load.image("air", "src/assets/air_log.png");
-    this.load.image("eau", "src/assets/goute_log.png");
-    this.load.image("radiation", "src/assets/radiation_log.png");
-    this.load.image("super", "src/assets/super_log.png");
+    this.load.image("water", "src/assets/goute_log.png");
+    this.load.image("shield", "src/assets/radiation_log.png");
+    this.load.image("joker", "src/assets/super_log.png");
     this.load.image("super_sign", "src/assets/super.png");
+
+    // Action cards assets
+    for (let actionName in ActionCardKind) {
+      this.load.image(
+        ActionCardKind[actionName],
+        "src/assets/" + ActionCardKind[actionName] + ".jpg"
+      );
+    }
+
+    // Generator card assets
+    let suffixes = ["G", "P", "V"];
+    for (let suffix of suffixes) {
+      for (let generatorName in GeneratorKind) {
+        this.load.image(
+          GeneratorKind[generatorName] + "_" + suffix,
+          "src/assets/" + GeneratorKind[generatorName] + "_" + suffix + ".jpg"
+        );
+      }
+    }
   }
 
   create() {
@@ -46,17 +71,17 @@ export class NewScene extends ResponsiveScene {
       "robotec_tete",
       "spectre_tete",
       "totox_tete",
-      "xmars_tete",
+      "xmars_tete"
     ];
 
-    let players: Player[] = [];
-    for (let i = 0; i < 3; i++) {
+    const players: Player[] = [];
+    for (let i = 0; i < 6; i++) {
       players.push(new Player(noms[i], textures[i]));
     }
 
-    this.updatePlayers(players, 2);
+    this.updatePlayers(players, 0);
 
-    let profileRadius = 55 * window.devicePixelRatio;
+    const profileRadius = 55 * window.devicePixelRatio;
     this.playerSlot = new PlayerSlot(
       this,
       profileRadius,
@@ -65,15 +90,15 @@ export class NewScene extends ResponsiveScene {
     );
     this.add.existing(this.playerSlot);
 
-    let width = this.cameras.main.width;
-    let height = this.cameras.main.height;
+    const width = this.cameras.main.width;
+    const height = this.cameras.main.height;
     this.resize(width, height);
   }
 
   resize(width: number, height: number) {
     this.updateSlotsPositions(width, height);
     for (let i = 0; i < this.opponentsSlots.length; i++) {
-      let position = this.playerPosition(i);
+      const position = this.playerPosition(i);
       this.opponentsSlots[i].setPosition(position.x, position.y);
     }
     this.playerSlot.setPosition(
@@ -88,17 +113,26 @@ export class NewScene extends ResponsiveScene {
     this.createPlayers();
   }
 
-  appendPlayer(newPlayer: Player) {}
+  appendPlayer(newPlayer: Player) {
+    this.players.push(newPlayer);
+    this.createPlayers();
+  }
 
   removePlayer(removedPlayerIndex: number) {
     if (removedPlayerIndex < this.playerIndex) {
       this.playerIndex--;
     }
+    this.players.splice(removedPlayerIndex, 1);
+    this.createPlayers();
+  }
+
+  distributeCards(cards: Card[]) {
+    
   }
 
   createPlayers() {
     // Remove any previously existing opponent slot
-    for (let opponentSlot of this.opponentsSlots) {
+    for (const opponentSlot of this.opponentsSlots) {
       opponentSlot.destroy();
     }
     this.opponentsSlots = [];
@@ -107,8 +141,8 @@ export class NewScene extends ResponsiveScene {
     let index = (this.playerIndex + 1) % this.players.length;
     let opponentIndex = 0;
     while (index != this.playerIndex) {
-      let opponent = this.players[index];
-      let opponentSlot = new OpponentSlot(
+      const opponent = this.players[index];
+      const opponentSlot = new OpponentSlot(
         this,
         55 * window.devicePixelRatio,
         this.slotLayoutForOpponent(opponentIndex),
@@ -128,22 +162,22 @@ export class NewScene extends ResponsiveScene {
   }
 
   updateSlotsPositions(width: number, height: number) {
-    let horizontalDistance = 100 * window.devicePixelRatio;
-    let verticalDistance = 115 * window.devicePixelRatio;
-    let heightDiff = 325 * window.devicePixelRatio;
-    let minHeight = 400 * window.devicePixelRatio;
+    const horizontalDistance = 100 * window.devicePixelRatio;
+    const verticalDistance = 115 * window.devicePixelRatio;
+    const heightDiff = 325 * window.devicePixelRatio;
+    const minHeight = 400 * window.devicePixelRatio;
     this.positions = [
       {
         x: horizontalDistance,
-        y: Math.max(height - heightDiff, minHeight),
+        y: Math.max(height - heightDiff, minHeight)
       },
       { x: horizontalDistance, y: verticalDistance },
       { x: width / 2, y: verticalDistance },
       { x: width - horizontalDistance, y: verticalDistance },
       {
         x: width - horizontalDistance,
-        y: Math.max(height - heightDiff, minHeight),
-      },
+        y: Math.max(height - heightDiff, minHeight)
+      }
     ];
   }
 
@@ -157,7 +191,7 @@ export class NewScene extends ResponsiveScene {
     3: [1, 3],
     4: [0, 2, 4],
     5: [0, 1, 3, 4],
-    6: [0, 1, 2, 3, 4],
+    6: [0, 1, 2, 3, 4]
   };
 
   static slotsLayouts = {
@@ -168,15 +202,15 @@ export class NewScene extends ResponsiveScene {
       SlotLayout.BottomLeft,
       SlotLayout.TopLeft,
       SlotLayout.TopRight,
-      SlotLayout.BottomRight,
+      SlotLayout.BottomRight
     ],
     6: [
       SlotLayout.BottomLeft,
       SlotLayout.TopLeft,
       SlotLayout.Middle,
       SlotLayout.TopRight,
-      SlotLayout.BottomRight,
-    ],
+      SlotLayout.BottomRight
+    ]
   };
 }
 
