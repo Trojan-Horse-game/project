@@ -23,6 +23,7 @@
 </template>
 
 <script lang="ts">
+// accéder 
 import Phaser from "phaser";
 import Card from "../clientTS/src/card";
 import Zone from "../clientTS/src/Zone";

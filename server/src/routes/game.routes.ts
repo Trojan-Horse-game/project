@@ -46,7 +46,7 @@ function forfeit(io: any, room: string, playerSocket: Socket) {
 
     if (idx == thisgame.currentPlayerIdx) {
       thisgame.resign();
-      playerSocket.to(room).emit("leave game", playerSocket.id);
+      playerSocket.to(room).emit("leave game", idx);
       playerSocket.leave(room);
 
       if (thisgame.inProgress) {
@@ -56,7 +56,7 @@ function forfeit(io: any, room: string, playerSocket: Socket) {
       }
     } else {
       thisgame.resign(idx);
-      playerSocket.to(room).emit("leave game", playerSocket.id);
+      playerSocket.to(room).emit("leave game", idx);
       playerSocket.leave(room);
 
       if (!thisgame.inProgress) {
@@ -183,7 +183,7 @@ module.exports = function (io: any) {
           socket.to(roomId).emit("play card", action);
 
           thisgame.playAction(action);
-          socket.emit("card played", thisgame.currentPlayer.hand);
+          socket.emit("hand", thisgame.currentPlayer.hand);
 
           if (thisgame.inProgress) {
             nextTurn(io, thisgame);
@@ -213,8 +213,8 @@ module.exports = function (io: any) {
             cards.push(thisgame.currentPlayer.hand[index]);
           }
 
-          socket.to(roomId).emit("discard", indexDiscard, cards);
           thisgame.discardHand(indexDiscard);
+          socket.to(roomId).emit("discard", indexDiscard, cards);
 
           nextTurn(io, thisgame);
         }
