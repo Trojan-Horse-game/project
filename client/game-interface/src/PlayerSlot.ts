@@ -3,10 +3,8 @@ import { ProfilePicture, TextPosition } from "./ProfilePicture";
 import { Generator, GeneratorState } from "./Generator";
 import { GeneratorKind, GeneratorCard, GeneratorCardKind } from "./Card";
 import { CardSprite } from "./CardSprite";
-import { MouseEventFSM } from "./MouseEventFSM";
 
 export class PlayerSlot extends Phaser.GameObjects.Container {
-
   constructor(
     scene: Phaser.Scene,
     profilePictureRadius: number,
@@ -88,18 +86,19 @@ export class PlayerSlot extends Phaser.GameObjects.Container {
       card.setX(offset);
       this.add(card);
       this.cards.push(card);
+      this.playerInteractive = false;
     }
 
     // Profile picture
-    const profile = new ProfilePicture(
+    this.profilePicture = new ProfilePicture(
       scene,
       profilePictureRadius,
       TextPosition.Bottom,
       texture,
       name
     );
-    profile.setPosition(-width * 2.25, -height * 0.46);
-    this.add(profile);
+    this.profilePicture.setPosition(-width * 2.25, -height * 0.46);
+    this.add(this.profilePicture);
 
     // Generators
     const generatorRadius = 0.58 * profilePictureRadius;
@@ -119,7 +118,23 @@ export class PlayerSlot extends Phaser.GameObjects.Container {
     }
   }
 
+  profilePicture: ProfilePicture;
   private otherSelected: CardSprite[] = [];
   selectedCards: CardSprite[] = [];
   cards: CardSprite[] = [];
+
+  private _playerInteractive: boolean;
+  get playerInteractive(): boolean {
+    return this._playerInteractive;
+  }
+  set playerInteractive(newValue) {
+    this._playerInteractive = newValue;
+    for (const card of this.cards) {
+      if (this.playerInteractive) {
+        card.setInteractive();
+      } else {
+        card.disableInteractive();
+      }
+    }
+  }
 }

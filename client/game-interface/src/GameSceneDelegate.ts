@@ -1,6 +1,8 @@
 import { Card } from "./Card";
+import { GameScene } from "./GameScene";
 
 export interface GameSceneDelegate {
+  wasAddedToScene(scene: GameScene);
   createGame(pseudo: string, specie: Species): void;
   joinGame(pseudo: string, roomId: string): void;
   chooseSpecie(specie: Species): void;
