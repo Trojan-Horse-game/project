@@ -2,15 +2,18 @@ import "phaser";
 import { OpponentSlot, SlotLayout } from "./OpponentSlot";
 import { PlayerSlot } from "./PlayerSlot";
 import { Card, ActionCardKind, GeneratorKind, GeneratorCardKind } from "./Card";
+import { GameSceneDelegate } from "./GameSceneDelegate";
 
 export class ResponsiveScene extends Phaser.Scene {
-  resize(width: number, height: number) {}
+  resize(width: number, height: number) {
+    console.error("Method must be overriden");
+  }
 }
 export class NewScene extends ResponsiveScene {
   constructor(players: Player[], playerIndex: number) {
     super({});
     this.players = players;
-    this.playerIndex = 0;
+    this.playerIndex = playerIndex;
   }
 
   players: Player[];
@@ -20,6 +23,8 @@ export class NewScene extends ResponsiveScene {
 
   playerSlot: PlayerSlot;
   opponentsSlots: OpponentSlot[] = [];
+
+  delegate: GameSceneDelegate;
 
   preload() {
     this.load.image("carte_verso", "src/assets/carte_verso.png");
@@ -69,14 +74,14 @@ export class NewScene extends ResponsiveScene {
       "xmars_tete"
     ];
 
-    let players: Player[] = [];
-    for (let i = 0; i < 2; i++) {
+    const players: Player[] = [];
+    for (let i = 0; i < 6; i++) {
       players.push(new Player(noms[i], textures[i]));
     }
 
     this.updatePlayers(players, 0);
 
-    let profileRadius = 55 * window.devicePixelRatio;
+    const profileRadius = 55 * window.devicePixelRatio;
     this.playerSlot = new PlayerSlot(
       this,
       profileRadius,
@@ -85,15 +90,15 @@ export class NewScene extends ResponsiveScene {
     );
     this.add.existing(this.playerSlot);
 
-    let width = this.cameras.main.width;
-    let height = this.cameras.main.height;
+    const width = this.cameras.main.width;
+    const height = this.cameras.main.height;
     this.resize(width, height);
   }
 
   resize(width: number, height: number) {
     this.updateSlotsPositions(width, height);
     for (let i = 0; i < this.opponentsSlots.length; i++) {
-      let position = this.playerPosition(i);
+      const position = this.playerPosition(i);
       this.opponentsSlots[i].setPosition(position.x, position.y);
     }
     this.playerSlot.setPosition(
@@ -121,11 +126,13 @@ export class NewScene extends ResponsiveScene {
     this.createPlayers();
   }
 
-  distributeCards(cards: Card[]) {}
+  distributeCards(cards: Card[]) {
+    
+  }
 
   createPlayers() {
     // Remove any previously existing opponent slot
-    for (let opponentSlot of this.opponentsSlots) {
+    for (const opponentSlot of this.opponentsSlots) {
       opponentSlot.destroy();
     }
     this.opponentsSlots = [];
@@ -134,8 +141,8 @@ export class NewScene extends ResponsiveScene {
     let index = (this.playerIndex + 1) % this.players.length;
     let opponentIndex = 0;
     while (index != this.playerIndex) {
-      let opponent = this.players[index];
-      let opponentSlot = new OpponentSlot(
+      const opponent = this.players[index];
+      const opponentSlot = new OpponentSlot(
         this,
         55 * window.devicePixelRatio,
         this.slotLayoutForOpponent(opponentIndex),
@@ -155,10 +162,10 @@ export class NewScene extends ResponsiveScene {
   }
 
   updateSlotsPositions(width: number, height: number) {
-    let horizontalDistance = 100 * window.devicePixelRatio;
-    let verticalDistance = 115 * window.devicePixelRatio;
-    let heightDiff = 325 * window.devicePixelRatio;
-    let minHeight = 400 * window.devicePixelRatio;
+    const horizontalDistance = 100 * window.devicePixelRatio;
+    const verticalDistance = 115 * window.devicePixelRatio;
+    const heightDiff = 325 * window.devicePixelRatio;
+    const minHeight = 400 * window.devicePixelRatio;
     this.positions = [
       {
         x: horizontalDistance,

@@ -12,7 +12,7 @@ export class OpponentSlot extends Phaser.GameObjects.Container {
     pictureName: string
   ) {
     super(scene);
-    let layoutInfo = new LayoutInfo(slotLayout);
+    const layoutInfo = new LayoutInfo(slotLayout);
     this.profilePicture = new ProfilePicture(
       scene,
       playerCircleRadius,
@@ -23,15 +23,17 @@ export class OpponentSlot extends Phaser.GameObjects.Container {
     this.add(this.profilePicture);
 
     let i = 0;
-    for (let generatorKind in GeneratorKind) {
-      let generatorAngle = layoutInfo.generatorRotationBuilder(i);
-      let basePivot = this.scene.add.container();
-      let subPivot = this.scene.add.container();
-      let generator = new Generator(
+    for (const generatorKind in GeneratorKind) {
+      const generatorAngle = layoutInfo.generatorRotationBuilder(i);
+      const basePivot = this.scene.add.container();
+      const subPivot = this.scene.add.container();
+      const generator = new Generator(
         scene,
         0.428 * playerCircleRadius,
-        GeneratorKind[generatorKind]
+        GeneratorKind[generatorKind],
+        false
       );
+      generator.setGeneratorState(GeneratorState.Enabled);
       this.generators.set(generatorKind, generator);
       subPivot.setY(-1.642 * playerCircleRadius);
       basePivot.rotation = generatorAngle;
@@ -107,7 +109,7 @@ class LayoutInfo {
   textPosition: TextPosition;
   generatorRotationBuilder: (index: number) => number;
 
-  static baseYPositionFactor: number = 1.15;
+  static baseYPositionFactor = 1.15;
 
   static makeGenPosBuild(
     start: number,

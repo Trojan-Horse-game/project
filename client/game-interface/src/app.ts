@@ -1,6 +1,7 @@
 import { NewScene, ResponsiveScene, Player } from "./NewScene";
 import "phaser";
 
+const scene = new NewScene([new Player("Youness", "xmars_tete")], 0);
 const config: Phaser.Types.Core.GameConfig = {
   type: Phaser.WEBGL,
   title: "Les Cavaliers de Troie",
@@ -12,7 +13,7 @@ const config: Phaser.Types.Core.GameConfig = {
     height: window.innerHeight * window.devicePixelRatio,
     zoom: 1 / window.devicePixelRatio
   },
-  scene: [new NewScene([new Player("Youness", "xmars_tete")], 0)]
+  scene: [scene]
 };
 
 window.onload = () => {
