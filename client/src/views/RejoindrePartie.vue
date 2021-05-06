@@ -14,6 +14,8 @@
 </template>
 
 <script>
+// Appeler la fonction "joinGame" puis rediriger vers la page choix espece
+// gameScene.joinGame()
 import Logo from "../components/Logo.vue";
 export default {
   components: { logo: Logo },

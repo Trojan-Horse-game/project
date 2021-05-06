@@ -548,7 +548,7 @@ export class Game {
 
     const temp = this.currentPlayer.base[action.slotTarget[0]];
     if (temp.state === State.Empty)
-      throw "Firewall : générateur cible indexistant";
+      throw "Firewall : générateur cible inexistant";
 
     if (temp.state === State.Immunized)
       throw "Firewall : générateur cible immunisé";
