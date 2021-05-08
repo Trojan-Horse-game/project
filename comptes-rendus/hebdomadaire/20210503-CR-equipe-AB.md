@@ -7,7 +7,7 @@
 - Rédaction du manuel de jeu et des règles / géré par Aghilas et Younes et Isabelle 
 - Finalisation de la communication avec le rapport final / géré par Younes, Walid, Zakaria et Aghilas
 - Développement du Site Vitrine et configuration du DNS pour le second lien, création des deux vidéos, rédaction des comptes-rendus qui manquent et mise en place d'une boutique  / géré par Aghilas 
-- Intégrer Nginx comme reverse proxy et Déployer le front et le back sur des subroutes du nom de domaine géré / par Siham Aissaoui
+- Intégrer Nginx comme reverse proxy et Déployer le front et le back sur des subroutes du nom de domaine géré / par Siham 
 - Interface de lancement de la partie (pour l'hôte) et Fusionner les packages client (Vue et Phaser) / géré par Younes
 - Prévoir l'affichage de la défaite/victoire et intégrer le design correspondant et résolution du grand bug lié à docker et client/ géré par Hakim
 
