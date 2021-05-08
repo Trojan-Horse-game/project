@@ -1,6 +1,6 @@
 <template>
   <div id="audioplay">
-    <audio ref="player" autoplay>
+    <audio ref="player" autoplay loop>
       <source :src="audioFile" type="audio/mpeg" />
       Your browser does not support the audio element.
     </audio>
@@ -38,6 +38,7 @@ export default {
   mounted: function() {
     this.$watch("audioFile", () => {
       this.$refs.player.load();
+      this.$refs.player.play();
     });
 
     this.$watch("playing", function() {
