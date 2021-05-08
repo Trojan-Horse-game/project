@@ -144,7 +144,6 @@ $content: #2f363c;
   font-size: 25px;
   justify-content: space-around;
   margin: 2% 0%;
-
 }
 
 #content > div {
@@ -175,7 +174,6 @@ $content: #2f363c;
 input:focus {
   outline: none;
 }
-
 
 #infos {
   width: 50%;

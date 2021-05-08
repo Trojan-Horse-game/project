@@ -1,6 +1,6 @@
 <template>
   <v-app>
-    <div id="wrap">
+    <div id="background-image"/>
       <div id="logo">
       <img src="logo.png" alt="Logo du jeu" />
     </div>
@@ -27,12 +27,10 @@
         </div>
 
         <div id="legal">
-          <ul>
-            <li>
+          <p>
               Un enfant de moins de 15 ans doit avoir l'accord de son
               représentant légal pour l'envoi de données personnelles.
-            </li>
-          </ul>
+            </p>
 
           <v-checkbox
             v-model="checkbox"
@@ -45,7 +43,6 @@
           <router-link to="/"><v-btn id="retour"/></router-link>
           <v-btn id="valider" @click="submitForm()" />
         </div>
-    </div>
     </div>
   </v-app>
 </template>
@@ -138,7 +135,7 @@ $content: #2f363c;
 }
 
 #content {
-  width: 100%;
+  width: inherit;
   height: max-content;
   padding: 2%;
   z-index: 0;
@@ -161,7 +158,7 @@ $content: #2f363c;
 
 #content .form_input {
   background-image: url("input.png");
-  background-repeat: no-repeat;
+  background-repeat: round;
   padding-left: 20px;
   font-size: 20px;
   background-size: contain;
@@ -171,7 +168,7 @@ $content: #2f363c;
 .form_input input {
   width: 90%;
   margin:auto;
-  text-align:left;
+  text-align:center;
 }
 
 input:focus {
@@ -179,7 +176,7 @@ input:focus {
 }
 
 #infos {
-  width: 50%;
+  width: 90%;
   display:grid;
 }
 
@@ -188,20 +185,11 @@ input:focus {
   grid-template-columns: 1fr 1fr;
   text-align: left;
   vertical-align: middle;
+  align-content: center;
 }
 
 .theme--light.v-label {
   color: rgba(0, 0, 0, 0.6) !important;
-}
-
-li {
-  list-style: none;
-}
-
-ul {
-  margin: 20px 0px;
-  text-align:center;
-  font-size: 15px;
 }
 
 #buttons {
@@ -227,10 +215,17 @@ ul {
 }
 
 #legal {
+  margin: 2px;
   display: flex;
+  text-align:center;
   justify-content: center;
   flex-direction: column;
   align-items: center;
+}
+
+#legal p {
+  width: 90%;
+  font-size: 60%;
 }
 
 .v-label {
@@ -239,8 +234,8 @@ ul {
 
 @media screen and (max-width: 1024px) { 
   #container {
-  width: 80%;
-  height: 100%;
+  width: 90%;
+  height: max-content;
   margin:auto;
   text-align:center;
   display: flex;

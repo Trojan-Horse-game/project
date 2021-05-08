@@ -242,7 +242,7 @@ export default {
 }
 
 #logo img {
-  width: 200px !important;
+  width: 20% !important;
   height: auto;
 }
 
@@ -465,5 +465,9 @@ ul {
 
 #valider {
   background-image: url("../../public/Design/valider.png");
+}
+
+@media screen and (max-width: 720px) { 
+  
 }
 </style>

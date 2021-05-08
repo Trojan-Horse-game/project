@@ -72,8 +72,9 @@
 #left {
   height: 100%;
   width: 100%;
-  align-content:middle;
+  align-content:center;
   display:grid;
+  justify-content:center;
   grid-template-rows:1fr 1fr;
 }
 
@@ -121,7 +122,7 @@
   #left {
   height: 100%;
   width: 100%;
-  align-content:middle;
+  align-content:center;
   display:grid;
   grid-template-rows:1fr 1fr;
 }
@@ -145,7 +146,7 @@
   }
 }
 
-@media screen and (max-width: 720px) { 
+@media screen and (max-width: 1024px) { 
    .min-title {
     padding: 2%;
     color: #fff;
@@ -157,6 +158,10 @@
 
   #right .min-title {
     display:none;
+  }
+
+  #container{
+    padding-right:0;
   }
 }
 </style>
