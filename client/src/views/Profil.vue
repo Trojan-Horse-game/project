@@ -1,63 +1,42 @@
 <template>
   <v-app>
-    <div id="background-image" />
-    <Logo />
-    <div id="container">
+    <div id="background-image"/>
+    <div id="logo">
+        <img src="logo.png" alt="Logo du jeu" />
+      </div>
+      <div id="container">
       <span id="titre">Mon profil</span>
 
       <div id="content">
-        <table id="infos">
-          <tr>
-            <td>Nom</td>
-            <td>
-              <input color="#000" v-model="lastNameProp" />
-            </td>
-          </tr>
-
-          <tr>
-            <td>Prénom</td>
-            <td>
-              <input color="#000" v-model="firstNameProp" />
-            </td>
-          </tr>
-
-          <tr>
-            <td>Username</td>
-            <td>
+        <div class="row">
+            <label>Username</label>
+            <div class="form_input">
               <input color="#000" v-model="usernameProp" />
-            </td>
-          </tr>
+          </div>
+        </div>
 
-          <tr>
-            <td>Adresse mail</td>
-            <td>
-              <input color="#000" v-model="mailProp" />
-            </td>
-          </tr>
-        </table>
-
-        <table id="stats">
-          <tr>
-            <td class="element">
+        <div id="stats">
+          <div class="row">
+            <div class="element">
               <img
                 class="etoile"
                 src="Design/victoires.png"
                 alt="Étoile noire"
               />Nombre de victoires
-            </td>
-            <td class="value bg-none">{{ nbVictoriesProp }}</td>
-          </tr>
-          <tr>
-            <td class="element">
+            </div>
+            <div class="value bg-none">{{ nbVictoriesProp }}</div>
+          </div>
+          <div class="row">
+            <div class="element">
               <img
                 class="etoile"
                 src="Design/defaites.png"
                 alt="Étoile noire"
               />Nombre de défaites
-            </td>
-            <td class="value bg-none">{{ nbDefeatsProp }}</td>
-          </tr>
-        </table>
+            </div>
+            <div class="value bg-none">{{ nbDefeatsProp }}</div>
+          </div>
+        </div>
 
         <div id="buttons-row">
           <v-dialog v-model="dialog" width="500">
@@ -222,9 +201,8 @@
 </template>
 
 <script lang="ts">
-import Logo from "../components/Logo.vue";
 export default {
-  components: { Logo: Logo },
+  components: {},
   data: () => ({
     dialog: false,
     tab: null,
@@ -236,22 +214,9 @@ export default {
   }),
 
   props: {
-    lastNameProp: {
-      type: String,
-      default: "Dorian"
-    },
-
-    firstNameProp: {
-      type: String,
-      default: "Arno"
-    },
     usernameProp: {
       type: String,
       default: "frenchAssassin"
-    },
-    mailProp: {
-      type: String,
-      default: "frenchAssassin@outlook.com"
     },
     nbVictoriesProp: {
       type: Number,
@@ -276,21 +241,8 @@ export default {
     submitForm() {
       const errors = [];
 
-      if (this.lastNameProp.length < 1) {
-        errors.push("Nom requis");
-      }
-
-      if (this.firstNameProp.length < 1) {
-        errors.push("Prénom requis");
-      }
       if (this.usernameProp.length < 1) {
         errors.push("Username requis");
-      }
-
-      if (this.mailProp.length < 1) {
-        errors.push("Mail requis");
-      } else if (!this.mailPattern.test(this.mailProp)) {
-        errors.push("Adresse mail invalide");
       }
 
       let alertMessage: string;
@@ -352,22 +304,27 @@ $content: #2f363c;
 
 #background-image {
   background-image: url("../../public/Design/default-bck.gif");
+  height: 100%;
+  background-size: cover;
 }
 
 #logo {
-  position: absolute;
+  width:20%;
+  position: fixed;
   top: 1%;
   left: 1%;
+  margin-right:5%;
 }
 
 #logo img {
-  width: 250px;
+  width: 100% !important;
   height: auto;
 }
 
+
 #container {
-  width: 100vw;
-  height: 100vh;
+  width: 100%;
+  height: 100%;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -377,39 +334,33 @@ $content: #2f363c;
 #content {
   width: max-content;
   height: max-content;
-  padding: 5%;
+  padding: 2%;
   z-index: 0;
   color: $textColor;
-  padding: 5px 10px;
   background-color: $content;
   display: flex;
   flex-direction: column;
   align-content: space-around;
   align-items: center;
   font-size: 25px;
-  flex-grow: 1;
   justify-content: space-around;
   margin: 2% 0%;
 }
 
+.row {
+  display:grid;
+  grid-template-columns: 1fr 1fr;
+  text-align: left;
+  vertical-align: middle;
+}
+
 #titre {
-  font-size: 70px;
+  font-size: 400%;
   color: $textColor;
-  margin: 0 auto;
-  margin-top: 1%;
+  text-align:center;
 }
 
-/*
-#infos {
-display: flex;
-flex-direction: column;
-flex-grow: 1;
-padding: 10px 0px 0px 0px;
-width: 90%;
-}
-*/
-
-#content input {
+#content .form_input {
   background-image: url("input.png");
   background-repeat: no-repeat;
   padding-left: 20px;
@@ -418,31 +369,23 @@ width: 90%;
   padding: 10px 0px 35px 0px;
 }
 
+.form_input input {
+  width: 90%;
+  margin:auto;
+  text-align:center;
+}
+
 input:focus {
   outline: none;
 }
 
-table {
-  width: 100%;
-}
-
-tr td:nth-child(1) {
-  vertical-align: top;
-  padding-top: 9px;
-  width: max-content;
-}
-
-td {
-  text-align: center;
-  vertical-align: middle;
+.infos {
+  display:grid;
+  grid-template-columns: 1fr 1fr;
 }
 
 .theme--light.v-label {
   color: rgba(0, 0, 0, 0.6) !important;
-}
-
-#stats td {
-  width: max-content;
 }
 
 #stats .element {
@@ -559,4 +502,32 @@ ul {
   opacity: 0.2;
   filter: grayscale(100%);
 }
+
+@media screen and (max-width: 720px) { 
+  #container {
+  width: 80%;
+  height: max-content;
+  margin:auto;
+  text-align:center;
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  flex-direction: column;
+  }
+
+  .row {
+    width:100%;
+    display:block;
+    text-align: center;
+  }
+
+  #logo {
+  width:20%;
+  position: relative;
+  top: 1%;
+  left: 1%;
+  margin-right:5%;
+  }
+}
+
 </style>

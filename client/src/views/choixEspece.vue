@@ -92,25 +92,25 @@
         </div>
         <div id="partieDroite">
           <div id="fiche">
-            <span class="attribut">
+            <div class="attribut">
               <span class="nom">Espèce</span>
-              <span class="text">{{ selected.name }}</span>
-            </span>
+              <span class="text"><p class="text-fill">{{ selected.name }}</p></span>
+            </div>
 
-            <span class="attribut">
+            <div class="attribut">
               <span class="nom">Origine</span>
-              <span class="text">{{ selected.origin }}</span>
-            </span>
+              <span class="text"><p class="text-fill">{{ selected.origin }}</p></span>
+            </div>
 
-            <span class="attribut">
+            <div class="attribut">
               <span class="nom">Force</span>
-              <span class="text">{{ selected.strength }}</span>
-            </span>
+              <span class="text"><p class="text-fill">{{ selected.strength }}</p></span>
+            </div>
 
-            <span class="attribut" id="description">
+            <div class="attribut" id="description">
               <span class="nom">Description</span>
-              <span class="text">{{ selected.description }}</span>
-            </span>
+              <span class="text"><p class="text-fill">{{ selected.description }}</p></span>
+            </div>
           </div>
 
           <div id="boutons">
@@ -287,14 +287,15 @@ export default {
 }
 
 #fiche {
-  background-color: #fff;
+  background-color: #2f363c;
   display: flex;
+  padding: 3%;
   flex-grow: 1;
   height: 80%;
   flex-flow: column wrap;
   justify-content: space-evenly;
   align-content: center;
-  font-size: 40px;
+  font-size: 150%;
 }
 
 .attribut {
@@ -305,6 +306,7 @@ export default {
 .nom {
   min-width: 122px;
   margin: 0px 10px;
+  color: #bbbbbb;
 }
 
 #description {
@@ -315,9 +317,9 @@ export default {
 
 .text {
   background-image: url("../../public/Design/test_big.png");
-  color: #fff;
+  color: #bbbbbb;
   width: 100%;
-  background-size: contain;
+  height: 100%;
   background-position: center;
   flex-grow: 1;
   margin: 0px 10px;
@@ -325,9 +327,15 @@ export default {
   font-size: 35px;
 }
 
+.text .text-fill{
+  width: 90%;
+  margin:auto;
+  text-align:center;
+}
+
 #description .text {
   background-image: url("../../public/Design/description_test.png");
-  color: #fff;
+  color: #bbbbbb;
   width: 98%;
   height: 100%;
   background-position: top;
@@ -438,21 +446,6 @@ export default {
 
 input:focus {
   outline: none;
-}
-
-table {
-  width: 100%;
-}
-
-tr td:nth-child(1) {
-  vertical-align: top;
-  padding-top: 9px;
-  width: max-content;
-}
-
-td {
-  text-align: center;
-  vertical-align: middle;
 }
 
 li {
