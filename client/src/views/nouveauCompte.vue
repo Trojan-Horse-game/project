@@ -98,7 +98,7 @@ export default {
 $textColor: #bbbbbb;
 $content: #2f363c;
 
-#wrap {
+#background-image {
   background-image: url("../../public/Design/default-bck.gif");
   min-width: 100%;
   min-height: 100%;
