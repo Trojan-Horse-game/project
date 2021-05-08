@@ -30,24 +30,24 @@ export class GameScene extends ResponsiveScene {
   delegate: GameSceneDelegate;
 
   preload() {
-    this.load.image("carte_verso", "src/assets/carte_verso.png");
+    this.load.image("carte_verso", "assets/carte_verso.png");
 
-    this.load.image("fawkes_tete", "src/assets/Fawkes_tete.png");
-    this.load.image("hutex_tete", "src/assets/Hutex_tete.png");
-    this.load.image("robotec_tete", "src/assets/Robotec_tete.png");
-    this.load.image("spectre_tete", "src/assets/Spectre_tete.png");
-    this.load.image("totox_tete", "src/assets/Totox_tete.png");
-    this.load.image("xmars_tete", "src/assets/Xmars_tete.png");
+    this.load.image("fawkes_tete", "assets/Fawkes_tete.png");
+    this.load.image("hutex_tete", "assets/Hutex_tete.png");
+    this.load.image("robotec_tete", "assets/Robotec_tete.png");
+    this.load.image("spectre_tete", "assets/Spectre_tete.png");
+    this.load.image("totox_tete", "assets/Totox_tete.png");
+    this.load.image("xmars_tete", "assets/Xmars_tete.png");
 
-    this.load.image("electricity", "src/assets/foudre_log.png");
-    this.load.image("air", "src/assets/air_log.png");
-    this.load.image("water", "src/assets/goute_log.png");
-    this.load.image("shield", "src/assets/radiation_log.png");
-    this.load.image("joker", "src/assets/super_log.png");
-    this.load.image("super_sign", "src/assets/super.png");
+    this.load.image("electricity", "assets/foudre_log.png");
+    this.load.image("air", "assets/air_log.png");
+    this.load.image("water", "assets/goute_log.png");
+    this.load.image("shield", "assets/radiation_log.png");
+    this.load.image("joker", "assets/super_log.png");
+    this.load.image("super_sign", "assets/super.png");
 
     // Action cards assets
-    for (let actionName in ActionCardKind) {
+    for (const actionName in ActionCardKind) {
       this.load.image(
         ActionCardKind[actionName],
         "src/assets/" + ActionCardKind[actionName] + ".jpg"
@@ -55,9 +55,9 @@ export class GameScene extends ResponsiveScene {
     }
 
     // Generator card assets
-    let suffixes = ["G", "P", "V"];
-    for (let suffix of suffixes) {
-      for (let generatorName in GeneratorKind) {
+    const suffixes = ["G", "P", "V"];
+    for (const suffix of suffixes) {
+      for (const generatorName in GeneratorKind) {
         this.load.image(
           GeneratorKind[generatorName] + "_" + suffix,
           "src/assets/" + GeneratorKind[generatorName] + "_" + suffix + ".jpg"
@@ -114,12 +114,12 @@ export class GameScene extends ResponsiveScene {
   }
 
   nextTurn(nextPlayer: number) {
-    let nextOpponentSlotIndex =
+    const nextOpponentSlotIndex =
       nextPlayer > this.playerIndex ? nextPlayer - 1 : nextPlayer;
     console.log("Hey");
 
     if (this.currentPlayer) {
-      let opponentSlotIndex =
+      const opponentSlotIndex =
         this.currentPlayer > this.playerIndex
           ? this.currentPlayer - 1
           : this.currentPlayer;
@@ -143,12 +143,12 @@ export class GameScene extends ResponsiveScene {
         .profilePicture;
     }
     nextPlayerProfilePicture.timerPercentage = 1;
-    let duration = 20000;
-    let fps = 30;
-    let increments = 1 / (duration / 1000) / fps;
-    let timerUpdater = window.setInterval(() => {
-      let current = nextPlayerProfilePicture.timerPercentage;
-      let next = Math.max(current - increments, 0);
+    const duration = 20000;
+    const fps = 30;
+    const increments = 1 / (duration / 1000) / fps;
+    const timerUpdater = window.setInterval(() => {
+      const current = nextPlayerProfilePicture.timerPercentage;
+      const next = Math.max(current - increments, 0);
       nextPlayerProfilePicture.timerPercentage = next;
     }, 1000 / fps);
     window.setTimeout(() => {
@@ -157,7 +157,7 @@ export class GameScene extends ResponsiveScene {
     this.currentPlayer = nextPlayer;
   }
 
-  distributeCards(cards: Card[]) {}
+  /*distributeCards(cards: Card[]) {}*/
 
   createPlayers() {
     // Remove any previously existing opponent slot
@@ -211,7 +211,7 @@ export class GameScene extends ResponsiveScene {
   }
 
   playerPosition(playerIndex: number): { x: number; y: number } {
-    let index = GameScene.slotsMappings[this.players.length][playerIndex];
+    const index = GameScene.slotsMappings[this.players.length][playerIndex];
     return this.positions[index];
   }
 

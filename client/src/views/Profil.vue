@@ -24,14 +24,14 @@
           <tr>
             <td>Username</td>
             <td>
-              <input color="#000" v-model="usernameProp" />
+              <input color="#000" v-model="username" />
             </td>
           </tr>
 
           <tr>
             <td>Adresse mail</td>
             <td>
-              <input color="#000" v-model="mailProp" />
+              <input color="#000" v-model="mail" />
             </td>
           </tr>
         </table>
@@ -45,7 +45,7 @@
                 alt="Étoile noire"
               />Nombre de victoires
             </td>
-            <td class="value bg-none">{{ nbVictoriesProp }}</td>
+            <td class="value bg-none">{{ nbVictoires }}</td>
           </tr>
           <tr>
             <td class="element">
@@ -55,7 +55,7 @@
                 alt="Étoile noire"
               />Nombre de défaites
             </td>
-            <td class="value bg-none">{{ nbDefeatsProp }}</td>
+            <td class="value bg-none">{{ nbDefaites }}</td>
           </tr>
         </table>
 
@@ -83,13 +83,13 @@
 
                 <v-tab
                   href="#friends-requests"
-                  v-if="this.pendingFriendRequests.length > 0"
+                  v-if="this.friendRequests.length > 0"
                 >
                   Demandes d'amitié en attente
                   <v-badge
                     bordered
                     color="red"
-                    :content="this.pendingFriendRequests.length"
+                    :content="this.friendRequests.length"
                     offset-y="10"
                   >
                     <v-icon>mdi-account-heart</v-icon>
@@ -157,7 +157,7 @@
                         <div class="friend-list">
                           <span
                             class="friend"
-                            v-for="friend in pendingFriendRequests"
+                            v-for="friend in friendRequests"
                             :key="friend"
                           >
                             {{ friend }}
@@ -211,83 +211,48 @@
         <router-link to="/menuPrincipal">
           <button id="retour" />
         </router-link>
-        <v-btn
-          id="valider"
-          :class="{ desactive: !this.validInput }"
-          @click="submitForm()"
-        />
+        <v-btn id="valider" @click="submitForm()" />
       </div>
     </div>
   </v-app>
 </template>
 
 <script lang="ts">
+/* eslint-disable camelcase */
 import Logo from "../components/Logo.vue";
+import axios from "axios";
+
 export default {
   components: { Logo: Logo },
   data: () => ({
+    apiUrl: "http://api.trojanhorse.cc",
     dialog: false,
     tab: null,
     newFriend: "",
     showFriendInput: false,
-    userId: JSON.parse(localStorage.getItem("userId")),
     mailPattern: /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/,
-    errors: []
+    errors: [],
+    friends: [],
+    friendRequests: [],
+    username: "",
+    mail: "",
+    nbVictoires: 0,
+    nbDefaites: 0
   }),
 
-  props: {
-    lastNameProp: {
-      type: String,
-      default: "Dorian"
-    },
-
-    firstNameProp: {
-      type: String,
-      default: "Arno"
-    },
-    usernameProp: {
-      type: String,
-      default: "frenchAssassin"
-    },
-    mailProp: {
-      type: String,
-      default: "frenchAssassin@outlook.com"
-    },
-    nbVictoriesProp: {
-      type: Number,
-      default: 10
-    },
-    nbDefeatsProp: {
-      type: Number,
-      default: 2
-    },
-    friends: {
-      type: Array,
-      default: () => ["Elise de la Serre", "Pierre Bellec"]
-    },
-
-    pendingFriendRequests: {
-      type: Array,
-      default: () => ["Ezio Auditore", "Marquis de Sade"]
-    }
+  mounted: async function() {
+    await this.getUserInfos();
   },
 
   methods: {
     submitForm() {
       const errors = [];
 
-      if (this.lastNameProp.length < 1) {
-        errors.push("Nom requis");
-      }
-
-      if (this.firstNameProp.length < 1) {
-        errors.push("Prénom requis");
-      }
-      if (this.usernameProp.length < 1) {
+      if (this.username.length < 1) {
         errors.push("Username requis");
       }
 
-      if (this.mailProp.length < 1) {
+      if (this.mail.length < 1) {
         errors.push("Mail requis");
       } else if (!this.mailPattern.test(this.mailProp)) {
         errors.push("Adresse mail invalide");
@@ -316,31 +281,170 @@ export default {
       this.showFriendInput = true;
     },
 
+    async getUserInfos() {
+      const myUserId = this.getMyUserId();
+      const url = `${this.apiUrl}/users/${myUserId}`;
+
+      try {
+        const response = await axios.get(url);
+        const userInfos = response.data;
+
+        this.username = userInfos.username;
+        this.mail = userInfos.mail;
+        this.nbVictoires = userInfos.wins;
+        this.nbDefaites = userInfos.games - userInfos.wins;
+      } catch (errors) {
+        console.error(errors);
+      }
+    },
+
+    getMyUserId(): number {
+      const userId = localStorage.getItem("userId");
+      return Number.parseInt(userId, 10);
+    },
+
+    async getUserId(username: string) {
+      const url = `${this.apiUrl}/users`;
+      try {
+        const response = await axios.get(url);
+
+        for (const user of response.data) {
+          if (user.username === username) {
+            return user.id;
+          }
+        }
+      } catch (errors) {
+        console.error(errors);
+      }
+
+      return -1;
+    },
+
+    async getUsername(userId: number) {
+      let username: string = null;
+      const url = `${this.apiUrl}/users/${userId}`;
+
+      try {
+        const response = await axios.get(url);
+
+        if (response.data) {
+          username = response.data.username;
+        } else {
+          throw new Error("User id not found");
+        }
+      } catch (errors) {
+        console.log(errors);
+      }
+
+      return username;
+    },
+
+    async addFriend(friendUsename: string) {
+      /* eslint-disable @typescript-eslint/camelcase */
+
+      const friendUserId = await this.getUserId(friendUsename);
+
+      if (friendUserId === -1) {
+        console.error(`Error while looking for ${friendUsename}'s userId`);
+        return;
+      }
+
+      axios.post(this.apiUrl + "/friendships/add", {
+        user1_id: this.getMyUserId(),
+        user2_id: friendUserId
+      });
+    },
+
+    async answerFriendRequest(friendUsename: string, accepted: boolean) {
+      const friendUserId = await this.getUserId(friendUsename);
+
+      if (friendUserId === -1) {
+        console.error(`Error while looking for ${friendUsename}'s userId`);
+        return;
+      }
+
+      const myUserId = this.getMyUserId();
+      const url = `${this.apiUrl}/friendships/respond/${myUserId}/${friendUserId}`;
+      const answer = accepted ? "confirmed" : "rejected";
+      try {
+        axios.put(
+          url,
+          {
+            status: answer
+          },
+          {
+            params: {
+              id1: myUserId,
+              id2: friendUserId
+            }
+          }
+        );
+      } catch (errors) {
+        console.error(errors);
+      }
+
+      await this.getFriends();
+    },
+
+    async getFriends() {
+      const myUserId = this.getMyUserId();
+      this.friends = [];
+      this.friendRequests = [];
+
+      try {
+        const url = `${this.apiUrl}/friendships/${myUserId}`;
+        const response = await axios.get(url);
+
+        for (const friendship of response.data) {
+          const friendUserId: number =
+            friendship.user1_id === myUserId
+              ? friendship.user2_id
+              : friendship.user1_id;
+
+          const friendUsename = await this.getUsername(friendUserId);
+
+          if (friendship.status === "confirmed") {
+            this.friends.push(friendUsename);
+          } else if (friendship.status === "pending") {
+            this.friendRequests.push(friendUsename);
+          }
+        }
+      } catch (errors) {
+        console.error(errors);
+      }
+    },
+
+    async deleteFriend(friendUsername: string) {
+      const myUserId = this.getMyUserId();
+      const friendUserId: number = await this.getUserId(friendUsername);
+      const url = `${this.apiUrl}/friendships/${myUserId}/${friendUserId}`;
+      await axios.delete(url, {
+        params: {
+          id1: myUserId,
+          id2: friendUserId
+        }
+      });
+      await this.getFriends();
+    },
+
     addFriendFromInput() {
-      this.friends.push(this.newFriend);
+      this.addFriend(this.newFriend);
       this.showFriendInput = false;
       this.newFriend = "";
     },
 
-    addFriend(friend) {
-      this.friends.push(friend);
+    acceptFriendRequest(friendUsername: string) {
+      this.answerFriendRequest(friendUsername, true);
     },
 
-    deleteFriend(friendToDelete) {
-      this.friends = this.friends.filter(friend => friend != friendToDelete);
-    },
+    declineFriendRequest(friendUsername: string) {
+      this.answerFriendRequest(friendUsername, false);
+    }
+  },
 
-    acceptFriendRequest(friendRequest) {
-      this.addFriend(friendRequest);
-      this.pendingFriendRequests = this.pendingFriendRequests.filter(
-        friend => friend != friendRequest
-      );
-    },
-
-    declineFriendRequest(friendRequest) {
-      this.pendingFriendRequests = this.pendingFriendRequests.filter(
-        friend => friend != friendRequest
-      );
+  watch: {
+    dialog: function() {
+      this.getFriends();
     }
   }
 };
@@ -398,16 +502,6 @@ $content: #2f363c;
   margin: 0 auto;
   margin-top: 1%;
 }
-
-/*
-#infos {
-display: flex;
-flex-direction: column;
-flex-grow: 1;
-padding: 10px 0px 0px 0px;
-width: 90%;
-}
-*/
 
 #content input {
   background-image: url("input.png");

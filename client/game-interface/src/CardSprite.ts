@@ -14,9 +14,9 @@ export class CardSprite extends Phaser.GameObjects.Container {
     } else if (card instanceof ActionCard) {
       textureName = card.kind;
     }
-    let sprite = scene.add.sprite(0, -height / 2, textureName);
+    const sprite = scene.add.sprite(0, -height / 2, textureName);
     sprite.setDisplaySize(width, height);
-    let hitArea = scene.add.rectangle(
+    const hitArea = scene.add.rectangle(
       -width / 2,
       -height,
       width,
@@ -68,7 +68,7 @@ export class CardSprite extends Phaser.GameObjects.Container {
           dragX,
           dragY
         );
-        let local = this.parentContainer.getLocalPoint(
+        const local = this.parentContainer.getLocalPoint(
           position.x + 100,
           position.y + 250
         );
@@ -80,11 +80,11 @@ export class CardSprite extends Phaser.GameObjects.Container {
             minThreshold = 150 * window.devicePixelRatio;
           }
         }
-        let threshold = 75 * window.devicePixelRatio;
-        let proportion =
+        const threshold = 75 * window.devicePixelRatio;
+        const proportion =
           1 - Math.min(Math.max(0, distance - minThreshold) / threshold, 1);
-        let x = proportion * dragX + (1 - proportion) * local.x;
-        let y = proportion * dragY + (1 - proportion) * local.y;
+        const x = proportion * dragX + (1 - proportion) * local.x;
+        const y = proportion * dragY + (1 - proportion) * local.y;
         this.setPosition(x, y);
 
         this.setScale(
@@ -102,7 +102,7 @@ export class CardSprite extends Phaser.GameObjects.Container {
     });
 
     this.on("dragend", () => {
-      let threshold = 5 * window.devicePixelRatio;
+      const threshold = 5 * window.devicePixelRatio;
       scene.tweens.add({
         targets: this,
         x: this.startX,
@@ -114,7 +114,7 @@ export class CardSprite extends Phaser.GameObjects.Container {
       });
     });
 
-    this.on("drop", () => {});
+    //this.on("drop", () => {});
 
     this.on(
       "dragenter",
@@ -150,7 +150,7 @@ export class CardSprite extends Phaser.GameObjects.Container {
 
   eventFSM: MouseEventFSM;
   selectedCallback: (boolean) => void;
-  private _selected: boolean = false;
+  private _selected = false;
   get selected(): boolean {
     return this._selected;
   }
