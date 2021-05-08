@@ -24,7 +24,7 @@
       </div>
 
       <div id="buttons">
-        <router-link to="/menuPrincipal">
+        <router-link to="/landingPage">
           <button id="retour" />
         </router-link>
         <v-btn id="valider" @click="submitForm()" />

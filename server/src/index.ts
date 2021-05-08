@@ -16,18 +16,13 @@ const io = require("socket.io")(http);
 require("./routes/game.routes")(io);
 
 createConnection();
-app.use("/api/users", usersRouter);
-app.use("/api/friendships", friendshipsRouter);
+app.use("/users", usersRouter);
+app.use("/friendships", friendshipsRouter);
 app.use(express.urlencoded({ extended: false }));
 app.use(express.json());
 
-// app.get("/", function (req: Request, res: Response) {
-//   res.sendFile(path.resolve("./src/index.html"));
-// });
-
 app.use(cors());
 
-// eslint-disable-next-line @typescript-eslint/no-misused-promises
 http.listen(port, async () => {
   console.log("Express server started on port: " + port);
 });

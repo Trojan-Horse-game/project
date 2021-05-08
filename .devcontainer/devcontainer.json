@@ -1,5 +1,5 @@
 {
-  "name": "DockerEnv",
+  "name": "Trojan Horsemen",
   "dockerComposeFile": "../config/docker-compose.yml",
   "service": "backend",
   "workspaceFolder": "/projet-integrateur",

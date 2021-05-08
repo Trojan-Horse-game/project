@@ -1,0 +1,29 @@
+version: "3.9"
+
+services:
+  db:
+    image: postgres
+    environment:
+      - POSTGRES_DB=postgres
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+
+  backend:
+    image: nginx-server
+    build: ./server
+    ports:
+      - "5432:5432"
+      - "3000:3000"
+    command: "npm run start"
+    depends_on:
+      - db
+
+  client:
+    image: nginx-client
+    build: ./
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - /root/nginx/letsencrypt:/etc/letsencrypt
+      - /root/nginx/dhparam.pem:/etc/ssl/certs/dhparam.pem
