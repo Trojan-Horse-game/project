@@ -3,19 +3,21 @@ import { ActionCard, GeneratorCard, Card } from "./Card";
 import { Generator, GeneratorState } from "./Generator";
 import { PlayerSlot } from "./PlayerSlot";
 import { MouseEventFSM } from "./MouseEventFSM";
+import { CardDeck } from "./CardDeck";
+import { GameScene } from "./GameScene";
 
 export class CardSprite extends Phaser.GameObjects.Container {
-  constructor(scene: Phaser.Scene, card: Card, width: number, height: number) {
+  constructor(
+    scene: Phaser.Scene,
+    card: Card | null,
+    width: number,
+    height: number
+  ) {
     super(scene);
     this.eventFSM = new MouseEventFSM();
-    let textureName: string;
-    if (card instanceof GeneratorCard) {
-      textureName = card.generator + "_" + card.kind;
-    } else if (card instanceof ActionCard) {
-      textureName = card.kind;
-    }
-    let sprite = scene.add.sprite(0, -height / 2, textureName);
-    sprite.setDisplaySize(width, height);
+    this.sprite = scene.add.sprite(0, -height / 2, "carte_verso");
+    this.sprite.setDisplaySize(width, height);
+    this.cardType = card;
     let hitArea = scene.add.rectangle(
       -width / 2,
       -height,
@@ -37,8 +39,7 @@ export class CardSprite extends Phaser.GameObjects.Container {
     this.selectionOutline.setStrokeStyle(5, 0x399fff, 1);
     this.selectionOutline.setAlpha(0);
     this.add(this.selectionOutline);
-
-    this.add(sprite);
+    this.add(this.sprite);
 
     this.eventFSM.drag = () => {
       if (this.parentContainer instanceof PlayerSlot) {
@@ -56,12 +57,6 @@ export class CardSprite extends Phaser.GameObjects.Container {
       "drag",
       (pointer: Phaser.Input.Pointer, dragX: number, dragY: number) => {
         const position = pointer.position;
-        const distanceY = CardSprite.dist(
-          this.startY,
-          this.startY,
-          dragY,
-          dragY
-        );
         const distance = CardSprite.dist(
           this.startX,
           this.startY,
@@ -99,22 +94,42 @@ export class CardSprite extends Phaser.GameObjects.Container {
     this.on("dragstart", (pointer: Phaser.Input.Pointer) => {
       this.startX = this.x;
       this.startY = this.y;
+      this.startWidth = this.displayWidth;
+      this.startHeight = this.displayHeight;
     });
 
-    this.on("dragend", () => {
-      let threshold = 5 * window.devicePixelRatio;
-      scene.tweens.add({
-        targets: this,
-        x: this.startX,
-        y: this.startY,
-        alpha: 1,
-        scale: 1,
-        duration: 400,
-        ease: "power4"
-      });
-    });
+    this.on(
+      "drop",
+      (
+        pointer: Phaser.Input.Pointer,
+        target: Phaser.GameObjects.GameObject
+      ) => {
+        if (!(scene instanceof GameScene)) {
+          return;
+        }
 
-    this.on("drop", () => {});
+        const playerSlot = scene.playerSlot;
+        if (target instanceof CardDeck) {
+          let discarded: number[] = [];
+          scene.tweens.add({
+            targets: playerSlot.selectedCards,
+            alpha: 0,
+            scale: 0,
+            duration: 400,
+            ease: "power4"
+          });
+          for (const selectedCard of playerSlot.selectedCards) {
+            selectedCard.dropped = true;
+            discarded.push(playerSlot.cards.indexOf(selectedCard));
+          }
+          playerSlot.discardedIndices = discarded;
+          playerSlot.selectedCards = [];
+          if (scene.delegate != null) {
+            scene.delegate.didDiscard(discarded);
+          }
+        }
+      }
+    );
 
     this.on(
       "dragenter",
@@ -161,10 +176,46 @@ export class CardSprite extends Phaser.GameObjects.Container {
     this.selectedCallback(newValue);
   }
 
+  private _cardAngle: number;
+  get cardAngle(): number {
+    return this._cardAngle;
+  }
+
+  set cardAngle(newValue: number) {
+    this._cardAngle = newValue;
+    this.sprite.setAngle(newValue);
+    this.selectionOutline.setAngle(newValue);
+  }
+
+  private _cardType: Card;
+  get cardType(): Card {
+    return this._cardType;
+  }
+  set cardType(newValue: Card) {
+    this._cardType = newValue;
+    let textureName: string;
+    if (newValue == null) {
+      textureName = "carte_verso";
+    } else if (newValue instanceof GeneratorCard) {
+      textureName = newValue.generator + "_" + newValue.kind;
+    } else if (newValue instanceof ActionCard) {
+      textureName = newValue.kind;
+    }
+    let oldWidth = this.sprite.displayWidth;
+    let oldHeight = this.sprite.displayHeight;
+    this.sprite.setTexture(textureName);
+    this.sprite.setDisplaySize(oldWidth, oldHeight);
+  }
+
   private selectionOutline: Phaser.GameObjects.Rectangle;
+  sprite: Phaser.GameObjects.Sprite;
+
+  dropped: boolean;
 
   startX: number;
   startY: number;
+  startWidth: number;
+  startHeight: number;
   private offsetX: number;
   private offsetY: number;
   static dist(x1: number, y1: number, x2: number, y2: number): number {

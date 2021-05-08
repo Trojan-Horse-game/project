@@ -1,9 +1,18 @@
 import "phaser";
 import { OpponentSlot, SlotLayout } from "./OpponentSlot";
 import { PlayerSlot } from "./PlayerSlot";
-import { Card, ActionCardKind, GeneratorKind, GeneratorCardKind } from "./Card";
+import {
+  Card,
+  ActionCardKind,
+  GeneratorKind,
+  GeneratorCardKind,
+  GeneratorCard
+} from "./Card";
+import { CardDeck } from "./CardDeck";
 import { GameSceneDelegate } from "./GameSceneDelegate";
 import { ProfilePicture } from "./ProfilePicture";
+import { CardSprite } from "./CardSprite";
+import { mixin } from "vue/types/umd";
 
 export class ResponsiveScene extends Phaser.Scene {
   resize(width: number, height: number) {
@@ -24,6 +33,7 @@ export class GameScene extends ResponsiveScene {
 
   positions: Position[];
 
+  deck: CardDeck;
   playerSlot: PlayerSlot;
   opponentsSlots: OpponentSlot[] = [];
 
@@ -67,6 +77,37 @@ export class GameScene extends ResponsiveScene {
   }
 
   create() {
+    let scene = this;
+
+    let kinds = [
+      GeneratorCardKind.Generator,
+      GeneratorCardKind.Medicine,
+      GeneratorCardKind.Virus
+    ];
+
+    let generatorKinds = [
+      GeneratorKind.Air,
+      GeneratorKind.Electricity,
+      GeneratorKind.Joker,
+      GeneratorKind.Shield,
+      GeneratorKind.Water
+    ];
+
+    document.onkeypress = function(e) {
+      if (e.keyCode == 100) {
+        let cards: GeneratorCard[] = [];
+        for (let i = 0; i < scene.playerSlot.discardedIndices.length; i++) {
+          cards.push(
+            new GeneratorCard(
+              kinds[Math.floor(Math.random() * kinds.length)],
+              generatorKinds[Math.floor(Math.random() * generatorKinds.length)]
+            )
+          );
+        }
+        scene.deck.distributeCards(cards);
+      }
+    };
+
     const profileRadius = 55 * window.devicePixelRatio;
     this.playerSlot = new PlayerSlot(
       this,
@@ -74,7 +115,19 @@ export class GameScene extends ResponsiveScene {
       this.players[this.playerIndex].name,
       this.players[this.playerIndex].specie
     );
+    this.playerSlot.setDepth(200);
     this.add.existing(this.playerSlot);
+
+    const ratio = 0.7069;
+    const cardHeight = profileRadius * 3.5;
+    const cardWidth = cardHeight * ratio;
+
+    this.deck = new CardDeck(this, cardWidth, cardHeight);
+    for (let i = 0; i < 10; i++) {
+      const cardSprite = new CardSprite(this, null, cardWidth, cardHeight);
+      this.deck.addCard(cardSprite);
+    }
+    this.add.existing(this.deck);
 
     const width = this.cameras.main.width;
     const height = this.cameras.main.height;
@@ -92,6 +145,8 @@ export class GameScene extends ResponsiveScene {
       width / 2,
       height - 15 * window.devicePixelRatio
     );
+
+    this.deck.setPosition(width / 2, height / 2 - 200);
   }
 
   updatePlayers(newValue: Player[], playerIndex: number) {
@@ -116,7 +171,6 @@ export class GameScene extends ResponsiveScene {
   nextTurn(nextPlayer: number) {
     let nextOpponentSlotIndex =
       nextPlayer > this.playerIndex ? nextPlayer - 1 : nextPlayer;
-    console.log("Hey");
 
     if (this.currentPlayer) {
       let opponentSlotIndex =
