@@ -2,11 +2,11 @@
 
 ### Tâches du sprint de la semaine (semaine du 03/05/2021)
 
-- Créer le deck,Interface de lancement de la partie (pour l'hôte), Animer les générateurs et ajouter le background et Animation victoire/défaite/ geré par Trevor
+- Création du deck, de l'interface de lancement de la partie (pour l'hôte), animation des générateurs et ajout du background / geré par Trevor
 - Créer le deck  de l'interface graphique / géré par Isabelle
-- Rédaction du manuel de jeu / géré par Aghilas et Younes et Isabelle 
+- Rédaction du manuel de jeu et des règles / géré par Aghilas et Younes et Isabelle 
 - Finalisation de la communication avec le rapport final / géré par Younes, Walid, Zakaria et Aghilas
-- Developpement du Siteweb Vitrine et configuration du dns pour le second lien, création des deux vidéo, rédaction des comptes hebdomadaires qui manquent et mise en place d'une boutique  / géré par Aghilas 
+- Développement du Site Vitrine et configuration du DNS pour le second lien, création des deux vidéos, rédaction des comptes-rendus qui manquent et mise en place d'une boutique  / géré par Aghilas 
 - Intégrer Nginx comme reverse proxy et Déployer le front et le back sur des subroutes du nom de domaine géré / par Siham Aissaoui
 - Interface de lancement de la partie (pour l'hôte) et Fusionner les packages client (Vue et Phaser) / géré par Younes
 - Prévoir l'affichage de la défaite/victoire et intégrer le design correspondant et résolution du grand bug lié à docker et client/ géré par Hakim

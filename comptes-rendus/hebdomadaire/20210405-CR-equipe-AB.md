@@ -10,7 +10,7 @@
     - Fusion du travail de Younes et Isabelle : prototype de l’interface utilisateur Phaser.
     - Siham : Mise en place du serveur (Digital Cloud), connexion au nom de serveur acheté par l’équipe.
     - Avancée sur l’ordre des joueurs à l’écran par Walid/
-    - Aghiles : Séparation des éléments d’interface utilisateur.
+    - Aghiles : Séparation des éléments d’interface utilisateur et composition de la premiere musique pour partie plateau.
     - Hakim : avancée sur les menus de l’interface utilisateur.
     - Tous les autres membres de l’équipe ont avancé sur leurs tâches respectives.
 
