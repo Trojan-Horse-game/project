@@ -75,12 +75,14 @@ function nextTurn(io: any, thisGame: Game) {
 
     let current = thisGame.currentPlayer;
     io.in(thisGame.roomId).emit("next turn", thisGame.currentPlayerIdx);
+    
+    if (thisGame.currentPlayer.hand.length === 0) {
+      thisGame.draw(3);
+    }
     io.to(current.socketId).emit("hand", current.hand);
 
-    if (thisGame.currentPlayer.hand.length === 0) {
-      //TODO: Envoyer les cartes discard par le jouer à cause de distraction nucléaire
-    }
   } while (thisGame.currentPlayer.hand.length === 0);
+  setTimeout(() => nextTurn(io, thisGame), 20000);
 }
 
 module.exports = function (io: any) {
@@ -252,5 +254,3 @@ module.exports = function (io: any) {
     });
   });
 };
-
-//TODO : En cas de distraction nucléaire, envoyer les cartes discard
