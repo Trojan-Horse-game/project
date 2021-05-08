@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const API_URL = "http:/.trojanhorse.cc";
+const API_URL = "http://api.trojanhorse.cc";
 
 class AuthService {
   signin(user) {
