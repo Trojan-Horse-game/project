@@ -1,210 +1,204 @@
 <template>
   <v-app>
     <div id="background-image" />
-    <Logo />
+    <div id="logo">
+      <img src="logo.png" alt="Logo du jeu" />
+    </div>
     <div id="container">
       <span id="titre">Mon profil</span>
 
       <div id="content">
-        <table id="infos">
-          <tr>
-            <td>Nom</td>
-            <td>
-              <input color="#000" v-model="lastNameProp" />
-            </td>
-          </tr>
+        <div class="row">
+          <label>Username</label>
+          <div class="form_input">
+            <input color="#000" v-model="username" />
+          </div>
+          <label>Mot de passe</label>
+          <div class="form_input">
+            <input type="password" color="#000" v-model="password" />
+          </div>
+        </div>
 
-          <tr>
-            <td>Prénom</td>
-            <td>
-              <input color="#000" v-model="firstNameProp" />
-            </td>
-          </tr>
-
-          <tr>
-            <td>Username</td>
-            <td>
-              <input color="#000" v-model="username" />
-            </td>
-          </tr>
-
-          <tr>
-            <td>Adresse mail</td>
-            <td>
-              <input color="#000" v-model="mail" />
-            </td>
-          </tr>
-        </table>
-
-        <table id="stats">
-          <tr>
-            <td class="element">
+        <div id="stats">
+          <div class="row">
+            <div class="element">
               <img
                 class="etoile"
                 src="Design/victoires.png"
                 alt="Étoile noire"
               />Nombre de victoires
-            </td>
-            <td class="value bg-none">{{ nbVictoires }}</td>
-          </tr>
-          <tr>
-            <td class="element">
+
+              <td class="value bg-none">{{ nbVictoires }}</td>
+            </div>
+
+            <div class="element">
               <img
                 class="etoile"
                 src="Design/defaites.png"
                 alt="Étoile noire"
               />Nombre de défaites
-            </td>
-            <td class="value bg-none">{{ nbDefaites }}</td>
-          </tr>
-        </table>
 
-        <div id="buttons-row">
-          <v-dialog v-model="dialog" width="500">
-            <template v-slot:activator="{ on, attrs }">
-              <v-btn x-large icon v-bind="attrs" v-on="on">
-                <v-icon>mdi-account-group</v-icon>
-              </v-btn>
-            </template>
+              <td class="value bg-none">{{ nbDefaites }}</td>
+            </div>
+          </div>
 
-            <v-card>
-              <v-tabs
-                v-model="tab"
-                background-color="#fff"
-                color="#2f363c"
-                centered
-                icons-and-text
-              >
-                <v-tabs-slider></v-tabs-slider>
-                <v-tab href="#friends">
-                  Liste de vos ami‧e‧s
+          <div id="buttons-row">
+            <v-dialog v-model="dialog" width="500">
+              <template v-slot:activator="{ on, attrs }">
+                <v-btn x-large icon v-bind="attrs" v-on="on">
                   <v-icon>mdi-account-group</v-icon>
-                </v-tab>
+                </v-btn>
+              </template>
 
-                <v-tab
-                  href="#friends-requests"
-                  v-if="this.friendRequests.length > 0"
+              <v-card>
+                <v-tabs
+                  v-model="tab"
+                  background-color="#fff"
+                  color="#2f363c"
+                  centered
+                  icons-and-text
                 >
-                  Demandes d'amitié en attente
-                  <v-badge
-                    bordered
-                    color="red"
-                    :content="this.friendRequests.length"
-                    offset-y="10"
+                  <v-tabs-slider></v-tabs-slider>
+                  <v-tab href="#friends">
+                    Liste de vos ami‧e‧s
+                    <v-icon>mdi-account-group</v-icon>
+                  </v-tab>
+
+                  <v-tab
+                    href="#friends-requests"
+                    v-if="this.friendRequests.length > 0"
                   >
-                    <v-icon>mdi-account-heart</v-icon>
-                  </v-badge>
-                </v-tab>
+                    Demandes d'amitié en attente
+                    <v-badge
+                      bordered
+                      color="red"
+                      :content="this.friendRequests.length"
+                      offset-y="10"
+                    >
+                      <v-icon>mdi-account-heart</v-icon>
+                    </v-badge>
+                  </v-tab>
 
-                <v-tabs-items v-model="tab">
-                  <v-tab-item value="friends">
-                    <v-card flat>
-                      <v-card-text>
-                        <div class="friend-list">
-                          <span
-                            class="friend"
-                            v-for="friend in friends"
-                            :key="friend"
+                  <v-tabs-items v-model="tab">
+                    <v-tab-item value="friends">
+                      <v-card flat>
+                        <v-card-text>
+                          <div class="friend-list">
+                            <span
+                              class="friend"
+                              v-for="friend in friends"
+                              :key="friend"
+                            >
+                              {{ friend }}
+                              <v-btn
+                                class="friend-action deleteFriend"
+                                title="Supprimer ami"
+                                icon
+                                small
+                                @click="deleteFriend(friend)"
+                                ><v-icon>mdi-delete</v-icon></v-btn
+                              >
+                            </span>
+                          </div>
+                        </v-card-text>
+                        <v-divider></v-divider>
+
+                        <v-card-actions>
+                          <div id="add-friend">
+                            <v-form>
+                              <v-text-field
+                                hide-details
+                                hint="Nom d'utilisateur‧trice"
+                                v-show="this.showFriendInput"
+                                v-model="newFriend"
+                                color="#2f363c"
+                              />
+                              <v-btn
+                                v-show="this.showFriendInput"
+                                @click="addFriendFromInput()"
+                                :class="{
+                                  desactive: this.newFriend.length == 0
+                                }"
+                                >Ajouter</v-btn
+                              >
+                            </v-form>
+                          </div>
+
+                          <v-btn
+                            @click="showFriendForm()"
+                            v-show="!this.showFriendInput"
+                            ><v-icon>mdi-account-plus</v-icon></v-btn
                           >
-                            {{ friend }}
-                            <v-btn
-                              class="friend-action deleteFriend"
-                              title="Supprimer ami"
-                              icon
-                              small
-                              @click="deleteFriend(friend)"
-                              ><v-icon>mdi-delete</v-icon></v-btn
+                          <v-btn text @click="dialog = false">
+                            Fermer
+                          </v-btn>
+                        </v-card-actions>
+                      </v-card>
+                    </v-tab-item>
+
+                    <v-tab-item value="friends-requests"
+                      ><v-card flat>
+                        <v-card-text>
+                          <div class="friend-list">
+                            <span
+                              class="friend"
+                              v-for="friend in friendRequests"
+                              :key="friend"
                             >
-                          </span>
-                        </div>
-                      </v-card-text>
-                      <v-divider></v-divider>
+                              {{ friend }}
+                              <v-btn
+                                class="friend-action"
+                                title="Accepter la demande"
+                                icon
+                                small
+                                @click="acceptFriendRequest(friend)"
+                                color="green"
+                                ><v-icon>mdi-check</v-icon></v-btn
+                              >
+                              <v-btn
+                                class="friend-action"
+                                title="Refuser la demande"
+                                icon
+                                small
+                                color="red"
+                                @click="declineFriendRequest(friend)"
+                                ><v-icon>mdi-close</v-icon></v-btn
+                              >
+                            </span>
+                          </div>
+                        </v-card-text>
 
-                      <v-card-actions>
-                        <div id="add-friend">
-                          <v-form>
-                            <v-text-field
-                              hide-details
-                              hint="Nom d'utilisateur‧trice"
-                              v-show="this.showFriendInput"
-                              v-model="newFriend"
-                              color="#2f363c"
-                            />
-                            <v-btn
-                              v-show="this.showFriendInput"
-                              @click="addFriendFromInput()"
-                              :class="{ desactive: this.newFriend.length == 0 }"
-                              >Ajouter</v-btn
-                            >
-                          </v-form>
-                        </div>
+                        <v-divider></v-divider>
 
-                        <v-btn
-                          @click="showFriendForm()"
-                          v-show="!this.showFriendInput"
-                          ><v-icon>mdi-account-plus</v-icon></v-btn
-                        >
-                        <v-btn text @click="dialog = false">
-                          Fermer
-                        </v-btn>
-                      </v-card-actions>
-                    </v-card>
-                  </v-tab-item>
+                        <v-card-actions>
+                          <v-btn text @click="dialog = false">
+                            Fermer
+                          </v-btn>
+                        </v-card-actions>
+                      </v-card></v-tab-item
+                    >
+                  </v-tabs-items>
+                </v-tabs>
+              </v-card>
+            </v-dialog>
 
-                  <v-tab-item value="friends-requests"
-                    ><v-card flat>
-                      <v-card-text>
-                        <div class="friend-list">
-                          <span
-                            class="friend"
-                            v-for="friend in friendRequests"
-                            :key="friend"
-                          >
-                            {{ friend }}
-                            <v-btn
-                              class="friend-action"
-                              title="Accepter la demande"
-                              icon
-                              small
-                              @click="acceptFriendRequest(friend)"
-                              color="green"
-                              ><v-icon>mdi-check</v-icon></v-btn
-                            >
-                            <v-btn
-                              class="friend-action"
-                              title="Refuser la demande"
-                              icon
-                              small
-                              color="red"
-                              @click="declineFriendRequest(friend)"
-                              ><v-icon>mdi-close</v-icon></v-btn
-                            >
-                          </span>
-                        </div>
-                      </v-card-text>
-
-                      <v-divider></v-divider>
-
-                      <v-card-actions>
-                        <v-btn text @click="dialog = false">
-                          Fermer
-                        </v-btn>
-                      </v-card-actions>
-                    </v-card></v-tab-item
-                  >
-                </v-tabs-items>
-              </v-tabs>
-            </v-card>
-          </v-dialog>
-
-          <v-btn
-            @click="logout()"
-            id="logout"
-            title="Se déconnecter"
-            x-large
-            icon
-            ><v-icon>mdi-logout</v-icon></v-btn
-          >
+            <v-btn
+              @click="logout()"
+              id="logout"
+              title="Se déconnecter"
+              x-large
+              icon
+              ><v-icon>mdi-logout</v-icon></v-btn
+            >
+            <v-btn
+              @click="deleteAccount()"
+              id="deleteAccount"
+              title="Supprimer compte"
+              x-large
+              icon
+              ><v-icon>mdi-account-off</v-icon></v-btn
+            >
+          </div>
         </div>
       </div>
       <div id="buttons">
@@ -219,11 +213,10 @@
 
 <script lang="ts">
 /* eslint-disable camelcase */
-import Logo from "../components/Logo.vue";
 import axios from "axios";
 
 export default {
-  components: { Logo: Logo },
+  components: {},
   data: () => ({
     apiUrl: "http://api.trojanhorse.cc",
     dialog: false,
@@ -235,7 +228,7 @@ export default {
     friends: [],
     friendRequests: [],
     username: "",
-    mail: "",
+    password: "",
     nbVictoires: 0,
     nbDefaites: 0
   }),
@@ -250,12 +243,6 @@ export default {
 
       if (this.username.length < 1) {
         errors.push("Username requis");
-      }
-
-      if (this.mail.length < 1) {
-        errors.push("Mail requis");
-      } else if (!this.mailPattern.test(this.mailProp)) {
-        errors.push("Adresse mail invalide");
       }
 
       let alertMessage: string;
@@ -290,7 +277,6 @@ export default {
         const userInfos = response.data;
 
         this.username = userInfos.username;
-        this.mail = userInfos.mail;
         this.nbVictoires = userInfos.wins;
         this.nbDefaites = userInfos.games - userInfos.wins;
       } catch (errors) {
@@ -439,6 +425,34 @@ export default {
 
     declineFriendRequest(friendUsername: string) {
       this.answerFriendRequest(friendUsername, false);
+    },
+
+    async deleteAccount() {
+      const myUserId = this.getMyUserId();
+      const url = `${this.apiUrl}/users/${myUserId}`;
+      await axios.delete(url);
+      this.logout();
+    },
+
+    async changeInfos() {
+      const myUserId = this.getMyUserId();
+      const url = `${this.apiUrl}/users/${myUserId}`;
+
+      const body =
+        this.password.length > 0
+          ? {
+              username: this.username,
+              password: this.password
+            }
+          : {
+              username: this.username
+            };
+
+      try {
+        axios.put(url, body);
+      } catch (errors) {
+        console.error(errors);
+      }
     }
   },
 
@@ -456,22 +470,26 @@ $content: #2f363c;
 
 #background-image {
   background-image: url("../../public/Design/default-bck.gif");
+  height: 100%;
+  background-size: cover;
 }
 
 #logo {
-  position: absolute;
+  width: 20%;
+  position: fixed;
   top: 1%;
   left: 1%;
+  margin-right: 5%;
 }
 
 #logo img {
-  width: 250px;
+  width: 100% !important;
   height: auto;
 }
 
 #container {
-  width: 100vw;
-  height: 100vh;
+  width: 100%;
+  height: 100%;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -481,29 +499,33 @@ $content: #2f363c;
 #content {
   width: max-content;
   height: max-content;
-  padding: 5%;
+  padding: 2%;
   z-index: 0;
   color: $textColor;
-  padding: 5px 10px;
   background-color: $content;
   display: flex;
   flex-direction: column;
   align-content: space-around;
   align-items: center;
   font-size: 25px;
-  flex-grow: 1;
   justify-content: space-around;
   margin: 2% 0%;
 }
 
-#titre {
-  font-size: 70px;
-  color: $textColor;
-  margin: 0 auto;
-  margin-top: 1%;
+.row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  text-align: left;
+  vertical-align: middle;
 }
 
-#content input {
+#titre {
+  font-size: 400%;
+  color: $textColor;
+  text-align: center;
+}
+
+#content .form_input {
   background-image: url("input.png");
   background-repeat: no-repeat;
   padding-left: 20px;
@@ -512,31 +534,23 @@ $content: #2f363c;
   padding: 10px 0px 35px 0px;
 }
 
+.form_input input {
+  width: 90%;
+  margin: auto;
+  text-align: center;
+}
+
 input:focus {
   outline: none;
 }
 
-table {
-  width: 100%;
-}
-
-tr td:nth-child(1) {
-  vertical-align: top;
-  padding-top: 9px;
-  width: max-content;
-}
-
-td {
-  text-align: center;
-  vertical-align: middle;
+.infos {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
 }
 
 .theme--light.v-label {
   color: rgba(0, 0, 0, 0.6) !important;
-}
-
-#stats td {
-  width: max-content;
 }
 
 #stats .element {
@@ -652,5 +666,32 @@ ul {
 .desactive {
   opacity: 0.2;
   filter: grayscale(100%);
+}
+
+@media screen and (max-width: 720px) {
+  #container {
+    width: 80%;
+    height: max-content;
+    margin: auto;
+    text-align: center;
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    flex-direction: column;
+  }
+
+  .row {
+    width: 100%;
+    display: block;
+    text-align: center;
+  }
+
+  #logo {
+    width: 20%;
+    position: relative;
+    top: 1%;
+    left: 1%;
+    margin-right: 5%;
+  }
 }
 </style>

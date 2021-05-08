@@ -72,7 +72,8 @@ export default {
 
 <style lang="scss" scoped>
 #audioplay {
-  position: absolute;
+  position: fixed;
+  right:0;
   z-index: 50;
 }
 

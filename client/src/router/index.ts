@@ -8,7 +8,6 @@ import Login from "../views/Login.vue";
 import Parametres from "../views/Parametres.vue";
 import Regles from "../views/Regles.vue";
 import Profil from "../views/Profil.vue";
-import Test from "../views/Test.vue";
 import Game from "../views/Game.vue";
 import rejoindrePartie from "../views/RejoindrePartie.vue";
 import choixEspece from "../views/choixEspece.vue";
@@ -70,14 +69,6 @@ const routes: Array<RouteConfig> = [
     component: Profil,
     meta: {
       title: "Les Cavaliers de Troie - Profil"
-    }
-  },
-  {
-    path: "/Test",
-    name: "Test",
-    component: Test,
-    meta: {
-      title: "Les Cavaliers de Troie - Test"
     }
   },
   {
