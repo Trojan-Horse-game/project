@@ -15,7 +15,7 @@ export class GameNetworkDelegate implements GameSceneDelegate {
     this.socket = io("localhost:3000");
 
     this.socket.on("oops", err => {
-      console.log(err);
+      console.error(err);
     });
 
     this.socket.on("available species", availableSpecies => {
@@ -77,7 +77,7 @@ export class GameNetworkDelegate implements GameSceneDelegate {
       action.addTarget(playerIndex);
       this.socket.emit("play card", this.room, action);
     } catch (err) {
-      console.log(err);
+      console.error(err);
     }
   }
 
@@ -85,7 +85,7 @@ export class GameNetworkDelegate implements GameSceneDelegate {
     try {
       this.socket.emit("discard", this.room, cardsIndices);
     } catch (err) {
-      console.log(err);
+      console.error(err);
     }
   }
 
@@ -93,7 +93,7 @@ export class GameNetworkDelegate implements GameSceneDelegate {
     try {
       this.socket.emit("launch game", this.room);
     } catch (err) {
-      console.log(err);
+      console.error(err);
     }
   }
 
@@ -103,7 +103,7 @@ export class GameNetworkDelegate implements GameSceneDelegate {
       // specie index or string ??
       let player = new Player(pseudo, specie);
     } catch (err) {
-      console.log(err);
+      console.error(err);
     }
   }
 
@@ -111,7 +111,7 @@ export class GameNetworkDelegate implements GameSceneDelegate {
     try {
       this.socket.emit("join game", pseudo, roomId);
     } catch (err) {
-      console.log(err);
+      console.error(err);
     }
   }
 
@@ -119,7 +119,7 @@ export class GameNetworkDelegate implements GameSceneDelegate {
     try {
       this.socket.emit("choose species", specie);
     } catch (err) {
-      console.log(err);
+      console.error(err);
     }
   }
 }

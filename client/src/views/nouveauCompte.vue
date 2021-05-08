@@ -1,48 +1,45 @@
 <template>
   <v-app>
-    <div id="wrap">
-      <div id="logo">
-        <img src="logo.png" alt="Logo du jeu" />
+    <div id="background-image" />
+    <div id="logo">
+      <img src="logo.png" alt="Logo du jeu" />
+    </div>
+    <div id="container">
+      <span id="titre">Inscription</span>
+
+      <div id="content">
+        <div id="infos">
+          <div class="row">
+            <label>Username</label>
+            <div class="form_input">
+              <input color="#000" v-model="user.username" />
+            </div>
+          </div>
+
+          <div class="row">
+            <label>Mot de passe</label>
+            <div class="form_input">
+              <input type="password" color="#000" v-model="user.password" />
+            </div>
+          </div>
+        </div>
+
+        <div id="legal">
+          <p>
+            Un enfant de moins de 15 ans doit avoir l'accord de son représentant
+            légal pour l'envoi de données personnelles.
+          </p>
+
+          <v-checkbox
+            v-model="checkbox"
+            label="J'accepte les termes"
+            color="#bbbbbb"
+          />
+        </div>
       </div>
-      <div id="container">
-        <span id="titre">Inscription</span>
-
-        <div id="content">
-          <div id="infos">
-            <div class="row">
-              <label>Username</label>
-              <div class="form_input">
-                <input color="#000" v-model="user.username" />
-              </div>
-            </div>
-
-            <div class="row">
-              <label>Mot de passe</label>
-              <div class="form_input">
-                <input type="password" color="#000" v-model="user.password" />
-              </div>
-            </div>
-          </div>
-
-          <div id="legal">
-            <ul>
-              <li>
-                Un enfant de moins de 15 ans doit avoir l'accord de son
-                représentant légal pour l'envoi de données personnelles.
-              </li>
-            </ul>
-
-            <v-checkbox
-              v-model="checkbox"
-              label="J'accepte les termes"
-              color="#bbbbbb"
-            />
-          </div>
-        </div>
-        <div id="buttons">
-          <router-link to="/"><v-btn id="retour"/></router-link>
-          <v-btn id="valider" @click="submitForm()" />
-        </div>
+      <div id="buttons">
+        <router-link to="/"><v-btn id="retour"/></router-link>
+        <v-btn id="valider" @click="submitForm()" />
       </div>
     </div>
   </v-app>
@@ -63,8 +60,8 @@ export default {
     submitForm() {
       const errors = [];
 
-      if (this.user.lastName.length < 1) {
-        errors.push("Nom requis");
+      if (this.user.username.length < 1) {
+        errors.push("Username requis");
       }
 
       if (this.user.password.length < 1) {
@@ -136,7 +133,7 @@ $content: #2f363c;
 }
 
 #content {
-  width: 100%;
+  width: inherit;
   height: max-content;
   padding: 2%;
   z-index: 0;
@@ -159,7 +156,7 @@ $content: #2f363c;
 
 #content .form_input {
   background-image: url("input.png");
-  background-repeat: no-repeat;
+  background-repeat: round;
   padding-left: 20px;
   font-size: 20px;
   background-size: contain;
@@ -169,7 +166,7 @@ $content: #2f363c;
 .form_input input {
   width: 90%;
   margin: auto;
-  text-align: left;
+  text-align: center;
 }
 
 input:focus {
@@ -177,7 +174,7 @@ input:focus {
 }
 
 #infos {
-  width: 50%;
+  width: 90%;
   display: grid;
 }
 
@@ -186,20 +183,11 @@ input:focus {
   grid-template-columns: 1fr 1fr;
   text-align: left;
   vertical-align: middle;
+  align-content: center;
 }
 
 .theme--light.v-label {
   color: rgba(0, 0, 0, 0.6) !important;
-}
-
-li {
-  list-style: none;
-}
-
-ul {
-  margin: 20px 0px;
-  text-align: center;
-  font-size: 15px;
 }
 
 #buttons {
@@ -225,10 +213,17 @@ ul {
 }
 
 #legal {
+  margin: 2px;
   display: flex;
+  text-align: center;
   justify-content: center;
   flex-direction: column;
   align-items: center;
+}
+
+#legal p {
+  width: 90%;
+  font-size: 60%;
 }
 
 .v-label {
@@ -237,8 +232,8 @@ ul {
 
 @media screen and (max-width: 1024px) {
   #container {
-    width: 80%;
-    height: 100%;
+    width: 90%;
+    height: max-content;
     margin: auto;
     text-align: center;
     display: flex;
