@@ -1,10 +1,11 @@
 import "phaser";
 import { ActionCard, GeneratorCard, Card } from "./Card";
-import { Generator, GeneratorState } from "./Generator";
+import { Generator } from "./Generator";
 import { PlayerSlot } from "./PlayerSlot";
 import { MouseEventFSM } from "./MouseEventFSM";
 import { CardDeck } from "./CardDeck";
 import { GameScene } from "./GameScene";
+import { ActionDropZone } from "./ActionDropZone";
 
 export class CardSprite extends Phaser.GameObjects.Container {
   constructor(
@@ -18,7 +19,7 @@ export class CardSprite extends Phaser.GameObjects.Container {
     this.sprite = scene.add.sprite(0, -height / 2, "carte_verso");
     this.sprite.setDisplaySize(width, height);
     this.cardType = card;
-    let hitArea = scene.add.rectangle(
+    const hitArea = scene.add.rectangle(
       -width / 2,
       -height,
       width,
@@ -47,6 +48,56 @@ export class CardSprite extends Phaser.GameObjects.Container {
           this.selected = true;
         }
       }
+    };
+
+    this.eventFSM.dragStart = () => {
+      if (!(this.scene instanceof GameScene)) {
+        return;
+      }
+
+      this.scene.tweens.add({
+        targets: this.scene.deck,
+        delay: 0,
+        x: this.scene.deck.x + 100 * window.devicePixelRatio,
+        duration: 1000,
+        ease: "power4"
+      });
+
+      this.scene.tweens.add({
+        targets: this.scene.actionDropZone,
+        delay: 0,
+        alpha: 1,
+        scale: 1,
+        duration: 1000,
+        ease: "power4"
+      });
+    };
+
+    this.eventFSM.dragEnd = () => {
+      if (this.dropped) {
+        return;
+      }
+
+      if (!(this.scene instanceof GameScene)) {
+        return;
+      }
+
+      this.scene.tweens.add({
+        targets: this.scene.deck,
+        delay: 300,
+        x: this.scene.deck.x - 100 * window.devicePixelRatio,
+        duration: 1000,
+        ease: "power4"
+      });
+
+      this.scene.tweens.add({
+        targets: this.scene.actionDropZone,
+        delay: 300,
+        alpha: 0,
+        scale: 0.5,
+        duration: 1000,
+        ease: "power4"
+      });
     };
 
     this.eventFSM.pointerUp = () => {
@@ -91,7 +142,7 @@ export class CardSprite extends Phaser.GameObjects.Container {
       }
     );
 
-    this.on("dragstart", (pointer: Phaser.Input.Pointer) => {
+    this.on("dragstart", (_pointer: Phaser.Input.Pointer) => {
       this.startX = this.x;
       this.startY = this.y;
       this.startWidth = this.displayWidth;
@@ -107,10 +158,10 @@ export class CardSprite extends Phaser.GameObjects.Container {
         if (!(scene instanceof GameScene)) {
           return;
         }
-
+        console.log("Drop");
         const playerSlot = scene.playerSlot;
         if (target instanceof CardDeck) {
-          let discarded: number[] = [];
+          const discarded: number[] = [];
           scene.tweens.add({
             targets: playerSlot.selectedCards,
             alpha: 0,
@@ -127,6 +178,32 @@ export class CardSprite extends Phaser.GameObjects.Container {
           if (scene.delegate != null) {
             scene.delegate.didDiscard(discarded);
           }
+        } else if (target instanceof ActionDropZone) {
+          this.dropped = true;
+          const globalX = this.x + this.parentContainer.x;
+          const globalY = this.y + this.parentContainer.y;
+          this.parentContainer.remove(this);
+          // this.scene.add.existing(this);
+          this.setPosition(globalX, globalY);
+          this.removeAllListeners();
+          this.selected = false;
+          const local = scene.actionDropZone.getLocalPoint(globalX, globalY);
+          scene.actionDropZone.add(this);
+          this.setPosition(local.x, local.y);
+          scene.tweens.add({
+            targets: this,
+            x: 0,
+            y: +this.sprite.displayHeight / 4,
+            duration: 250,
+            ease: "power4"
+          });
+          this.scene.tweens.add({
+            targets: target.text,
+            delay: 500,
+            alpha: 0,
+            duration: 600,
+            ease: "power4"
+          });
         }
       }
     );
@@ -140,12 +217,18 @@ export class CardSprite extends Phaser.GameObjects.Container {
         if (!(this.parentContainer instanceof PlayerSlot)) {
           return;
         }
-        if (
-          this.parentContainer.selectedCards.length <= 1 &&
-          target instanceof Generator
-        ) {
-          const nextState = target.nextState(card);
-          target.setGeneratorDisplayState(nextState[0], nextState[1]);
+        if (this.parentContainer.selectedCards.length <= 1) {
+          if (target instanceof Generator) {
+            const nextState = target.nextState(card);
+            target.setGeneratorDisplayState(nextState[0], nextState[1]);
+          } else if (target instanceof ActionDropZone) {
+            const baseScale = target.circle.scale;
+            this.scene.tweens.add({
+              targets: target.circle,
+              scale: baseScale / 1.1,
+              duration: 100
+            });
+          }
         }
       }
     );
@@ -158,6 +241,13 @@ export class CardSprite extends Phaser.GameObjects.Container {
       ) => {
         if (target instanceof Generator) {
           target.resetDisplayState();
+        } else if (target instanceof ActionDropZone) {
+          const baseScale = target.circle.scale;
+          this.scene.tweens.add({
+            targets: target.circle,
+            scale: baseScale * 1.1,
+            duration: 100
+          });
         }
       }
     );
@@ -201,8 +291,8 @@ export class CardSprite extends Phaser.GameObjects.Container {
     } else if (newValue instanceof ActionCard) {
       textureName = newValue.kind;
     }
-    let oldWidth = this.sprite.displayWidth;
-    let oldHeight = this.sprite.displayHeight;
+    const oldWidth = this.sprite.displayWidth;
+    const oldHeight = this.sprite.displayHeight;
     this.sprite.setTexture(textureName);
     this.sprite.setDisplaySize(oldWidth, oldHeight);
   }

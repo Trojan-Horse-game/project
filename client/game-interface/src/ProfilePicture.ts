@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-use-before-define */
 import "phaser";
 
 export class ProfilePicture extends Phaser.GameObjects.Container {
@@ -9,25 +10,25 @@ export class ProfilePicture extends Phaser.GameObjects.Container {
     playerName: string
   ) {
     super(scene);
-    let strokeWidth = radius * 0.15;
+    const strokeWidth = radius * 0.15;
 
     // The width of the black inner stroke that separates the
     // character picture from the main border
-    let innerStrokeWidth = strokeWidth / 1.7;
+    const innerStrokeWidth = strokeWidth / 1.7;
 
     // Create and add image
-    let image = this.scene.add.image(0, 0, pictureName);
-    let imageSize = radius * 2 - strokeWidth;
+    const image = this.scene.add.image(0, 0, pictureName);
+    const imageSize = radius * 2 - strokeWidth;
     image.displayWidth = imageSize;
     image.displayHeight = imageSize;
     this.add(image);
 
     // Create borders
-    let innerCircle = this.scene.add.circle(0, 0, radius - innerStrokeWidth);
+    const innerCircle = this.scene.add.circle(0, 0, radius - innerStrokeWidth);
     innerCircle.setStrokeStyle(innerStrokeWidth, 0x0, 1);
     this.add(innerCircle);
 
-    let outerCircle = this.scene.add.circle(0, 0, radius);
+    const outerCircle = this.scene.add.circle(0, 0, radius);
     outerCircle.setStrokeStyle(strokeWidth, 0x565455, 1);
     this.add(outerCircle);
 
@@ -39,11 +40,11 @@ export class ProfilePicture extends Phaser.GameObjects.Container {
     // Create text
     this.nameText = this.scene.add.text(0, 0, playerName.toUpperCase());
     this.nameText.setOrigin(0.5, textPosition == TextPosition.Bottom ? 0 : 1);
-    let yTextPosFactor = textPosition == TextPosition.Top ? -1.15 : 1.15;
+    const yTextPosFactor = textPosition == TextPosition.Top ? -1.15 : 1.15;
     this.nameText.setY(yTextPosFactor * radius);
     this.nameText.setFontSize(radius * 0.38);
     this.nameText.setFontFamily("Gagalin");
-    let padding = radius * 0.0857;
+    const padding = radius * 0.0857;
     this.nameText.setPadding(padding, 0, padding, padding);
     this.nameText.style.setAlign("center");
     this.nameText.style.setColor("#FFFFFF");
@@ -54,7 +55,7 @@ export class ProfilePicture extends Phaser.GameObjects.Container {
   timerArc: Phaser.GameObjects.Arc;
   nameText: Phaser.GameObjects.Text;
 
-  _timerPercentage: number = 0;
+  _timerPercentage = 0;
 
   get timerPercentage(): number {
     return this._timerPercentage;
@@ -73,5 +74,5 @@ export class ProfilePicture extends Phaser.GameObjects.Container {
 
 export enum TextPosition {
   Top,
-  Bottom,
+  Bottom
 }

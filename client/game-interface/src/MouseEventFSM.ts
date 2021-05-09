@@ -86,11 +86,12 @@ export class MouseEventFSM {
         let dist = Math.sqrt(Math.pow(tx, 2) + Math.pow(ty, 2));
         if (dist > 5 * window.devicePixelRatio) {
           this.reactTo(PhaserEvent.DragThreshold);
+          if (this.state == MouseEventFSMState.DragStart) {
+            this.dragStart(pointer, dragX, dragY);
+          }
         }
         this.reactTo(PhaserEvent.Drag);
-        if (this.state == MouseEventFSMState.DragStart) {
-          this.dragStart(pointer, dragX, dragY);
-        } else if (this.state == MouseEventFSMState.Drag) {
+        if (this.state == MouseEventFSMState.Drag) {
           this.drag(pointer, dragX, dragY);
         }
       }
@@ -100,7 +101,7 @@ export class MouseEventFSM {
       "dragend",
       (pointer: Phaser.Input.Pointer, dragX: number, dragY: number) => {
         if (this.state == MouseEventFSMState.Drag) {
-          this.dragStart(pointer, dragX, dragY);
+          this.dragEnd(pointer, dragX, dragY);
         }
         this.reactTo(PhaserEvent.DragEnd);
       }

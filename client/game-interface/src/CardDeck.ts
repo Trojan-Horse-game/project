@@ -23,17 +23,17 @@ export class CardDeck extends Phaser.GameObjects.Container {
     if (!(this.scene instanceof GameScene)) {
       return;
     }
-    let playerSlot = this.scene.playerSlot;
+    const playerSlot = this.scene.playerSlot;
     distributedCards.forEach((value: Card, index: number) => {
-      let discardedIndex = playerSlot.discardedIndices[index];
-      let discardedCard = playerSlot.cards[discardedIndex];
-      let replacingCard = this.cards.pop();
+      const discardedIndex = playerSlot.discardedIndices[index];
+      const discardedCard = playerSlot.cards[discardedIndex];
+      const replacingCard = this.cards.pop();
       playerSlot.cards[discardedIndex] = replacingCard;
       const newPoint = playerSlot.getLocalPoint(
         replacingCard.x + this.x,
         replacingCard.y + this.y
       );
-      let timeline = this.scene.tweens.createTimeline();
+      const timeline = this.scene.tweens.createTimeline();
 
       // Move card to replace
       timeline.add({

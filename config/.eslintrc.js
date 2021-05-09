@@ -14,6 +14,9 @@ module.exports = {
     "prettier/@typescript-eslint",
     "plugin:jest/recommended",
   ],
+  rules: {
+    "no-use-before-define": "off",
+  },
   settings: {
     "eslint.workingDirectories": [
       { directory: "../server", changeProcessCWD: true },
