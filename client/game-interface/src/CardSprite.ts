@@ -31,13 +31,18 @@ export class CardSprite extends Phaser.GameObjects.Container {
     this.setInteractive(hitArea, Phaser.Geom.Rectangle.Contains);
     scene.input.setDraggable(this);
     this.eventFSM.linkToGameObject(this);
+    const margin = 7.5 * window.devicePixelRatio;
     this.selectionOutline = scene.add.rectangle(
       0,
       -height / 2,
-      width + 15,
-      height + 15
+      width + margin,
+      height + margin
     );
-    this.selectionOutline.setStrokeStyle(5, 0x399fff, 1);
+    this.selectionOutline.setStrokeStyle(
+      2.5 * window.devicePixelRatio,
+      0x399fff,
+      1
+    );
     this.selectionOutline.setAlpha(0);
     this.add(this.selectionOutline);
     this.add(this.sprite);
@@ -115,8 +120,8 @@ export class CardSprite extends Phaser.GameObjects.Container {
           dragY
         );
         const local = this.parentContainer.getLocalPoint(
-          position.x + 100,
-          position.y + 250
+          position.x + 50 * window.devicePixelRatio,
+          position.y + 125 * window.devicePixelRatio
         );
         let minThreshold;
         if (this.parentContainer instanceof PlayerSlot) {

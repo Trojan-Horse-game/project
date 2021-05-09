@@ -65,9 +65,9 @@ export class ProfilePicture extends Phaser.GameObjects.Container {
     this._timerPercentage = newValue;
     this.timerArc.endAngle = -90 + 360 * newValue;
     if (newValue == 0) {
-      this.nameText.setBackgroundColor("555455");
+      this.nameText.setBackgroundColor("#555455");
     } else {
-      this.nameText.setBackgroundColor("0082FD");
+      this.nameText.setBackgroundColor("#0082FD");
     }
   }
 }
