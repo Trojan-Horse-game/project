@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-use-before-define */
 import "phaser";
 import { ProfilePicture, TextPosition } from "./ProfilePicture";
 import { Generator, GeneratorState } from "./Generator";

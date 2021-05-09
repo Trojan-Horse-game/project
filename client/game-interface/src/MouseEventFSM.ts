@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-empty-function */
+/* eslint-disable @typescript-eslint/no-use-before-define */
 import "phaser";
 
 export class MouseEventFSM {
@@ -77,13 +79,13 @@ export class MouseEventFSM {
     gameObject.on(
       "drag",
       (pointer: Phaser.Input.Pointer, dragX: number, dragY: number) => {
-        let startX = pointer.downX;
-        let startY = pointer.downY;
-        let x = pointer.x;
-        let y = pointer.y;
-        let tx = x - startX;
-        let ty = y - startY;
-        let dist = Math.sqrt(Math.pow(tx, 2) + Math.pow(ty, 2));
+        const startX = pointer.downX;
+        const startY = pointer.downY;
+        const x = pointer.x;
+        const y = pointer.y;
+        const tx = x - startX;
+        const ty = y - startY;
+        const dist = Math.sqrt(Math.pow(tx, 2) + Math.pow(ty, 2));
         if (dist > 5 * window.devicePixelRatio) {
           this.reactTo(PhaserEvent.DragThreshold);
           if (this.state == MouseEventFSMState.DragStart) {

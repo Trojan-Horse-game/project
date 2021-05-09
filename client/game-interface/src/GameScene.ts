@@ -12,12 +12,8 @@ import { GameSceneDelegate } from "./GameSceneDelegate";
 import { ProfilePicture } from "./ProfilePicture";
 import { CardSprite } from "./CardSprite";
 import { ActionDropZone } from "./ActionDropZone";
+import { ResponsiveScene } from "./ResponsiveScene";
 
-export class ResponsiveScene extends Phaser.Scene {
-  resize(width: number, height: number) {
-    console.error("Method must be overriden");
-  }
-}
 export class GameScene extends ResponsiveScene {
   constructor(currentPlayer: Player) {
     super({});
@@ -32,12 +28,13 @@ export class GameScene extends ResponsiveScene {
 
   positions: Position[];
 
+  delegate: GameSceneDelegate;
+
+  // Phaser game objects
   deck: CardDeck;
   actionDropZone: ActionDropZone;
   playerSlot: PlayerSlot;
   opponentsSlots: OpponentSlot[] = [];
-
-  delegate: GameSceneDelegate;
 
   preload() {
     // Character pictures

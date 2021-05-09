@@ -60,7 +60,7 @@ export class Generator extends Phaser.GameObjects.Container {
   }
 
   generatorState: GeneratorState;
-  isSuper: boolean = false;
+  isSuper = false;
   generatorKind: GeneratorKind;
   playerGenerator: boolean;
   strokeWidth: number;

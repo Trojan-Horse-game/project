@@ -142,7 +142,8 @@ export class CardSprite extends Phaser.GameObjects.Container {
       }
     );
 
-    this.on("dragstart", (_pointer: Phaser.Input.Pointer) => {
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    this.on("dragstart", (pointer: Phaser.Input.Pointer) => {
       this.startX = this.x;
       this.startY = this.y;
       this.startWidth = this.displayWidth;

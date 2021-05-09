@@ -1,4 +1,5 @@
-import { GameScene, ResponsiveScene, Player } from "./GameScene";
+import { GameScene, Player } from "./GameScene";
+import { ResponsiveScene } from "./ResponsiveScene";
 import "phaser";
 
 const scene = new GameScene(new Player("Youness", "xmars_tete"));
