@@ -4,20 +4,20 @@
     <div id="container">
       <div id="left">
         <div id="logo">
-            <img src="logo.png" alt="Logo du jeu" />
-            <span class="min-title">LES CAVALIERS DE TROIE</span>
-        </div>
-      <div id="buttons">
-        <router-link to="/connexion">
-          <button id="connexion" />
-        </router-link>
-        <router-link to="/inscription">
-          <button id="inscription" />
-       </router-link>
-      </div>
-    </div>
-    <div id="right">
+          <img src="logo.png" alt="Logo du jeu" />
           <span class="min-title">LES CAVALIERS DE TROIE</span>
+        </div>
+        <div id="buttons">
+          <router-link to="/connexion">
+            <button id="connexion" />
+          </router-link>
+          <router-link to="/inscription">
+            <button id="inscription" />
+          </router-link>
+        </div>
+      </div>
+      <div id="right">
+        <span class="min-title">LES CAVALIERS DE TROIE</span>
       </div>
     </div>
   </v-app>
@@ -30,26 +30,26 @@
 }
 
 #logo {
-  margin-left:auto;
-  margin-right:auto;
-  margin-top:auto;
-  text-align:center;
-  align-self:baseline;
+  margin-left: auto;
+  margin-right: auto;
+  margin-top: auto;
+  text-align: center;
+  align-self: baseline;
 }
 
-.min-title{
+.min-title {
   width: 100%;
   padding: 2%;
   color: #fff;
   display: block;
   font-size: 400%;
   font-family: "Gagalin", sans-serif !important;
-  text-shadow: 4px 4px rgb(83,82,85);
-  text-align:center;
+  text-shadow: 4px 4px rgb(83, 82, 85);
+  text-align: center;
 }
 
 #left .min-title {
-  display:none;
+  display: none;
 }
 
 #logo img {
@@ -61,21 +61,21 @@
   background-image: url("../../public/Design/begin.gif");
 }
 
-#container{
+#container {
   padding-right: 10%;
-  display:grid;
+  display: grid;
   grid-template-columns: 1fr 2fr;
   height: 100%;
-  width:100%;
+  width: 100%;
 }
 
 #left {
   height: 100%;
   width: 100%;
-  align-content:center;
-  display:grid;
-  justify-content:center;
-  grid-template-rows:1fr 1fr;
+  align-content: center;
+  display: grid;
+  justify-content: center;
+  grid-template-rows: 1fr 1fr;
 }
 
 #right {
@@ -85,8 +85,8 @@
 }
 
 #buttons {
-  margin:auto;
-  text-align:center;
+  margin: auto;
+  text-align: center;
   align-items: center;
   height: 70%;
   width: 100%;
@@ -106,30 +106,30 @@
   background-image: url("../../public/Design/inscription.png");
 }
 
-@media screen and (max-width: 1024px) { 
+@media screen and (max-width: 1024px) {
   #background-image {
-  background-image: url("../../public/Design/default-bck.gif");
+    background-image: url("../../public/Design/default-bck.gif");
   }
 
-  #right{
-    display:none;
+  #right {
+    display: none;
   }
 
   #container {
-    display:block;
+    display: block;
   }
 
   #left {
-  height: 100%;
-  width: 100%;
-  align-content:center;
-  display:grid;
-  grid-template-rows:1fr 1fr;
-}
+    height: 100%;
+    width: 100%;
+    align-content: center;
+    display: grid;
+    grid-template-rows: 1fr 1fr;
+  }
 
   #logo img {
-  width: 70% !important;
-  height: auto;
+    width: 70% !important;
+    height: auto;
   }
 
   .min-title {
@@ -138,30 +138,30 @@
     display: block;
     font-size: 400%;
     font-family: "Gagalin", sans-serif !important;
-    text-shadow: 4px 4px rgb(83,82,85);
+    text-shadow: 4px 4px rgb(83, 82, 85);
   }
 
   #right .min-title {
-    display:none;
+    display: none;
   }
 }
 
-@media screen and (max-width: 1024px) { 
-   .min-title {
+@media screen and (max-width: 1024px) {
+  .min-title {
     padding: 2%;
     color: #fff;
     display: block;
     font-size: 300%;
     font-family: "Gagalin", sans-serif !important;
-    text-shadow: 4px 4px rgb(83,82,85);
+    text-shadow: 4px 4px rgb(83, 82, 85);
   }
 
   #right .min-title {
-    display:none;
+    display: none;
   }
 
-  #container{
-    padding-right:0;
+  #container {
+    padding-right: 0;
   }
 }
 </style>
