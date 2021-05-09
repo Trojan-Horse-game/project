@@ -2,7 +2,6 @@ import "phaser";
 import { OpponentSlot, SlotLayout } from "./OpponentSlot";
 import { PlayerSlot } from "./PlayerSlot";
 import {
-  Card,
   ActionCardKind,
   GeneratorKind,
   GeneratorCardKind,
@@ -12,13 +11,9 @@ import { CardDeck } from "./CardDeck";
 import { GameSceneDelegate } from "./GameSceneDelegate";
 import { ProfilePicture } from "./ProfilePicture";
 import { CardSprite } from "./CardSprite";
-import { mixin } from "vue/types/umd";
+import { ActionDropZone } from "./ActionDropZone";
+import { ResponsiveScene } from "./ResponsiveScene";
 
-export class ResponsiveScene extends Phaser.Scene {
-  resize(width: number, height: number) {
-    console.error("Method must be overriden");
-  }
-}
 export class GameScene extends ResponsiveScene {
   constructor(currentPlayer: Player) {
     super({});
@@ -33,29 +28,37 @@ export class GameScene extends ResponsiveScene {
 
   positions: Position[];
 
+  delegate: GameSceneDelegate;
+
+  // Phaser game objects
   deck: CardDeck;
+  actionDropZone: ActionDropZone;
   playerSlot: PlayerSlot;
   opponentsSlots: OpponentSlot[] = [];
 
-  delegate: GameSceneDelegate;
-
   preload() {
-    this.load.image("carte_verso", "assets/carte_verso.png");
+    // Character pictures
+    this.load.image("fawkes_tete", "src/assets/Fawkes_tete.png");
+    this.load.image("hutex_tete", "src/assets/Hutex_tete.png");
+    this.load.image("robotec_tete", "src/assets/Robotec_tete.png");
+    this.load.image("spectre_tete", "src/assets/Spectre_tete.png");
+    this.load.image("totox_tete", "src/assets/Totox_tete.png");
+    this.load.image("xmars_tete", "src/assets/Xmars_tete.png");
 
-    this.load.image("fawkes_tete", "assets/Fawkes_tete.png");
-    this.load.image("hutex_tete", "assets/Hutex_tete.png");
-    this.load.image("robotec_tete", "assets/Robotec_tete.png");
-    this.load.image("spectre_tete", "assets/Spectre_tete.png");
-    this.load.image("totox_tete", "assets/Totox_tete.png");
-    this.load.image("xmars_tete", "assets/Xmars_tete.png");
+    // Generator icons
+    this.load.image("electricity", "src/assets/foudre_log.png");
+    this.load.image("air", "src/assets/air_log.png");
+    this.load.image("water", "src/assets/goute_log.png");
+    this.load.image("shield", "src/assets/radiation_log.png");
+    this.load.image("joker", "src/assets/super_log.png");
+    this.load.image("super_sign", "src/assets/super.png");
 
-    this.load.image("electricity", "assets/foudre_log.png");
-    this.load.image("air", "assets/air_log.png");
-    this.load.image("water", "assets/goute_log.png");
-    this.load.image("shield", "assets/radiation_log.png");
-    this.load.image("joker", "assets/super_log.png");
-    this.load.image("super_sign", "assets/super.png");
+    // Action drop zone
+    this.load.image("dropzone_circle", "src/assets/dropzone_circle.png");
+    this.load.image("utiliser", "src/assets/utiliser.png");
 
+    // Cards
+    this.load.image("carte_verso", "src/assets/carte_verso.png");
     // Action cards assets
     for (const actionName in ActionCardKind) {
       this.load.image(
@@ -63,7 +66,6 @@ export class GameScene extends ResponsiveScene {
         "src/assets/" + ActionCardKind[actionName] + ".jpg"
       );
     }
-
     // Generator card assets
     const suffixes = ["G", "P", "V"];
     for (const suffix of suffixes) {
@@ -77,15 +79,13 @@ export class GameScene extends ResponsiveScene {
   }
 
   create() {
-    let scene = this;
-
-    let kinds = [
+    const kinds = [
       GeneratorCardKind.Generator,
       GeneratorCardKind.Medicine,
       GeneratorCardKind.Virus
     ];
 
-    let generatorKinds = [
+    const generatorKinds = [
       GeneratorKind.Air,
       GeneratorKind.Electricity,
       GeneratorKind.Joker,
@@ -93,10 +93,10 @@ export class GameScene extends ResponsiveScene {
       GeneratorKind.Water
     ];
 
-    document.onkeypress = function(e) {
-      if (e.keyCode == 100) {
-        let cards: GeneratorCard[] = [];
-        for (let i = 0; i < scene.playerSlot.discardedIndices.length; i++) {
+    document.onkeypress = e => {
+      if (e.code == "KeyD") {
+        const cards: GeneratorCard[] = [];
+        for (let i = 0; i < this.playerSlot.discardedIndices.length; i++) {
           cards.push(
             new GeneratorCard(
               kinds[Math.floor(Math.random() * kinds.length)],
@@ -104,9 +104,15 @@ export class GameScene extends ResponsiveScene {
             )
           );
         }
-        scene.deck.distributeCards(cards);
+        this.deck.distributeCards(cards);
       }
     };
+
+    this.actionDropZone = new ActionDropZone(
+      this,
+      70 * window.devicePixelRatio
+    );
+    this.add.existing(this.actionDropZone);
 
     const profileRadius = 55 * window.devicePixelRatio;
     this.playerSlot = new PlayerSlot(
@@ -147,6 +153,7 @@ export class GameScene extends ResponsiveScene {
     );
 
     this.deck.setPosition(width / 2, height / 2 - 200);
+    this.actionDropZone.setPosition(width / 2 - 150, height / 2 - 200);
   }
 
   updatePlayers(newValue: Player[], playerIndex: number) {
@@ -210,8 +217,6 @@ export class GameScene extends ResponsiveScene {
     }, duration + 50);
     this.currentPlayer = nextPlayer;
   }
-
-  /*distributeCards(cards: Card[]) {}*/
 
   createPlayers() {
     // Remove any previously existing opponent slot

@@ -125,22 +125,23 @@ export class PlayerSlot extends Phaser.GameObjects.Container {
 
     card.on(
       "drag",
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
       (pointer: Phaser.Input.Pointer, dragX: number, dragY: number) => {
-        let xTranslation = pointer.x - pointer.downX;
-        let yTranslation = pointer.y - pointer.downY;
-        let distance = Math.sqrt(
+        const xTranslation = pointer.x - pointer.downX;
+        const yTranslation = pointer.y - pointer.downY;
+        const distance = Math.sqrt(
           Math.pow(xTranslation, 2) + Math.pow(yTranslation, 2)
         );
         // let minThreshold = 150 * window.devicePixelRatio;
-        let minThreshold = 0;
+        const minThreshold = 0;
         let proportion = Math.min(
           1,
           Math.max(0, distance - minThreshold) / 500
         );
         proportion = Math.min(proportion, 0.95);
         for (const otherCard of this.otherSelected) {
-          let baseXPosition = otherCard.startX + xTranslation;
-          let xPosition =
+          const baseXPosition = otherCard.startX + xTranslation;
+          const xPosition =
             (1 - proportion) * baseXPosition + proportion * card.x;
           otherCard.setPosition(xPosition, card.y);
           otherCard.setScale(card.scale);

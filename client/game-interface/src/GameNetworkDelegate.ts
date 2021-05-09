@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-use-before-define */
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import { Card } from "./Card";
 import { GameSceneDelegate, Species } from "./GameSceneDelegate";
 import { io, Socket } from "socket.io-client";
@@ -26,15 +28,17 @@ export class GameNetworkDelegate implements GameSceneDelegate {
   wasAddedToScene(scene: GameScene) {
     this.scene = scene;
 
-    this.socket.on("hand", hand => {});
+    this.socket.on("hand", hand => {
+      console.log("hand");
+    });
 
     this.socket.on("next turn", (playerIndex: number) => {
       this.scene.nextTurn(playerIndex);
     });
 
     this.socket.on("play card", (action: Action) => {
-      let opponent = action.target[0];
-      let slotTarget = action.slotTarget[0];
+      const opponent = action.target[0];
+      const slotTarget = action.slotTarget[0];
       // Voir avec trevor
     });
 
@@ -47,7 +51,7 @@ export class GameNetworkDelegate implements GameSceneDelegate {
     });
 
     this.socket.on("join game", (pseudo, specie) => {
-      let player = new Player(pseudo, specie);
+      const player = new Player(pseudo, specie);
       this.scene.appendPlayer(player);
     });
 
@@ -60,7 +64,7 @@ export class GameNetworkDelegate implements GameSceneDelegate {
     });
 
     this.socket.on("players", (pseudo: string, species) => {
-      let player = new Player(pseudo, species);
+      const player = new Player(pseudo, species);
       this.scene.appendPlayer(player);
     });
   }
@@ -72,7 +76,7 @@ export class GameNetworkDelegate implements GameSceneDelegate {
     generatorIndex: number
   ) {
     try {
-      let action = new Action(cardIndex);
+      const action = new Action(cardIndex);
       action.addSlotTarget(generatorIndex);
       action.addTarget(playerIndex);
       this.socket.emit("play card", this.room, action);
@@ -101,7 +105,7 @@ export class GameNetworkDelegate implements GameSceneDelegate {
     try {
       this.socket.emit("create game", pseudo, specie);
       // specie index or string ??
-      let player = new Player(pseudo, specie);
+      const player = new Player(pseudo, specie);
     } catch (err) {
       console.error(err);
     }
