@@ -94,22 +94,30 @@
           <div id="fiche">
             <div class="attribut">
               <span class="nom">Espèce</span>
-              <span class="text"><p class="text-fill">{{ selected.name }}</p></span>
+              <span class="text"
+                ><p class="text-fill">{{ selected.name }}</p></span
+              >
             </div>
 
             <div class="attribut">
               <span class="nom">Origine</span>
-              <span class="text"><p class="text-fill">{{ selected.origin }}</p></span>
+              <span class="text"
+                ><p class="text-fill">{{ selected.origin }}</p></span
+              >
             </div>
 
             <div class="attribut">
               <span class="nom">Force</span>
-              <span class="text"><p class="text-fill">{{ selected.strength }}</p></span>
+              <span class="text"
+                ><p class="text-fill">{{ selected.strength }}</p></span
+              >
             </div>
 
             <div class="attribut" id="description">
               <span class="nom">Description</span>
-              <span class="text"><p class="text-fill">{{ selected.description }}</p></span>
+              <span class="text"
+                ><p class="text-fill">{{ selected.description }}</p></span
+              >
             </div>
           </div>
 
@@ -327,10 +335,10 @@ export default {
   font-size: 35px;
 }
 
-.text .text-fill{
+.text .text-fill {
   width: 90%;
-  margin:auto;
-  text-align:center;
+  margin: auto;
+  text-align: center;
 }
 
 #description .text {
@@ -467,7 +475,6 @@ ul {
   background-image: url("../../public/Design/valider.png");
 }
 
-@media screen and (max-width: 720px) { 
-  
+@media screen and (max-width: 720px) {
 }
 </style>

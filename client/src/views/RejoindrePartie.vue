@@ -19,6 +19,11 @@
 import Logo from "../components/Logo.vue";
 export default {
   components: { logo: Logo },
+  created: function() {
+    if (localStorage.getItem("token") === null) {
+      this.$router.push("/");
+    }
+  },
   data: () => ({
     id: ""
   })

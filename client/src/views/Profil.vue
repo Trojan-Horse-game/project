@@ -218,7 +218,7 @@ import axios from "axios";
 export default {
   components: {},
   data: () => ({
-    apiUrl: "http://api.trojanhorse.cc",
+    apiUrl: "http://localhost:3000",
     dialog: false,
     tab: null,
     newFriend: "",
@@ -232,7 +232,11 @@ export default {
     nbVictoires: 0,
     nbDefaites: 0
   }),
-
+  created: function() {
+    if (localStorage.getItem("token") === null) {
+      this.$router.push("/");
+    }
+  },
   mounted: async function() {
     await this.getUserInfos();
   },
