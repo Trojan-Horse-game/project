@@ -14,7 +14,10 @@ export class ActionDropZone extends Phaser.GameObjects.Container {
 
     this.text = scene.add.sprite(0, 0, "utiliser");
     this.text.setPosition(0, radius + 20 * window.devicePixelRatio);
-    this.text.setScale(0.53);
+    const textRatio = this.text.displayWidth / this.text.displayHeight;
+    const textHeight = 17 * window.devicePixelRatio;
+    const textWidth = textHeight * textRatio;
+    this.text.setDisplaySize(textWidth, textHeight);
     this.add(this.text);
   }
 
