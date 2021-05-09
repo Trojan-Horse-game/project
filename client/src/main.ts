@@ -6,6 +6,7 @@ import vuetify from "./plugins/vuetify";
 import store from "./store";
 import { defineCustomElements as defineIonPhaser } from "@ion-phaser/core/loader";
 import VueSocketIO from "vue-socket.io";
+import * as SocketIO from "socket.io-client";
 
 Vue.config.productionTip = false;
 Vue.config.ignoredElements = [/ion-\w*/];
@@ -15,7 +16,7 @@ defineIonPhaser(window);
 Vue.use(
   new VueSocketIO({
     debug: true,
-    connection: "https://trojanhorse.cc",
+    connection: SocketIO("https://trojanhorse.cc/"),
     vuex: {
       store,
       actionPrefix: "SOCKET_",
