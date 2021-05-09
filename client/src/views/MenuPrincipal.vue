@@ -33,8 +33,47 @@ Libre a toi d'appeler les méthodes dans les bons fichiers mais à première vue
 */
 
 import Logo from "../components/Logo";
+import { GameScene } from "../../game-interface/src/GameScene";
+
 export default {
-  components: { Logo: Logo }
+  components: { Logo: Logo },
+  created: function() {
+    if (localStorage.getItem("token") === null) {
+      this.$router.push("/");
+    }
+  },
+
+  mounted: function() {
+    try {
+    await this.getUserInfos();
+    this.game = new GameScene(this.username);
+    }
+
+    catch(errors) {
+      alert(errors);
+    }
+  },
+
+  data: () => ({
+    game: null,
+    username: null
+  }),
+
+  methods: {
+    async getUserInfos() {
+      const myUserId = this.getMyUserId();
+      const url = `${this.apiUrl}/users/${myUserId}`;
+
+      try {
+        const response = await axios.get(url);
+        const userInfos = response.data;
+
+        this.username = userInfos.username;
+      } catch (errors) {
+        console.error(errors);
+      }
+    }
+  }
 };
 </script>
 <style scoped>

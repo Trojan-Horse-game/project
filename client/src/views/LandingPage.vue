@@ -23,6 +23,16 @@
   </v-app>
 </template>
 
+<script lang="ts">
+export default {
+  created: function() {
+    if (localStorage.getItem("token") === null) {
+      this.$router.push("/");
+    }
+  }
+};
+</script>
+
 <style scoped>
 #app {
   width: 100%;
@@ -158,6 +168,10 @@
 
   #right .min-title {
     display: none;
+  }
+
+  #container {
+    padding-right: 0;
   }
 
   #container {

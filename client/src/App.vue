@@ -11,7 +11,8 @@ import AudioPlayer from "../src/components/AudioPlayer.vue";
 
 export default Vue.extend({
   name: "App",
-  components: { AudioPlayer: AudioPlayer }
+  components: { AudioPlayer: AudioPlayer },
+  data: () => ({})
 });
 </script>
 
@@ -23,3 +24,4 @@ export default Vue.extend({
   z-index: 0;
 }
 </style>
+<>

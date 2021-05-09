@@ -56,6 +56,12 @@ export default {
     checkbox: false
   }),
 
+  created: function() {
+    if (localStorage.getItem("token") !== null) {
+      this.$router.push("/menuPrincipal");
+    }
+  },
+
   methods: {
     submitForm() {
       const errors = [];

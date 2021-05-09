@@ -1,7 +1,7 @@
 <template>
   <v-app>
-    <div id="background-image"/>
-      <div id="logo">
+    <div id="background-image" />
+    <div id="logo">
       <img src="logo.png" alt="Logo du jeu" />
     </div>
     <div id="container">
@@ -9,7 +9,6 @@
 
       <div id="content">
         <div id="infos">
-
           <div class="row">
             <label>Username</label>
             <div class="form_input">
@@ -38,7 +37,7 @@
 
 <script>
 export default {
-  components: { },
+  components: {},
   data: () => ({
     validInput: false,
     showError: false,
@@ -48,15 +47,9 @@ export default {
     }
   }),
 
-  computed: {
-    loggedIn() {
-      return this.$store.state.auth.status.loggedIn;
-    }
-  },
-
-  created() {
-    if (this.loggedIn) {
-      this.$router.push("/menuPrincipal");
+  created: function() {
+    if (localStorage.getItem("token") === null) {
+      this.$router.push("/");
     }
   },
 
@@ -100,7 +93,7 @@ $content: #2f363c;
 
 #background-image {
   background-image: url("../../public/Design/default-bck.gif");
-  min-width:100%;
+  min-width: 100%;
   min-height: 100%;
   -webkit-background-size: cover;
   -moz-background-size: cover;
@@ -122,8 +115,8 @@ $content: #2f363c;
 #container {
   width: 100%;
   height: 100%;
-  margin:auto;
-  text-align:center;
+  margin: auto;
+  text-align: center;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -153,7 +146,7 @@ $content: #2f363c;
 #titre {
   font-size: 400%;
   color: $textColor;
-  text-align:center;
+  text-align: center;
 }
 
 #content .form_input {
@@ -167,8 +160,8 @@ $content: #2f363c;
 
 .form_input input {
   width: 90%;
-  margin:auto;
-  text-align:center;
+  margin: auto;
+  text-align: center;
 }
 
 input:focus {
@@ -177,11 +170,11 @@ input:focus {
 
 #infos {
   width: 50%;
-  display:grid;
+  display: grid;
 }
 
 .row {
-  display:block;
+  display: block;
   text-align: center;
 }
 
