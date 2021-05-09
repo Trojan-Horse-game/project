@@ -34,6 +34,7 @@ Libre a toi d'appeler les méthodes dans les bons fichiers mais à première vue
 
 import Logo from "../components/Logo";
 import { GameScene } from "../../game-interface/src/GameScene";
+import axios from "axios";
 
 export default {
   components: { Logo: Logo },
@@ -43,13 +44,11 @@ export default {
     }
   },
 
-  mounted: function() {
+  mounted: async function() {
     try {
-    await this.getUserInfos();
-    this.game = new GameScene(this.username);
-    }
-
-    catch(errors) {
+      await this.getUserInfos();
+      this.game = new GameScene(this.username);
+    } catch (errors) {
       alert(errors);
     }
   },
