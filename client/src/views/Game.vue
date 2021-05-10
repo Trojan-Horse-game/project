@@ -6,11 +6,8 @@
 
 <script lang="ts">
 import Phaser from "phaser";
-import {
-  GameScene,
-  Player,
-  ResponsiveScene
-} from "../../game-interface/src/GameScene";
+import { GameScene, Player } from "../../game-interface/src/GameScene";
+import { ResponsiveScene } from "../../game-interface/src/ResponsiveScene";
 
 export default {
   name: "Jeu",

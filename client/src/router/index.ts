@@ -37,7 +37,8 @@ const routes: Array<RouteConfig> = [
     component: MenuPrincipal,
     meta: {
       title: "Les Cavaliers de Troie - Menu principal"
-    }
+    },
+    props: true
   },
   {
     path: "/connexion",
@@ -85,7 +86,8 @@ const routes: Array<RouteConfig> = [
     component: rejoindrePartie,
     meta: {
       title: "Les Cavaliers de Troie - Rejoindre une partie"
-    }
+    },
+    props: true
   },
   {
     path: "/choixEspece",
@@ -93,7 +95,8 @@ const routes: Array<RouteConfig> = [
     component: choixEspece,
     meta: {
       title: "Les Cavaliers de Troie - Choix de l'espèce"
-    }
+    },
+    props: true
   }
 ];
 

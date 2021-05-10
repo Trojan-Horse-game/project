@@ -178,8 +178,8 @@ export default {
     padding-right: 0;
   }
 
-  #container{
-    padding-right:0;
+  #container {
+    padding-right: 0;
   }
 }
 </style>

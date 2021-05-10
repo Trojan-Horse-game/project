@@ -3,8 +3,12 @@
     <div id="background-image" />
     <div id="container">
       <logo title="Menu principal" />
-      <router-link to="/choixEspece"><button id="lancer"/></router-link>
-      <router-link to="/rejoindrePartie"><button id="rejoindre"/></router-link>
+      <router-link :to="{ name: 'Choix espèce', params: { game, player } }"
+        ><button id="lancer"
+      /></router-link>
+      <router-link :to="{ name: 'Rejoindre partie', params: { game, player } }"
+        ><button id="rejoindre"
+      /></router-link>
 
       <div id="buttons">
         <router-link to="/reglesDuJeu">
@@ -19,22 +23,8 @@
 </template>
 
 <script>
-/*
-- Importer le fichier GameScene
-- Créer une instance de GameScene :
-  gameScene = new GameScene();
-  la scène sera accessible par gameScene.scene
-
-- si le joueur choisit de créer une partie, appeler la fonction "createGame(pseudo, Specie)"
-- Sinon appeler "joinGame(pseudo)" puis "chooseSpecie(specie) quand il aura choisit son espèce"
-
-La liste des espèces disponibles est stockée dans l'attribut gameScene.availableSpecies
-Libre a toi d'appeler les méthodes dans les bons fichiers mais à première vue je dirai de créer l'instance GameScene dans menuPrincipal.vue et appeler gameScene.scene dans Game.vue
-*/
-
 import Logo from "../components/Logo";
-import { GameScene } from "../../game-interface/src/GameScene";
-import axios from "axios";
+import { GameScene, Player } from "../../game-interface/src/GameScene";
 
 export default {
   components: { Logo: Logo },
@@ -42,35 +32,30 @@ export default {
     if (localStorage.getItem("token") === null) {
       this.$router.push("/");
     }
-  },
 
-  mounted: async function() {
-    try {
-      await this.getUserInfos();
-      this.game = new GameScene(this.username);
-    } catch (errors) {
-      alert(errors);
-    }
+    this.username = localStorage.getItem("username");
+    this.player = new Player(this.username, this.species);
+    this.game = new GameScene(this.player);
   },
 
   data: () => ({
-    game: null,
-    username: null
+    species: "",
+    username: "",
+    player: null,
+    game: null
   }),
 
-  methods: {
-    async getUserInfos() {
-      const myUserId = this.getMyUserId();
-      const url = `${this.apiUrl}/users/${myUserId}`;
+  watch: {
+    username: function() {
+      this.player = new Player(this.username, this.species);
+    },
 
-      try {
-        const response = await axios.get(url);
-        const userInfos = response.data;
+    species: function() {
+      this.player = new Player(this.username, this.species);
+    },
 
-        this.username = userInfos.username;
-      } catch (errors) {
-        console.error(errors);
-      }
+    player: function() {
+      this.game = new GameScene(this.player);
     }
   }
 };
