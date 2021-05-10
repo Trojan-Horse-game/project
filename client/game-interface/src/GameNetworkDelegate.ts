@@ -14,8 +14,6 @@ export class GameNetworkDelegate implements GameSceneDelegate {
   winnerIndex: number;
 
   constructor() {
-    this.socket = io("localhost:3000");
-
     this.socket.on("oops", err => {
       console.error(err);
     });
@@ -34,6 +32,12 @@ export class GameNetworkDelegate implements GameSceneDelegate {
 
     this.socket.on("next turn", (playerIndex: number) => {
       this.scene.nextTurn(playerIndex);
+    });
+
+    this.socket.on("check card", (action: Action, result: string | null) => {
+      if (typeof result == "string") return action;
+      // Valid action
+      else return; // Invalid action
     });
 
     this.socket.on("play card", (action: Action) => {

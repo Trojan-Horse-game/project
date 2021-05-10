@@ -4,7 +4,7 @@
     <div id="container">
       <logo title="Menu principal" />
       <router-link :to="{ name: 'Choix espèce', params: { game, player } }"
-        ><button id="lancer"
+        ><button id="lancer" @click="createGame()"
       /></router-link>
       <router-link :to="{ name: 'Rejoindre partie', params: { game, player } }"
         ><button id="rejoindre"
@@ -37,7 +37,6 @@ export default {
     this.player = new Player(this.username, this.species);
     this.game = new GameScene(this.player);
   },
-
   data: () => ({
     species: "",
     username: "",
@@ -51,11 +50,19 @@ export default {
     },
 
     species: function() {
-      this.player = new Player(this.username, this.species);
+        this.player = new Player(this.username, this.species);
     },
-
     player: function() {
-      this.game = new GameScene(this.player);
+        this.game = new GameScene(this.player);
+    }
+  }, 
+  sockets: {
+    async createGame() {
+      try {
+        this.$socket.emit("create game", (this.username));
+      } catch (err) {
+        console.log(err);
+      }
     }
   }
 };

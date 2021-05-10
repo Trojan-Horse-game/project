@@ -55,13 +55,11 @@ export default {
     },
     checkbox: false
   }),
-
   created: function() {
     if (localStorage.getItem("token") !== null) {
       this.$router.push("/menuPrincipal");
     }
   },
-
   methods: {
     submitForm() {
       const errors = [];
@@ -162,7 +160,7 @@ $content: #2f363c;
 
 #content .form_input {
   background-image: url("input.png");
-  background-repeat: round;
+  background-repeat: no-repeat;
   padding-left: 20px;
   font-size: 20px;
   background-size: contain;

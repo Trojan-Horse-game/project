@@ -75,12 +75,11 @@ function nextTurn(io: any, thisGame: Game) {
 
     let current = thisGame.currentPlayer;
     io.in(thisGame.roomId).emit("next turn", thisGame.currentPlayerIdx);
-    
+
     if (thisGame.currentPlayer.hand.length === 0) {
       thisGame.draw(3);
     }
     io.to(current.socketId).emit("hand", current.hand);
-
   } while (thisGame.currentPlayer.hand.length === 0);
   setTimeout(() => nextTurn(io, thisGame), 20000);
 }
@@ -92,7 +91,7 @@ module.exports = function (io: any) {
     }
 
     // When creating a new game
-    socket.on("create game", (pseudo: string, speciesIndx: number) => {
+    socket.on("create game", (pseudo: string) => {
       try {
         for (const game of games) {
           const count = howManyGames(pseudo, game);
@@ -104,10 +103,14 @@ module.exports = function (io: any) {
         const room = "ROOM-" + socket.id;
         socket.join(room);
         let game = new Game(room);
-        let player = new Player(pseudo, speciesIndx, socket.id);
-        game.addPlayer(player);
-        games.push(game);
-        socket.emit("game id", game.roomId);
+        socket.emit("available species", game.availableSpecies);
+
+        socket.on("choose species", (species: Species) => {
+          let player = new Player(pseudo, species, socket.id);
+          game.addPlayer(player);
+          games.push(game);
+          socket.emit("game id", game.roomId);
+        });
       } catch (err) {
         socket.emit("oops", err);
       }
@@ -171,6 +174,23 @@ module.exports = function (io: any) {
       }
     });
 
+    // When a user selects a card
+    socket.on("check card", (roomId: string, action: Action) => {
+      try {
+        let thisgame = findGame(roomId, games);
+        let player = findPlayer(socket.id, thisgame);
+
+        if (player !== thisgame.currentPlayer) {
+          throw "Not your turn !";
+        } else {
+          let result = thisgame.checkAction(action);
+          socket.to(socket.id).emit("check card", action, result);
+        }
+      } catch (err) {
+        socket.emit("oops", err);
+      }
+    });
+
     // when a user plays a card
     socket.on("play card", (roomId: string, action: Action) => {
       try {
@@ -178,8 +198,7 @@ module.exports = function (io: any) {
         let player = findPlayer(socket.id, thisgame);
 
         if (player !== thisgame.currentPlayer) {
-          let error = "Not your turn !";
-          socket.emit("oops", error);
+          throw "Not your turn !";
         } else {
           thisgame.checkAction(action);
           socket.to(roomId).emit("play card", action);

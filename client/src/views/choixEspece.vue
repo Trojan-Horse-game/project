@@ -106,7 +106,7 @@
               >
             </div>
 
-            <div class="attribut">
+            <div class="attribut" id="force">
               <span class="nom">Force</span>
               <span class="text"
                 ><p class="text-fill">{{ selected.strength }}</p></span
@@ -143,40 +143,40 @@ export default {
   data: () => ({
     species: [
       {
-        name: "sonyas",
-        origin: "Placeholder",
-        strength: "Placeholder",
-        description: "Placeholder"
+        name: "fawkes",
+        origin: "fakous",
+        strength: " Maîtrise du piratage et de l’aérospatial",
+        description: "Étant plus petit que la moyenne humaine, Fawkes compense par sa perspicacité et son intelligence. Il a les cheveux longs et il s’habille d’une façon classique avec un chapeau melon lui rappelant ses origines. une forme corporelle assez petite, long cheveux, un bonnet sur la tête, portant des vêtements classiques. Un humanoïde qui a l’air presque comme les autres."
       },
       {
         name: "hutex",
-        origin: "Placeholder",
-        strength: "Placeholder",
-        description: "Placeholder"
+        origin: "Hucex",
+        strength: "Manipulation du champ gravitationnel",
+        description: "Avec ses vêtements déchirés et son visage borgne, Hutex terrifie ses adversaires. Quelle que soit la situation, cet individu est plein de ressources et il sera prêt à y  faire face. Il est vétu d’un bandeau blanc, signifiant sa determination à atteindre ses objectifs. Ses vêtements déchirés et son œil gauche perdu sont exposés pour terrifier ses adversaires. Son sac à dos montre que cet individu est plein de ressources et toujours prêt à s'adapter à n’importe quelle situation qui se présente à lui. Et enfin son bandeau est toujours présenté comme blanc comme la neige pour montrer sa determination a atteindre ses objectifs."
       },
       {
-        name: "ulysse",
-        origin: "Placeholder",
-        strength: "Placeholder",
-        description: "Placeholder"
+        name: "robotec",
+        origin: "Dingjal Orlov",
+        strength: "Capacité de calculer 10 milliard d’équations par seconde",
+        description: "Robotec possède un corps métallique, plaquée or. Le bas de son corps semble deformé suite à un des combats lors de la révolution."
       },
       {
         name: "spectre",
-        origin: "Placeholder",
-        strength: "Placeholder",
-        description: "Placeholder"
+        origin: "Asgard",
+        strength: "L’épée forgée dans le volcan de la planète Asgard",
+        description: "Spectre possède des sourcils blancs et une longue barbe puisque jadis, ce fut un vieil homme. Vétu d’un linge blanc, il dégage une aura noire. Spectre a gardé sa forme humanoïde. Il porte dans son dos l’épée asgardienne et sur sa tête, tout comme la lampe de Pixar, il a une lumière aveuglante provenant de ses cornes."
       },
       {
         name: "totox",
-        origin: "Placeholder",
-        strength: "Placeholder",
-        description: "Placeholder"
+        origin: "unknown",
+        strength: "unknown",
+        description: "Totox a une apparence monstrueuse issue de la fusion d’un octopus et d’un humanoïde. Il agit et communique comme les humains mais il a des tentacules comme les octopus. On peut y apercevoir sur ces derniers des ongles remplies de venin. Il porte une longue cape noire imitant son héros d’enfance Dracula (son apparence monstrueuse est une fusion entre une octopus et une forme humanoïde. Ce dernier marche, s’habille,parle comme un être human, il porte une long cape noir et ils possedent meme des ongles sur la pointes de ses tentacules!)"
       },
       {
         name: "xmars",
-        origin: "Placeholder",
-        strength: "Placeholder",
-        description: "Placeholder"
+        origin: "mars",
+        strength: "intimidation, ruse, tromperie",
+        description: "Xmars a une apparence trompeuse. Il possède une forme humanoïde dissimulée sous sa carapace de pierre. Celle-ci lui donnant une taille ainsi qu’une force démesurées ce qui intimide tous ses adversaires. (son apparence est trompeuse. Il a une forme humanoïde cachée sous un bloc de pierre, ceci lui donne une fausse masse corporelle et une taille exagérée mais toute aussi efficace pour intimider ses adversaires.)"
       }
     ],
     count: 0,
@@ -213,6 +213,27 @@ export default {
     select(index: number) {
       this.count = index;
     }
+  },
+  created: function() {
+    if (localStorage.getItem("token") === null) {
+      this.$router.push("/");
+    }
+  },
+  mounted () {
+    this.$socket.subscribe("available species", availableSpecies => {
+      for(const specie of this.species){
+        if (!(specie.name in availableSpecies))
+          this.lockedChoices.push(specie.name)
+      }
+    })
+  },
+  sockets:{
+    lockChoice() {
+      this.lockedSpecies = this.selected.name;
+      this.lockedChoices.push(this.selected.name);
+      this.$socket.emit("choose specie", this.selected.name);
+      this.$router.push("/Jeu");
+    },
   }
 };
 </script>
@@ -320,17 +341,19 @@ export default {
 .text {
   background-image: url("../../public/Design/test_big.png");
   color: #bbbbbb;
-  width: 100%;
-  height: 100%;
+  width: inherit;
+  height: inherit;
   background-position: center;
   flex-grow: 1;
   margin: 0px 10px;
   text-align: center;
   font-size: 35px;
+  overflow: scroll;
 }
 
-.text .text-fill {
+.text .text-fill, #force .text .text-fill {
   width: 90%;
+  height: inherit;
   margin: auto;
   text-align: center;
 }
@@ -339,7 +362,8 @@ export default {
   background-image: url("../../public/Design/description_test.png");
   color: #bbbbbb;
   width: 98%;
-  height: 100%;
+  height: 90%;
+  font-size:15px;
   background-position: top;
   background-size: contain;
   margin: 0px 10px;

@@ -218,12 +218,11 @@ import axios from "axios";
 export default {
   components: {},
   data: () => ({
-    apiUrl: "http://localhost:3000",
+    apiUrl: "https://api.trojanhorse.cc",
     dialog: false,
     tab: null,
     newFriend: "",
     showFriendInput: false,
-    mailPattern: /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/,
     errors: [],
     friends: [],
     friendRequests: [],

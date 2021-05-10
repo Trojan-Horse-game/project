@@ -38,6 +38,11 @@
 <script>
 export default {
   components: {},
+  created: function() {
+    if (localStorage.getItem("token") !== null) {
+      this.$router.push("/menuPrincipal");
+    }
+  },
   data: () => ({
     validInput: false,
     showError: false,
@@ -46,12 +51,6 @@ export default {
       password: ""
     }
   }),
-
-  created: function() {
-    if (localStorage.getItem("token") === null) {
-      this.$router.push("/");
-    }
-  },
 
   methods: {
     submitForm() {

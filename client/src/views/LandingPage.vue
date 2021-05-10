@@ -26,8 +26,13 @@
 <script lang="ts">
 export default {
   created: function() {
-    if (localStorage.getItem("token") === null) {
-      this.$router.push("/");
+    if (localStorage.getItem("token") !== null) {
+      this.$router.push("/menuPrincipal");
+    }
+  },
+  sockets:{
+    connect: function () {
+      console.log('socket to notification channel connected')
     }
   }
 };
@@ -180,6 +185,10 @@ export default {
 
   #container {
     padding-right: 0;
+  }
+
+  #container{
+    padding-right:0;
   }
 }
 </style>
