@@ -1,8 +1,11 @@
 import { GameScene, Player } from "./GameScene";
 import { ResponsiveScene } from "./ResponsiveScene";
 import "phaser";
+import { GameNetworkDelegate } from "./GameNetworkDelegate";
 
 const scene = new GameScene(new Player("Youness", "xmars_tete"));
+const delegate = new GameNetworkDelegate();
+scene.delegate = delegate;
 const config: Phaser.Types.Core.GameConfig = {
   type: Phaser.WEBGL,
   title: "Les Cavaliers de Troie",

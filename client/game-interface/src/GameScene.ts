@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-use-before-define */
 import "phaser";
 import { OpponentSlot, SlotLayout } from "./OpponentSlot";
 import { PlayerSlot } from "./PlayerSlot";
@@ -107,6 +108,15 @@ export class GameScene extends ResponsiveScene {
         this.deck.distributeCards(cards);
       }
     };
+
+    this.updatePlayers(
+      [
+        new Player("Foo", "hutex_tete"),
+        new Player("Bar", "hutex_tete"),
+        new Player("Baz", "totox_tete")
+      ],
+      0
+    );
 
     this.actionDropZone = new ActionDropZone(
       this,

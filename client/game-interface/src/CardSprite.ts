@@ -59,7 +59,7 @@ export class CardSprite extends Phaser.GameObjects.Container {
       if (!(this.scene instanceof GameScene)) {
         return;
       }
-
+      /*
       this.scene.tweens.add({
         targets: this.scene.deck,
         delay: 0,
@@ -68,6 +68,7 @@ export class CardSprite extends Phaser.GameObjects.Container {
         ease: "power4"
       });
 
+      
       this.scene.tweens.add({
         targets: this.scene.actionDropZone,
         delay: 0,
@@ -76,6 +77,7 @@ export class CardSprite extends Phaser.GameObjects.Container {
         duration: 1000,
         ease: "power4"
       });
+      */
     };
 
     this.eventFSM.dragEnd = () => {
@@ -86,7 +88,7 @@ export class CardSprite extends Phaser.GameObjects.Container {
       if (!(this.scene instanceof GameScene)) {
         return;
       }
-
+      /*
       this.scene.tweens.add({
         targets: this.scene.deck,
         delay: 300,
@@ -103,6 +105,7 @@ export class CardSprite extends Phaser.GameObjects.Container {
         duration: 1000,
         ease: "power4"
       });
+      */
     };
 
     this.eventFSM.pointerUp = () => {
@@ -210,6 +213,15 @@ export class CardSprite extends Phaser.GameObjects.Container {
             duration: 600,
             ease: "power4"
           });
+        } else if (
+          target instanceof Generator &&
+          this.parentContainer instanceof PlayerSlot
+        ) {
+          scene.delegate.didDropCard(
+            this.parentContainer.cards.indexOf(this),
+            scene.playerIndex,
+            target.index
+          );
         }
       }
     );

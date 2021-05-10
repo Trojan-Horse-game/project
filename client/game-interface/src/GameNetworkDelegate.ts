@@ -69,13 +69,9 @@ export class GameNetworkDelegate implements GameSceneDelegate {
     });
   }
 
-  didDropCard(
-    card: Card,
-    cardIndex: number,
-    playerIndex: number,
-    generatorIndex: number
-  ) {
+  didDropCard(cardIndex: number, playerIndex: number, generatorIndex: number) {
     try {
+      console.log("didDropCard", cardIndex, playerIndex, generatorIndex);
       const action = new Action(cardIndex);
       action.addSlotTarget(generatorIndex);
       action.addTarget(playerIndex);

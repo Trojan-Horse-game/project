@@ -32,7 +32,8 @@ export class OpponentSlot extends Phaser.GameObjects.Container {
         scene,
         0.428 * playerCircleRadius,
         GeneratorKind[generatorKind],
-        false
+        false,
+        i
       );
       generator.setGeneratorState(GeneratorState.Enabled);
       this.generators.set(generatorKind, generator);

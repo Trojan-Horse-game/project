@@ -1,4 +1,3 @@
-import { Card } from "./Card";
 import { GameScene } from "./GameScene";
 
 export interface GameSceneDelegate {
@@ -8,7 +7,6 @@ export interface GameSceneDelegate {
   chooseSpecie(specie: Species): void;
   launchGame(roomId: string): void;
   didDropCard(
-    card: Card,
     cardIndex: number,
     playerIndex: number,
     generatorIdx: number
