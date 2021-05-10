@@ -3,9 +3,9 @@
     <div
       id="background-image"
       :class="{
-        fawkes: selected.name == 'fawkes',
+        fawkes: selected.name == 'sonyas',
         hutex: selected.name == 'hutex',
-        robot: selected.name == 'robot',
+        robot: selected.name == 'ulysse',
         spectre: selected.name == 'spectre',
         totox: selected.name == 'totox',
         xmars: selected.name == 'xmars'
@@ -20,7 +20,7 @@
       <div id="content">
         <div id="especes">
           <span
-            :class="[{ active: selected.name == 'fawkes' }, 'cercle']"
+            :class="[{ active: selected.name == 'sonyas' }, 'cercle']"
             id="fawkes"
             @click="select(0)"
           >
@@ -47,7 +47,7 @@
             <img src="../../public/Design/hutex_locked.png" alt="hutex" v-else
           /></span>
           <span
-            :class="[{ active: selected.name == 'robot' }, 'cercle']"
+            :class="[{ active: selected.name == 'ulysse' }, 'cercle']"
             id="robot"
             @click="select(2)"
             ><img
@@ -143,7 +143,7 @@ export default {
   data: () => ({
     species: [
       {
-        name: "fawkes",
+        name: "sonyas",
         origin: "Placeholder",
         strength: "Placeholder",
         description: "Placeholder"
@@ -155,7 +155,7 @@ export default {
         description: "Placeholder"
       },
       {
-        name: "robot",
+        name: "ulysse",
         origin: "Placeholder",
         strength: "Placeholder",
         description: "Placeholder"
@@ -184,6 +184,8 @@ export default {
     lockedChoices: []
   }),
 
+  props: ["game", "player"],
+
   computed: {
     selected: function() {
       return this.species[this.count];
@@ -192,15 +194,7 @@ export default {
   methods: {
     lockChoice() {
       this.lockedSpecies = this.selected.name;
-      this.lockedChoices.push(this.selected.name);
       this.$router.push("/Jeu");
-    },
-
-    changeChoice() {
-      this.lockedChoices = this.lockedChoices.filter(
-        speciesName => speciesName != this.lockedSpecies
-      );
-      this.lockedSpecies = null;
     },
 
     isLocked(speciesName: string) {
