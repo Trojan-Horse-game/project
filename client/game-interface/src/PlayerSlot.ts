@@ -21,7 +21,7 @@ export class PlayerSlot extends Phaser.GameObjects.Container {
     for (const offset of offsets) {
       const card = new CardSprite(
         scene,
-        new GeneratorCard(GeneratorCardKind.Virus, GeneratorKind.Joker),
+        new GeneratorCard(GeneratorCardKind.Medicine, GeneratorKind.Joker),
         width,
         height
       );

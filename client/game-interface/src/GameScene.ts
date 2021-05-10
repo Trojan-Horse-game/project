@@ -245,7 +245,8 @@ export class GameScene extends ResponsiveScene {
         55 * window.devicePixelRatio,
         this.slotLayoutForOpponent(opponentIndex),
         opponent.name,
-        opponent.specie
+        opponent.specie,
+        index
       );
 
       this.opponentsSlots.push(opponentSlot);

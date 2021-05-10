@@ -73,6 +73,7 @@ export class GameNetworkDelegate implements GameSceneDelegate {
     try {
       console.log("didDropCard", cardIndex, playerIndex, generatorIndex);
       const action = new Action(cardIndex);
+      action.addTarget(playerIndex);
       action.addSlotTarget(generatorIndex);
       action.addTarget(playerIndex);
       this.socket.emit("play card", this.room, action);

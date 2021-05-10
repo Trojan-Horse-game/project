@@ -6,6 +6,7 @@ import { MouseEventFSM } from "./MouseEventFSM";
 import { CardDeck } from "./CardDeck";
 import { GameScene } from "./GameScene";
 import { ActionDropZone } from "./ActionDropZone";
+import { OpponentSlot } from "./OpponentSlot";
 
 export class CardSprite extends Phaser.GameObjects.Container {
   constructor(
@@ -217,9 +218,19 @@ export class CardSprite extends Phaser.GameObjects.Container {
           target instanceof Generator &&
           this.parentContainer instanceof PlayerSlot
         ) {
+          let targetPlayerIndex;
+          if (target.parentContainer instanceof PlayerSlot) {
+            targetPlayerIndex = scene.playerIndex;
+          } else if (
+            target.parentContainer.parentContainer.parentContainer instanceof
+            OpponentSlot
+          ) {
+            targetPlayerIndex =
+              target.parentContainer.parentContainer.parentContainer.index;
+          }
           scene.delegate.didDropCard(
             this.parentContainer.cards.indexOf(this),
-            scene.playerIndex,
+            targetPlayerIndex,
             target.index
           );
         }
