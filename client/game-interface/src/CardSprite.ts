@@ -151,8 +151,8 @@ export class CardSprite extends Phaser.GameObjects.Container {
     this.on("dragstart", (pointer: Phaser.Input.Pointer) => {
       this.startX = this.x;
       this.startY = this.y;
-      this.startWidth = this.displayWidth;
-      this.startHeight = this.displayHeight;
+      this.startWidth = this.sprite.displayWidth;
+      this.startHeight = this.sprite.displayHeight;
     });
 
     this.on(
@@ -164,7 +164,6 @@ export class CardSprite extends Phaser.GameObjects.Container {
         if (!(scene instanceof GameScene)) {
           return;
         }
-        console.log("Drop");
         const playerSlot = scene.playerSlot;
         if (target instanceof CardDeck) {
           const discarded: number[] = [];
@@ -189,7 +188,6 @@ export class CardSprite extends Phaser.GameObjects.Container {
           const globalX = this.x + this.parentContainer.x;
           const globalY = this.y + this.parentContainer.y;
           this.parentContainer.remove(this);
-          // this.scene.add.existing(this);
           this.setPosition(globalX, globalY);
           this.removeAllListeners();
           this.selected = false;
@@ -205,8 +203,67 @@ export class CardSprite extends Phaser.GameObjects.Container {
           });
           this.scene.tweens.add({
             targets: target.text,
-            delay: 500,
+            delay: 100,
             alpha: 0,
+            duration: 600,
+            ease: "power4"
+          });
+          const baseScale = target.circle.scale;
+          this.scene.tweens.add({
+            targets: target.circle,
+            scale: baseScale * 1.1,
+            duration: 500,
+            ease: "power4"
+          });
+
+          this.scene.tweens.add({
+            targets: target.circle,
+            angle: 359.999,
+            repeat: 100,
+            duration: 1000
+          });
+
+          this.scene.tweens.add({
+            targets: target.circle,
+            scale: baseScale * 1.3,
+            delay: 100,
+            duration: 1000
+          });
+
+          this.scene.tweens
+            .add({
+              targets: target.circle,
+              alpha: 0,
+              scale: 0,
+              delay: 1200,
+              duration: 600,
+              ease: "power4"
+            })
+            .on("complete", () => {
+              const newPosition = scene.deck.getLocalPoint(
+                this.x + this.parentContainer.x,
+                this.y + this.parentContainer.y
+              );
+
+              target.remove(this);
+              scene.deck.add(this);
+              scene.deck.sendToBack(this);
+              this.setPosition(newPosition.x, newPosition.y);
+            });
+          this.scene.tweens.add({
+            targets: this,
+            x: 0,
+            y: this.startHeight / 2,
+            scale: 1,
+            delay: 1800,
+            duration: 500,
+            ease: "power4"
+          });
+
+          this.scene.tweens.add({
+            targets: scene.deck,
+            delay: 2100,
+            x: scene.deck.x - 100 * window.devicePixelRatio,
             duration: 600,
             ease: "power4"
           });
