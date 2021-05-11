@@ -47,7 +47,7 @@ export default {
     }
   },
   data: () => ({
-    game_id: "",
+    gameId: "",
     species: "",
     username: "",
     player: null,
@@ -68,8 +68,8 @@ export default {
   // }, 
   sockets: {
     gameId : function(gameId){
-      this.game_id = gameId;
-      console.log(this.game_id)
+      this.gameId = gameId;
+      console.log(this.gameId)
     },
     oops : function(error) {
       alert(error);
