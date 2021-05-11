@@ -201,7 +201,7 @@ export default {
     lockChoice() {
       this.lockedSpecies = this.selected.name;
       this.lockedChoices.push(this.selected.name);
-      this.$socket.emit("choose specie", this.selected.name);
+      this.$socket.emit("choose species", this.selected.name);
       this.$router.push("/Jeu");
     },
 
