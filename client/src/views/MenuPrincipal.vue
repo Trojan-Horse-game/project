@@ -56,15 +56,15 @@ export default {
   //       this.game = new GameScene(this.player);
   //   }
   // }, 
-  // sockets: {
-  //   async createGame() {
-  //     try {
-  //       this.$socket.emit("create game", (this.username));
-  //     } catch (err) {
-  //       console.log(err);
-  //     }
-  //   }
-  // }
+  sockets: {
+    async createGame() {
+      try {
+        this.$socket.emit("create game", (this.username));
+      } catch (err) {
+        console.log(err);
+      }
+    }
+  }
 };
 </script>
 <style scoped>

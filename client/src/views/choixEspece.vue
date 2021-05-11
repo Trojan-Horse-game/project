@@ -219,22 +219,22 @@ export default {
       this.$router.push("/");
     }
   },
-  // mounted () {
-  //   this.$socket.subscribe("available species", availableSpecies => {
-  //     for(const specie of this.species){
-  //       if (!(specie.name in availableSpecies))
-  //         this.lockedChoices.push(specie.name)
-  //     }
-  //   })
-  // },
-  // sockets:{
-  //   lockChoice() {
-  //     this.lockedSpecies = this.selected.name;
-  //     this.lockedChoices.push(this.selected.name);
-  //     this.$socket.emit("choose specie", this.selected.name);
-  //     this.$router.push("/Jeu");
-  //   },
-  // }
+  mounted () {
+    this.$socket.subscribe("available species", availableSpecies => {
+      for(const specie of this.species){
+        if (!(specie.name in availableSpecies))
+          this.lockedChoices.push(specie.name)
+      }
+    })
+  },
+  sockets:{
+    lockChoice() {
+      this.lockedSpecies = this.selected.name;
+      this.lockedChoices.push(this.selected.name);
+      this.$socket.emit("choose specie", this.selected.name);
+      this.$router.push("/Jeu");
+    },
+  }
 };
 </script>
 

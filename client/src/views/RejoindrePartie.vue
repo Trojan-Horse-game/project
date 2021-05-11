@@ -34,20 +34,20 @@ export default {
   data: () => ({
     id: "",
   }),
-  // sockets: {
-  //   async joinGame() {
-  //     try {
-  //       if(this.id.length > 0){
-  //         this.$sockets.emit("join game", localStorage.getItem("username"), this.id);
-  //       }
-  //       else{
-  //         throw "Id de la partie requis";
-  //       }
-  //     } catch (err) {
-  //       alert(err);
-  //     }
-  //   }
-  // }
+  sockets: {
+    async joinGame() {
+      try {
+        if(this.id.length > 0){
+          this.$sockets.emit("join game", localStorage.getItem("username"), this.id);
+        }
+        else{
+          throw "Id de la partie requis";
+        }
+      } catch (err) {
+        alert(err);
+      }
+    }
+  }
 };
 </script>
 
