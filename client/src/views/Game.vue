@@ -6,7 +6,7 @@
 
 <script lang="ts">
 import Phaser from "phaser";
-import { Specie } from "../../game-interface/src/GameNetworkDelegate";
+import { Action, GeneratorSlot, NetworkCard, Specie } from "../../game-interface/src/GameNetworkDelegate";
 import { GameScene, Player } from "../../game-interface/src/GameScene";
 import { ResponsiveScene } from "../../game-interface/src/ResponsiveScene";
 
@@ -26,7 +26,7 @@ export default {
         height: window.innerHeight * window.devicePixelRatio,
         zoom: 1 / window.devicePixelRatio
       },
-      scene: [new GameScene(new Player("Youness", Specie.Spectre))]
+      scene: [new GameScene(new Player(localStorage.getItem("username"), Specie.Spectre))]
     }
   }),
 
@@ -48,40 +48,80 @@ export default {
       }
     });
   },
-  
+  methods : {
+    didDropCard(cardIndex: number, playerIndex: number, generatorIndex: number) {
+      try {
+        console.log("didDropCard", cardIndex, playerIndex, generatorIndex);
+        const action = new Action(cardIndex);
+        action.addTarget(playerIndex);
+        action.addSlotTarget(generatorIndex);
+        action.addTarget(playerIndex);
+        this.$socket.emit("play card", this.room, action);
+      } catch (err) {
+        console.error(err);
+      }
+    },
+    didDiscard(cardsIndices: number[]) {
+      console.log("Did discard", cardsIndices);
+      try {
+        this.$socket.emit("discard", this.room, cardsIndices);
+      } catch (err) {
+        console.error(err);
+      }
+    },
+    launchGame(roomId: string) {
+      try {
+        this.$socket.emit("launch game", this.room);
+      } catch (err) {
+        console.error(err);
+      }
+    },
+
+  },
   sockets : {
-    gameId : function(gameId) {
+    gameId : function(gameId: string) {
       console.log(gameId)
     },
-    joinGame : function(pseudo,species) {
-      console.log(pseudo,species)
+    joinGame : function(pseudo: string,specie: Specie) {
+      console.log("joined the game :",pseudo, specie)
+      const player = new Player(pseudo, specie);
+      this.scene.appendPlayer(player);
     },
-    players : function(players) {
-      console.log(players)
-      // const player = new Player(pseudo, species);
-      // this.scene.appendPlayer(player);
+    players : function(pseudo: string[], species: Specie[], playerIndex: number) {
+      const players: Player[] = [];
+        for (let i = 0; i < pseudo.length; i++) {
+          console.log("player :", playerIndex, pseudo[i], species[i])
+          players.push(new Player(pseudo[i], species[i]));
+        }
+        this.scene.updatePlayers(players, -1);
     },
-    hand : function(cards) {
-      console.log(cards)
+    hand : function(hand: NetworkCard[], kind: string[]) {
+      console.log("hand",hand,kind)
     },
-    base : function(generators) {
-      console.log(generators)
+    base : function(generators: GeneratorSlot[], idx: number) {
+      console.log("base",generators)
     },
-    checkCard : function(card) {
-      console.log(card)
+    checkCard : function(action: Action, result: string | null) {
+      if (typeof result == "string") {
+        console.log("valid action",action, result)
+      }
+      else console.log("invalid action", action)
     },
-    playCard : function(card) {
-      console.log(card)
+    playCard : function(action: Action) {
+      console.log("play card", action)
+      const opponent = action.target[0];
+      const slotTarget = action.slotTarget[0];
     },
-    nextTurn : function(playerIdx) {
-      console.log(playerIdx)
-      // this.scene.nextTurn(playerIdx);
+    nextTurn : function(playerIdx: number) {
+      console.log("next turn", playerIdx)
+      this.scene.nextTurn(playerIdx);
     },
-    discard : function(indexDiscard, cards) {
-      console.log(indexDiscard, cards)
+    discard : function(indexDiscard: number, cards: NetworkCard[]) {
+      console.log("discard",indexDiscard, cards)
     },
     leaveGame : function(playerIdx){
-      console.log(playerIdx)
+      console.log("left the game",playerIdx)
+      this.scene.removePlayer(playerIdx);
     },
     endGame : function(winner) {
       console.log(winner)

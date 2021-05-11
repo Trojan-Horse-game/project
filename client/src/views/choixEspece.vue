@@ -3,9 +3,9 @@
     <div
       id="background-image"
       :class="{
-        fawkes: selected.name == 'sonyas',
+        fawkes: selected.name == 'fawkes',
         hutex: selected.name == 'hutex',
-        robot: selected.name == 'ulysse',
+        robot: selected.name == 'robotec',
         spectre: selected.name == 'spectre',
         totox: selected.name == 'totox',
         xmars: selected.name == 'xmars'
@@ -20,7 +20,7 @@
       <div id="content">
         <div id="especes">
           <span
-            :class="[{ active: selected.name == 'sonyas' }, 'cercle']"
+            :class="[{ active: selected.name == 'fawkes' }, 'cercle']"
             id="fawkes"
             @click="select(0)"
           >
@@ -47,7 +47,7 @@
             <img src="../../public/Design/hutex_locked.png" alt="hutex" v-else
           /></span>
           <span
-            :class="[{ active: selected.name == 'ulysse' }, 'cercle']"
+            :class="[{ active: selected.name == 'robotec' }, 'cercle']"
             id="robot"
             @click="select(2)"
             ><img
@@ -101,22 +101,21 @@
 
             <div class="attribut">
               <span class="nom">Origine</span>
-              <span class="text"
-                ><p class="text-fill">{{ selected.origin }}</p></span
+              <div class="text"
+                ><p class="text-fill">{{ selected.origin }}</p></div
               >
             </div>
 
-            <div class="attribut" id="force">
-              <span class="nom">Force</span>
-              <span class="text"
-                ><p class="text-fill">{{ selected.strength }}</p></span
-              >
+            <div class="attribut">
+              <p class="nom">Force</p>
+              <div class="text"
+                ><p class="text-fill" id="force"> {{ selected.strength }}</p></div>
             </div>
 
             <div class="attribut" id="description">
               <span class="nom">Description</span>
-              <span class="text"
-                ><p class="text-fill">{{ selected.description }}</p></span
+              <div class="text"
+                ><p class="text-fill">{{ selected.description }}</p></div
               >
             </div>
           </div>
@@ -223,9 +222,9 @@ export default {
     }
   },
   created: function() {
-    if (localStorage.getItem("token") === null) {
-      this.$router.push("/");
-    }
+    // if (localStorage.getItem("token") === null) {
+    //   this.$router.push("/");
+    // }
   },
   sockets:{
     availableSpecies : function(availableSpecies) {
@@ -246,6 +245,12 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+$content: #2f363c;
+
+#background-image {
+  height: 100%;
+}
+
 #background-image.fawkes {
   background-image: url("../../public/Design/fawkes.gif");
 }
@@ -346,11 +351,12 @@ export default {
 }
 
 .text {
-  background-image: url("../../public/Design/test_big.png");
-  color: #bbbbbb;
-  width: inherit;
-  height: inherit;
+  background-image: url("input.png");
+  color: $content;
+  width: 100%;
+  height: 100%;
   background-position: center;
+  background-size: contain;
   flex-grow: 1;
   margin: 0px 10px;
   text-align: center;
@@ -360,20 +366,23 @@ export default {
 
 .text .text-fill, #force .text .text-fill {
   width: 90%;
-  height: inherit;
+  height: 80%;
   margin: auto;
   text-align: center;
+  overflow-y: scroll;
 }
 
 #description .text {
-  background-image: url("../../public/Design/description_test.png");
-  color: #bbbbbb;
-  width: 98%;
-  height: 90%;
+  background-image: url("input.png");
+  color:$content;
+  width: 100%;
+  height: 100%;
   font-size:15px;
   background-position: top;
-  background-size: contain;
+  background-size: cover;
+  align-self: center;
   margin: 0px 10px;
+  padding: 3%;
 }
 
 .cercle:not(.lock) {
@@ -466,6 +475,10 @@ export default {
   top: 0;
   justify-content: center;
   display: flex;
+}
+
+#force {
+  font-size: 15px;
 }
 
 #content input {

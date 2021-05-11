@@ -24,7 +24,7 @@
 
 <script>
 import Logo from "../components/Logo";
-// import { GameScene, Player } from "../../game-interface/src/GameScene";
+import { GameScene, Player } from "../../game-interface/src/GameScene";
 
 export default {
   components: { Logo: Logo },
@@ -32,10 +32,9 @@ export default {
     if (localStorage.getItem("token") === null) {
       this.$router.push("/");
     }
-
     this.username = localStorage.getItem("username");
-    // this.player = new Player(this.username, this.species);
-    // this.game = new GameScene(this.player);
+    this.player = new Player(this.username, this.species);
+    this.game = new GameScene(this.player);
   },
   methods:{
     async createGame() {
@@ -53,18 +52,18 @@ export default {
     player: null,
     game: null
   }),
-  // watch: {
-  //   username: function() {
-  //     this.player = new Player(this.username, this.species);
-  //   },
+  watch: {
+    username: function() {
+      this.player = new Player(this.username, this.species);
+    },
 
-  //   species: function() {
-  //       this.player = new Player(this.username, this.species);
-  //   },
-  //   player: function() {
-  //       this.game = new GameScene(this.player);
-  //   }
-  // }, 
+    species: function() {
+        this.player = new Player(this.username, this.species);
+    },
+    player: function() {
+        this.game = new GameScene(this.player);
+    }
+  }, 
   sockets: {
     gameId : function(gameId){
       this.gameId = gameId;
