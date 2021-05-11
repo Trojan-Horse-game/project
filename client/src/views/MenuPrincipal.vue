@@ -53,7 +53,6 @@ export default {
     player: null,
     game: null
   }),
-
   // watch: {
   //   username: function() {
   //     this.player = new Player(this.username, this.species);
