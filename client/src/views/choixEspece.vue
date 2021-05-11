@@ -244,7 +244,7 @@ export default {
       this.$router.push("/menuPrincipal");
     },
     restricted : function() {
-      this.$router.push("/mneuPrincipal");
+      this.$router.push("/menuPrincipal");
     },
     inGame : function() {
       this.$router.push("/Jeu");
