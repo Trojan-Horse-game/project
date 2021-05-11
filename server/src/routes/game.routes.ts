@@ -126,8 +126,8 @@ module.exports = function (io: any) {
         }
         const room = "ROOM-" + socket.id;
         socket.join(room);
-        socket.emit("gameId", game.roomId);
         let game = new Game(room);
+        socket.emit("gameId", game.roomId);
         socket.emit("availableSpecies", game.availableSpecies);
 
         socket.on("choose species", (species: Species) => {
