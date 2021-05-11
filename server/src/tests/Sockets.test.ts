@@ -52,6 +52,7 @@ describe("Back-front communication testing", () => {
     serverSocket.emit("chat message", "test username", "test message");
   });
 
+/*
   test("create game should work", (done) => {
     serverSocket.on("create game", (pseudo: string, species: Species) => {
       expect(pseudo).toBe("test username");
@@ -85,4 +86,5 @@ describe("Back-front communication testing", () => {
     });
     serverSocket.emit("oops", "ERROR: Could not find game !");
   });
+  */
 });

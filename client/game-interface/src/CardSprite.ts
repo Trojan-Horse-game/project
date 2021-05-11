@@ -6,6 +6,7 @@ import { MouseEventFSM } from "./MouseEventFSM";
 import { CardDeck } from "./CardDeck";
 import { GameScene } from "./GameScene";
 import { ActionDropZone } from "./ActionDropZone";
+import { OpponentSlot } from "./OpponentSlot";
 
 export class CardSprite extends Phaser.GameObjects.Container {
   constructor(
@@ -59,7 +60,7 @@ export class CardSprite extends Phaser.GameObjects.Container {
       if (!(this.scene instanceof GameScene)) {
         return;
       }
-
+      /*
       this.scene.tweens.add({
         targets: this.scene.deck,
         delay: 0,
@@ -68,6 +69,7 @@ export class CardSprite extends Phaser.GameObjects.Container {
         ease: "power4"
       });
 
+      
       this.scene.tweens.add({
         targets: this.scene.actionDropZone,
         delay: 0,
@@ -76,6 +78,7 @@ export class CardSprite extends Phaser.GameObjects.Container {
         duration: 1000,
         ease: "power4"
       });
+      */
     };
 
     this.eventFSM.dragEnd = () => {
@@ -86,7 +89,7 @@ export class CardSprite extends Phaser.GameObjects.Container {
       if (!(this.scene instanceof GameScene)) {
         return;
       }
-
+      /*
       this.scene.tweens.add({
         targets: this.scene.deck,
         delay: 300,
@@ -103,6 +106,7 @@ export class CardSprite extends Phaser.GameObjects.Container {
         duration: 1000,
         ease: "power4"
       });
+      */
     };
 
     this.eventFSM.pointerUp = () => {
@@ -267,6 +271,25 @@ export class CardSprite extends Phaser.GameObjects.Container {
             duration: 600,
             ease: "power4"
           });
+        } else if (
+          target instanceof Generator &&
+          this.parentContainer instanceof PlayerSlot
+        ) {
+          let targetPlayerIndex;
+          if (target.parentContainer instanceof PlayerSlot) {
+            targetPlayerIndex = scene.playerIndex;
+          } else if (
+            target.parentContainer.parentContainer.parentContainer instanceof
+            OpponentSlot
+          ) {
+            targetPlayerIndex =
+              target.parentContainer.parentContainer.parentContainer.index;
+          }
+          scene.delegate.didDropCard(
+            this.parentContainer.cards.indexOf(this),
+            targetPlayerIndex,
+            target.index
+          );
         }
       }
     );

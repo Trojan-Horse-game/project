@@ -1,7 +1,11 @@
 // Required External Modules and Interfaces
 import { Socket } from "socket.io";
-import { Action } from "src/gamelogic/Action";
-import { Card } from "src/gamelogic/Card";
+import { Action } from "../gamelogic/Action";
+import { Card } from "../gamelogic/Card";
+import { FirewallCard } from "../gamelogic/FirewallCard";
+import { GeneratorCard } from "../gamelogic/GeneratorCard";
+import { SpecialCard } from "../gamelogic/SpecialCard";
+import { VirusCard } from "../gamelogic/VirusCard";
 import { Game } from "../gamelogic/Game";
 import { Player, Species } from "../gamelogic/Players";
 
@@ -46,21 +50,21 @@ function forfeit(io: any, room: string, playerSocket: Socket) {
 
     if (idx == thisgame.currentPlayerIdx) {
       thisgame.resign();
-      playerSocket.to(room).emit("leaveGame", idx);
+      playerSocket.to(room).emit("leave game", idx);
       playerSocket.leave(room);
 
       if (thisgame.inProgress) {
         nextTurn(io, thisgame);
       } else {
-        io.in(room).emit("endGame", thisgame.winnerIdx);
+        io.in(room).emit("end game", thisgame.winnerIdx);
       }
     } else {
       thisgame.resign(idx);
-      playerSocket.to(room).emit("leaveGame", idx);
+      playerSocket.to(room).emit("leave game", idx);
       playerSocket.leave(room);
 
       if (!thisgame.inProgress) {
-        io.in(room).emit("endGame", thisgame.winnerIdx);
+        io.in(room).emit("end game", thisgame.winnerIdx);
       }
     }
   } catch (err) {
@@ -74,20 +78,40 @@ function nextTurn(io: any, thisGame: Game) {
     thisGame.endTurn();
 
     let current = thisGame.currentPlayer;
-    io.in(thisGame.roomId).emit("nextTurn", thisGame.currentPlayerIdx);
+    io.in(thisGame.roomId).emit("next turn", thisGame.currentPlayerIdx);
 
     if (thisGame.currentPlayer.hand.length === 0) {
       thisGame.draw(3);
     }
-    io.to(current.socketId).emit("hand", current.hand);
+    io.to(current.socketId).emit(
+      "hand",
+      current.hand,
+      cardsKinds(current.hand)
+    );
   } while (thisGame.currentPlayer.hand.length === 0);
   setTimeout(() => nextTurn(io, thisGame), 20000);
+}
+
+function cardsKinds(cards: Card[]): string[] {
+  return cards.map((value) => {
+    if (value instanceof FirewallCard) {
+      return "firewall";
+    } else if (value instanceof GeneratorCard) {
+      return "generator";
+    } else if (value instanceof VirusCard) {
+      return "virus";
+    } else if (value instanceof SpecialCard) {
+      return "action";
+    } else {
+      throw "Unexpected type";
+    }
+  });
 }
 
 module.exports = function (io: any) {
   io.on("connection", (socket: Socket) => {
     if (socket.rooms.size > 1) {
-      socket.emit("closeTab");
+      socket.emit("close tab");
     }
 
     // When creating a new game
@@ -96,20 +120,20 @@ module.exports = function (io: any) {
         for (const game of games) {
           const count = howManyGames(pseudo, game);
           if (count > 0) {
-            socket.emit("closeTab");
+            socket.emit("close tab");
             throw "Already in a game !";
           }
         }
         const room = "ROOM-" + socket.id;
         socket.join(room);
-        socket.emit("gameId", game.roomId);
         let game = new Game(room);
-        socket.emit("availableSpecies", game.availableSpecies);
+        socket.emit("available species", game.availableSpecies);
 
         socket.on("choose species", (species: Species) => {
           let player = new Player(pseudo, species, socket.id);
           game.addPlayer(player);
           games.push(game);
+          socket.emit("game id", game.roomId);
         });
       } catch (err) {
         socket.emit("oops", err);
@@ -125,24 +149,33 @@ module.exports = function (io: any) {
         }
         const count = howManyGames(pseudo, thisgame);
         if (count > 0) {
-          socket.emit("closeTab");
+          socket.emit("close tab");
           throw "Already in a game !";
         }
 
-        socket.emit("availableSpecies", thisgame.availableSpecies);
+        socket.emit("available species", thisgame.availableSpecies);
 
         socket.on("choose species", (species: Species) => {
           let player = new Player(pseudo, species, socket.id);
           thisgame.addPlayer(player);
           socket.join(thisgame.roomId);
-          socket.emit("gameId", thisgame.roomId);
+          socket.emit("game id", thisgame.roomId);
 
-          for (let tmp of thisgame.players) {
-            socket.emit("players", tmp.pseudo, tmp.species);
-          }
+          socket.emit(
+            "players",
+            thisgame.players.map((value) => {
+              return value.pseudo;
+            }),
+            thisgame.players.map((value) => {
+              return value.species;
+            }),
+            thisgame.players.findIndex((value) => {
+              return value.socketId == socket.id;
+            })
+          );
 
           io.in(thisgame.roomId).emit(
-            "joinGame",
+            "join game",
             player.pseudo,
             player.species
           );
@@ -164,11 +197,15 @@ module.exports = function (io: any) {
         }
 
         thisgame.init();
-        for (let player of thisgame.players) {
-          io.to(player.socketId).emit("hand", player.hand);
-          io.in(thisgame.roomId).emit("base", player.base);
-        }
-        io.in(thisgame.roomId).emit("nextTurn", thisgame.currentPlayerIdx);
+        thisgame.players.forEach((player, index) => {
+          io.to(player.socketId).emit(
+            "hand",
+            player.hand,
+            cardsKinds(player.hand)
+          );
+          io.in(thisgame.roomId).emit("base", player.base, index);
+        });
+        io.in(thisgame.roomId).emit("next turn", thisgame.currentPlayerIdx);
       } catch (err) {
         socket.emit("oops", err);
       }
@@ -184,7 +221,7 @@ module.exports = function (io: any) {
           throw "Not your turn !";
         } else {
           let result = thisgame.checkAction(action);
-          socket.to(socket.id).emit("checkCard", action, result);
+          socket.to(socket.id).emit("check card", action, result);
         }
       } catch (err) {
         socket.emit("oops", err);
@@ -201,15 +238,19 @@ module.exports = function (io: any) {
           throw "Not your turn !";
         } else {
           thisgame.checkAction(action);
-          socket.to(roomId).emit("playCard", action);
+          socket.to(roomId).emit("play card", action);
 
           thisgame.playAction(action);
-          socket.emit("hand", thisgame.currentPlayer.hand);
+          const kinds = cardsKinds(thisgame.currentPlayer.hand);
+          socket.emit("hand", thisgame.currentPlayer.hand, kinds);
+          thisgame.players.forEach((player, index) => {
+            io.in(thisgame.roomId).emit("base", player.base, index);
+          });
 
           if (thisgame.inProgress) {
             nextTurn(io, thisgame);
           } else {
-            io.in(roomId).emit("endGame", thisgame.winnerIdx);
+            io.in(roomId).emit("end game", thisgame.winnerIdx);
           }
         }
       } catch (err) {
@@ -257,7 +298,7 @@ module.exports = function (io: any) {
     socket.on("chat message", (roomId: string, msg: string) => {
       try {
         let player = findPlayer(socket.id, findGame(roomId, games));
-        io.in(roomId).emit("chatMessage", player.pseudo, msg);
+        io.in(roomId).emit("chat message", player.pseudo, msg);
       } catch (err) {
         socket.emit("oops", err);
       }

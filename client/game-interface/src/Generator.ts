@@ -20,9 +20,11 @@ export class Generator extends Phaser.GameObjects.Container {
     scene: Phaser.Scene,
     radius: number,
     generatorKind: GeneratorKind,
-    playerGenerator: boolean
+    playerGenerator: boolean,
+    index: number
   ) {
     super(scene);
+    this.index = index;
     this.strokeWidth = radius * 0.14;
     this.generatorKind = generatorKind;
     this.playerGenerator = playerGenerator;
@@ -59,6 +61,7 @@ export class Generator extends Phaser.GameObjects.Container {
     this.input.dropZone = true;
   }
 
+  index: number;
   generatorState: GeneratorState;
   isSuper = false;
   generatorKind: GeneratorKind;

@@ -21,7 +21,7 @@ export class PlayerSlot extends Phaser.GameObjects.Container {
     for (const offset of offsets) {
       const card = new CardSprite(
         scene,
-        new GeneratorCard(GeneratorCardKind.Virus, GeneratorKind.Joker),
+        new GeneratorCard(GeneratorCardKind.Medicine, GeneratorKind.Joker),
         width,
         height
       );
@@ -47,17 +47,20 @@ export class PlayerSlot extends Phaser.GameObjects.Container {
     const generatorRadius = 0.58 * profilePictureRadius;
     const increment = generatorRadius * 2 * 1.4;
     let offset = -increment * 2;
+    let i = 0;
     for (const generatorKind in GeneratorKind) {
       const generator = new Generator(
         scene,
         generatorRadius,
         GeneratorKind[generatorKind],
-        true
+        true,
+        i
       );
       generator.setPosition(offset, -height * 1.3);
       generator.setGeneratorState(GeneratorState.Enabled);
       offset += increment;
       this.add(generator);
+      i++;
     }
   }
 
