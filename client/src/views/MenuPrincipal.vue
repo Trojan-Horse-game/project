@@ -34,7 +34,7 @@ export default {
     }
 
     this.username = localStorage.getItem("username");
-    this.player = new Player(this.username, this.species);
+    // this.player = new Player(this.username, this.species);
     // this.game = new GameScene(this.player);
   },
   data: () => ({
