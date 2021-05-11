@@ -28,7 +28,7 @@ export default {
     if (localStorage.getItem("token") === null) {
       this.$router.push("/");
     }
-    this.$socket.emit("gameState");
+    // this.$socket.emit("gameState");
   },
   methods:{
     async createGame() {
@@ -44,12 +44,12 @@ export default {
     oops : function(error) {
       alert(error);
     },
-    closeTab : function() {
-      this.$router.push("/menuPrincipal");
-    },
-    inGame : function() {
-      this.$router.push("/Jeu");
-    }
+    // closeTab : function() {
+    //   this.$router.push("/menuPrincipal");
+    // },
+    // inGame : function() {
+    //   this.$router.push("/Jeu");
+    // }
   }
 };
 </script>

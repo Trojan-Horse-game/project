@@ -12,7 +12,8 @@
       }"
     />
     <div id="logo">
-      <img src="logo.png" alt="Logo du jeu" />
+      <router-link to="/menuPrincipal">
+      <img src="logo.png" alt="Logo du jeu" /></router-link>
     </div>
     <div id="container">
       <div id="titre">Choix de l'espèce</div>
@@ -224,7 +225,8 @@ export default {
     if (localStorage.getItem("token") === null) {
       this.$router.push("/");
     }
-    this.$socket.emit("gameState");
+    this.$route.params.gameId;
+    // this.$socket.emit("gameState");
   },
   sockets:{
     availableSpecies : function(availableSpecies) {
@@ -240,15 +242,15 @@ export default {
     oops : function(error) {
       alert(error);
     },
-    closeTab : function() {
-      this.$router.push("/menuPrincipal");
-    },
-    restricted : function() {
-      this.$router.push("/menuPrincipal");
-    },
-    inGame : function() {
-      this.$router.push("/Jeu");
-    }
+    // closeTab : function() {
+    //   this.$router.push("/menuPrincipal");
+    // },
+    // restricted : function() {
+    //   this.$router.push("/menuPrincipal");
+    // },
+    // inGame : function() {
+    //   this.$router.push("/Jeu");
+    // }
   }
 };
 </script>

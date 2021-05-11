@@ -1,6 +1,7 @@
 <template>
   <div id="jeu">
     <ion-phaser :game.prop="game" :initialize.prop="true" />
+    <span id="gameId">{{ gameId }}</span>
   </div>
 </template>
 
@@ -81,9 +82,9 @@ export default {
 
   },
   sockets : {
-    closeTab : function() {
-      this.$router.push("/menuPrincipal");
-    },
+    // closeTab : function() {
+    //   this.$router.push("/menuPrincipal");
+    // },
     gameId : function(gameId: string) {
       console.log(gameId)
     },
@@ -135,9 +136,9 @@ export default {
     oops : function(error) {
       alert(error);
     },
-    restricted : function() {
-      this.$router.push("/menuPrincipal");
-    }
+    // restricted : function() {
+    //   this.$router.push("/menuPrincipal");
+    // }
   }
 };
 </script>
@@ -146,5 +147,13 @@ export default {
 #jeu {
   width: 100%;
   height: 100%;
+}
+
+#gameId {
+  left: 0;
+  bottom: 0;
+  margin: 2%;
+  font-size: 25px;
+  color: white;
 }
 </style>
