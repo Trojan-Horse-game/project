@@ -48,7 +48,7 @@ export default {
       }
     });
 
-    this.$socket.emit("gameState", localStorage.getItem("username"));
+    this.$socket.emit("gameState");
   },
   methods : {
     didDropCard(cardIndex: number, playerIndex: number, generatorIndex: number) {

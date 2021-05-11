@@ -305,7 +305,7 @@ module.exports = function (io: any) {
       }
     });
 
-    socket.on("gameState", (pseudo: string) => {
+    socket.on("gameState", () => {
       if(socket.rooms.length > 2)
         socket.emit("inGame");
       else if( socket.rooms.length == 1)

@@ -224,7 +224,7 @@ export default {
     if (localStorage.getItem("token") === null) {
       this.$router.push("/");
     }
-    this.$socket.emit("gameState", localStorage.getItem("username"));
+    this.$socket.emit("gameState");
   },
   sockets:{
     availableSpecies : function(availableSpecies) {

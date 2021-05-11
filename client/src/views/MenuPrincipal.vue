@@ -28,6 +28,7 @@ export default {
     if (localStorage.getItem("token") === null) {
       this.$router.push("/");
     }
+    this.$socket.emit("gameState");
   },
   methods:{
     async createGame() {
