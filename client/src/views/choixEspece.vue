@@ -22,7 +22,7 @@
           <span
             :class="[{ active: selected.name == 'fawkes' }, 'cercle']"
             id="fawkes"
-            @click="select(0)"
+            @click="select(4)"
           >
             <img
               src="../../public/Design/fawkes.png"
@@ -39,7 +39,7 @@
           <span
             :class="[{ active: selected.name == 'hutex' }, 'cercle']"
             id="hutex"
-            @click="select(1)"
+            @click="select(0)"
             ><img
               src="../../public/Design/hutex.png"
               alt="hutex"
@@ -49,7 +49,7 @@
           <span
             :class="[{ active: selected.name == 'robotec' }, 'cercle']"
             id="robot"
-            @click="select(2)"
+            @click="select(1)"
             ><img
               src="../../public/Design/robot.png"
               alt="robot"
@@ -72,7 +72,7 @@
           <span
             :class="[{ active: selected.name == 'totox' }, 'cercle']"
             id="totox"
-            @click="select(4)"
+            @click="select(5)"
             ><img
               src="../../public/Design/totox.png"
               alt="totox"
@@ -82,7 +82,7 @@
           <span
             :class="[{ active: selected.name == 'xmars' }, 'cercle']"
             id="xmars"
-            @click="select(5)"
+            @click="select(2)"
             ><img
               src="../../public/Design/xmars.png"
               alt="xmars"
@@ -186,10 +186,9 @@ export default {
     ],
     count: 0,
     lockedSpecies: null,
-    lockedChoices: []
+    lockedChoices: [],
+    gameId : "",
   }),
-
-  props: ["game", "player"],
 
   computed: {
     selected: function() {
@@ -222,9 +221,10 @@ export default {
     }
   },
   created: function() {
-    // if (localStorage.getItem("token") === null) {
-    //   this.$router.push("/");
-    // }
+    if (localStorage.getItem("token") === null) {
+      this.$router.push("/");
+    }
+    this.$socket.emit("gameState", localStorage.getItem("username"));
   },
   sockets:{
     availableSpecies : function(availableSpecies) {
@@ -235,10 +235,19 @@ export default {
     },
     gameId : function(gameId){
       this.gameId = gameId;
-      console.log("game id",gameId);
+      console.log("game id",this.gameId);
     },
     oops : function(error) {
       alert(error);
+    },
+    closeTab : function() {
+      this.$router.push("/menuPrincipal");
+    },
+    restricted : function() {
+      this.$router.push("/mneuPrincipal");
+    },
+    inGame : function() {
+      this.$router.push("/Jeu");
     }
   }
 };

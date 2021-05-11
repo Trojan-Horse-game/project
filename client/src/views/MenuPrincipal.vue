@@ -3,9 +3,8 @@
     <div id="background-image" />
     <div id="container">
       <logo title="Menu principal" />
-      <router-link :to="{ name: 'Choix espèce' }"
-        ><button id="lancer" @click="createGame()"/></router-link>
-      <router-link :to="{ name: 'Rejoindre partie' }"
+        <button id="lancer" @click="createGame()"/>
+      <router-link to="/rejoindrePartie"
         ><button id="rejoindre"/></router-link>
 
       <div id="buttons">
@@ -22,7 +21,6 @@
 
 <script>
 import Logo from "../components/Logo";
-import { GameScene, Player } from "../../game-interface/src/GameScene";
 
 export default {
   components: { Logo: Logo },
@@ -35,19 +33,21 @@ export default {
     async createGame() {
       try {
         this.$socket.emit("create game", (localStorage.getItem("username")));
+        this.$router.push("/choixEspece");
       } catch (err) {
         console.log(err);
       }
     }
   },
   sockets: {
-    gameId : function(gameId){
-      this.gameId = gameId;
-      console.log("game id",gameId);
-      console.log("game id",this.gameId)
-    },
     oops : function(error) {
       alert(error);
+    },
+    closeTab : function() {
+      this.$router.push("/menuPrincipal");
+    },
+    inGame : function() {
+      this.$router.push("/Jeu");
     }
   }
 };

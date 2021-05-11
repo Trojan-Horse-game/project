@@ -47,6 +47,8 @@ export default {
         }
       }
     });
+
+    this.$socket.emit("gameState", localStorage.getItem("username"));
   },
   methods : {
     didDropCard(cardIndex: number, playerIndex: number, generatorIndex: number) {
@@ -79,6 +81,9 @@ export default {
 
   },
   sockets : {
+    closeTab : function() {
+      this.$router.push("/menuPrincipal");
+    },
     gameId : function(gameId: string) {
       console.log(gameId)
     },
@@ -129,6 +134,9 @@ export default {
     },
     oops : function(error) {
       alert(error);
+    },
+    restricted : function() {
+      this.$router.push("/menuPrincipal");
     }
   }
 };

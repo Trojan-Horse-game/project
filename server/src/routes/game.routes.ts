@@ -65,6 +65,7 @@ function forfeit(io: any, room: string, playerSocket: Socket) {
 
       if (!thisgame.inProgress) {
         io.in(room).emit("endGame", thisgame.winnerIdx);
+        games.splice(games.indexOf(thisgame), 1);
       }
     }
   } catch (err) {
@@ -302,6 +303,13 @@ module.exports = function (io: any) {
       } catch (err) {
         socket.emit("oops", err);
       }
+    });
+
+    socket.on("gameState", (pseudo: string) => {
+      if(socket.rooms.length > 2)
+        socket.emit("inGame");
+      else if( socket.rooms.length == 1)
+        socket.emit("restricted");
     });
 
     // When a user disconnects from the game
