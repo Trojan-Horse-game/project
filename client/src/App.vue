@@ -17,8 +17,8 @@ export default Vue.extend({
 
 <style lang="scss" scoped>
 #appContainer {
-  width: 100vw;
-  height: 100vh;
+  width: 100%;
+  height: 100%;
   position: relative;
   z-index: 0;
 }

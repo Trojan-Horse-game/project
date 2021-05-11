@@ -3,6 +3,9 @@ module.exports = {
   env: {
     node: true
   },
+  rules: {
+    "no-use-before-define": "off",
+  },
   extends: [
     "plugin:vue/essential",
     "eslint:recommended",

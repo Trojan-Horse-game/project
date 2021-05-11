@@ -1,7 +1,8 @@
-import { NewScene, ResponsiveScene, Player } from "./NewScene";
+import { GameScene, Player } from "./GameScene";
+import { ResponsiveScene } from "./ResponsiveScene";
 import "phaser";
 
-const scene = new NewScene([new Player("Youness", "xmars_tete")], 0);
+const scene = new GameScene(new Player("Youness", "xmars_tete"));
 const config: Phaser.Types.Core.GameConfig = {
   type: Phaser.WEBGL,
   title: "Les Cavaliers de Troie",

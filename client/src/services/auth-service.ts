@@ -1,18 +1,19 @@
 import axios from "axios";
 
-const API_URL = "http://localhost:3000";
+const API_URL = "https://api.trojanhorse.cc";
 
 class AuthService {
   signin(user) {
+    const url = `${API_URL}/users/signin`;
     return axios
-
-      .post(API_URL + "/api/users/signin", {
+      .post(url, {
         username: user.username,
         password: user.password
       })
       .then(response => {
-        if (response.data.accessToken) {
+        if (response.data.token) {
           localStorage.setItem("userId", response.data.userId);
+          localStorage.setItem("username", user.username);
           localStorage.setItem("token", response.data.token);
         }
 
@@ -22,27 +23,16 @@ class AuthService {
 
   logout() {
     localStorage.removeItem("userId");
+    localStorage.removeItem("username");
     localStorage.removeItem("token");
   }
 
   signup(user) {
-    return axios.post(API_URL + "/api/users/signup", {
+    const url = `${API_URL}/users/signup`;
+    return axios.post(url, {
       username: user.username,
       password: user.password
     });
-  }
-
-  postInfos(user) {
-    return axios.post(API_URL + "", {
-      firstName: user.firstName,
-      name: user.name,
-      username: user.username,
-      mail: user.mail
-    });
-  }
-
-  addFriend(username) {
-    //On cherche l'user id de l'username
   }
 }
 

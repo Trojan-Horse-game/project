@@ -1,7 +1,7 @@
 # Compte rendu hebdomadaire (semaine du 29 mars)
 
 ## Résumé
-### Séance du 9 mars
+### Séance du 29 mars
 - Fermeture d'issues et merge requests trop anciennes
 - Attribution de tâches à chacun :
     - Zakariae : tester les requetes sur la table d'amitié et la base de données

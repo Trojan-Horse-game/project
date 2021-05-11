@@ -1,31 +1,33 @@
 <template>
   <v-app>
     <div id="background-image" />
-    <Logo />
+    <div id="logo">
+      <img src="logo.png" alt="Logo du jeu" />
+    </div>
     <div id="container">
       <span id="titre">Connexion</span>
 
       <div id="content">
-        <table id="infos">
-          <tr>
-            Username
-          </tr>
-          <tr>
-            <input color="#000" v-model="user.username" />
-          </tr>
+        <div id="infos">
+          <div class="row">
+            <label>Username</label>
+            <div class="form_input">
+              <input color="#000" v-model="user.username" />
+            </div>
+          </div>
 
-          <tr>
-            Mot de passe
-          </tr>
-          <tr>
-            <input type="password" color="#000" v-model="user.password" />
-          </tr>
-        </table>
+          <div class="row">
+            <label>Mot de passe</label>
+            <div class="form_input">
+              <input type="password" color="#000" v-model="user.password" />
+            </div>
+          </div>
+        </div>
       </div>
 
       <div id="buttons">
-        <router-link to="/menuPrincipal">
-          <button id="retour" />
+        <router-link to="/">
+          <v-btn id="retour" />
         </router-link>
         <v-btn id="valider" @click="submitForm()" />
       </div>
@@ -34,9 +36,13 @@
 </template>
 
 <script>
-import Logo from "../components/Logo.vue";
 export default {
-  components: { logo: Logo },
+  components: {},
+  created: function() {
+    if (localStorage.getItem("token") !== null) {
+      this.$router.push("/menuPrincipal");
+    }
+  },
   data: () => ({
     validInput: false,
     showError: false,
@@ -45,18 +51,6 @@ export default {
       password: ""
     }
   }),
-
-  computed: {
-    loggedIn() {
-      return this.$store.state.auth.status.loggedIn;
-    }
-  },
-
-  created() {
-    if (this.loggedIn) {
-      this.$router.push("/menuPrincipal");
-    }
-  },
 
   methods: {
     submitForm() {
@@ -98,6 +92,12 @@ $content: #2f363c;
 
 #background-image {
   background-image: url("../../public/Design/default-bck.gif");
+  min-width: 100%;
+  min-height: 100%;
+  -webkit-background-size: cover;
+  -moz-background-size: cover;
+  -o-background-size: cover;
+  background-size: cover;
 }
 
 #logo {
@@ -107,13 +107,15 @@ $content: #2f363c;
 }
 
 #logo img {
-  width: 250px;
+  width: 20% !important;
   height: auto;
 }
 
 #container {
-  width: 100vw;
-  height: 100vh;
+  width: 100%;
+  height: 100%;
+  margin: auto;
+  text-align: center;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -121,12 +123,11 @@ $content: #2f363c;
 }
 
 #content {
-  width: 50%;
-  height: 50%;
-  padding: 5%;
+  width: max-content;
+  height: max-content;
+  padding: 2%;
   z-index: 0;
   color: $textColor;
-  padding: 5px 10px;
   background-color: $content;
   display: flex;
   flex-direction: column;
@@ -137,51 +138,43 @@ $content: #2f363c;
   margin: 2% 0%;
 }
 
-#content > table {
-  font-size: 40px;
-}
-
 #content > div {
   width: max-content;
 }
 
 #titre {
-  font-size: 70px;
+  font-size: 400%;
   color: $textColor;
-  margin: 0 auto;
-  margin-top: 1%;
-  position: fixed;
-  top: 0;
+  text-align: center;
 }
 
-#content input {
+#content .form_input {
   background-image: url("input.png");
   background-repeat: no-repeat;
   padding-left: 20px;
   font-size: 20px;
   background-size: contain;
   padding: 10px 0px 35px 0px;
-  width: 50%;
+}
+
+.form_input input {
+  width: 90%;
+  margin: auto;
+  text-align: center;
 }
 
 input:focus {
   outline: none;
 }
 
-table {
-  width: 100%;
-  text-align: center;
+#infos {
+  width: 50%;
+  display: grid;
 }
 
-tr td:nth-child(1) {
-  vertical-align: top;
-  padding-top: 9px;
-  width: max-content;
-}
-
-td {
+.row {
+  display: block;
   text-align: center;
-  vertical-align: middle;
 }
 
 .theme--light.v-label {
@@ -200,7 +193,7 @@ ul {
 #buttons {
   display: flex;
   justify-content: center;
-  align-items: flex-end;
+  align-items: center;
   width: 100vw;
   height: 20%;
 }
