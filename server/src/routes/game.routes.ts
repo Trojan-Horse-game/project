@@ -65,6 +65,7 @@ function forfeit(io: any, room: string, playerSocket: Socket) {
 
       if (!thisgame.inProgress) {
         io.in(room).emit("endGame", thisgame.winnerIdx);
+        games.splice(games.indexOf(thisgame), 1);
       }
     }
   } catch (err) {
@@ -117,9 +118,10 @@ module.exports = function (io: any) {
     // When creating a new game
     socket.on("create game", (pseudo: string) => {
       try {
+        let count = 0;
         for (const game of games) {
-          const count = howManyGames(pseudo, game);
-          if (count > 0) {
+          count += howManyGames(pseudo, game);
+          if (count > 1) {
             socket.emit("closeTab");
             throw "Already in a game !";
           }
@@ -302,6 +304,17 @@ module.exports = function (io: any) {
       } catch (err) {
         socket.emit("oops", err);
       }
+    });
+
+    socket.on("gameState", (pseudo: string) => {
+      let count = 0;
+      for (const game of games) {
+        count += howManyGames(pseudo, game);
+      }
+      if(socket.rooms.size >= 2 && count > 1)
+        socket.emit("inGame");
+      else if( socket.rooms.size < 2 && count == 0)
+        socket.emit("restricted");
     });
 
     // When a user disconnects from the game

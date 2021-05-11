@@ -3,17 +3,16 @@
     <div id="background-image" />
     <div id="container">
       <logo title="Menu principal" />
-      <router-link :to="{ name: 'Choix espèce' }"
-        ><button id="lancer" @click="createGame()"/></router-link>
-      <router-link :to="{ name: 'Rejoindre partie' }"
+        <button id="lancer" @click="createGame()"/>
+      <router-link to="/rejoindrePartie"
         ><button id="rejoindre"/></router-link>
 
       <div id="buttons">
         <router-link to="/reglesDuJeu">
-          <img src="../../public/Design/regles.png" alt="Règles du jeu" />
+          <img src="../../public/Design/regles.png" alt="Règles du jeu" title="Règles du jeu" />
         </router-link>
         <router-link to="/Profil">
-          <img src="../../public/Design/profil.png" alt="Profil" />
+          <img src="../../public/Design/profil.png" alt="Profil" title="Profil"/>
         </router-link>
       </div>
     </div>
@@ -22,7 +21,6 @@
 
 <script>
 import Logo from "../components/Logo";
-import { GameScene, Player } from "../../game-interface/src/GameScene";
 
 export default {
   components: { Logo: Logo },
@@ -30,24 +28,27 @@ export default {
     if (localStorage.getItem("token") === null) {
       this.$router.push("/");
     }
+    this.$socket.emit("gameState");
   },
   methods:{
     async createGame() {
       try {
         this.$socket.emit("create game", (localStorage.getItem("username")));
+        this.$router.push("/choixEspece");
       } catch (err) {
         console.log(err);
       }
     }
   },
   sockets: {
-    gameId : function(gameId){
-      this.gameId = gameId;
-      console.log("game id",gameId);
-      console.log("game id",this.gameId)
-    },
     oops : function(error) {
       alert(error);
+    },
+    closeTab : function() {
+      this.$router.push("/menuPrincipal");
+    },
+    inGame : function() {
+      this.$router.push("/Jeu");
     }
   }
 };
@@ -75,7 +76,7 @@ export default {
 }
 
 #buttons {
-  width: 10vw;
+  width: 25%;
   display: flex;
   justify-content: space-evenly;
   margin: 2% 0% 0% 0%;
@@ -89,6 +90,7 @@ export default {
 }
 
 #buttons img {
+  margin: 5%;
   height: 50px;
   width: auto;
 }

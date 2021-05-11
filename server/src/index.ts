@@ -9,7 +9,12 @@ import usersRouter from "./routes/user.routes";
 import friendshipsRouter from "./routes/friendship.routes";
 import { createConnection } from "typeorm";
 
-var whitelist = ["https://trojanhorse.cc", "https://www.trojanhorse.cc", "http://localhost/"];
+var whitelist = [
+  "https://trojanhorse.cc",
+  "https://www.trojanhorse.cc",
+  "http://localhost:8081",
+  "http://localhost:8080",
+];
 
 var origin = {
   origin: function (origin: any, callback: any) {
@@ -17,6 +22,7 @@ var origin = {
     if (whitelist.indexOf(origin) !== -1) {
       callback(null, true);
     } else {
+      console.log("origin:",origin);
       callback(new Error("Not allowed by CORS"));
     }
   },

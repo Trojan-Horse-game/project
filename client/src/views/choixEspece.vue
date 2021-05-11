@@ -22,7 +22,7 @@
           <span
             :class="[{ active: selected.name == 'fawkes' }, 'cercle']"
             id="fawkes"
-            @click="select(0)"
+            @click="select(4)"
           >
             <img
               src="../../public/Design/fawkes.png"
@@ -39,7 +39,7 @@
           <span
             :class="[{ active: selected.name == 'hutex' }, 'cercle']"
             id="hutex"
-            @click="select(1)"
+            @click="select(0)"
             ><img
               src="../../public/Design/hutex.png"
               alt="hutex"
@@ -49,7 +49,7 @@
           <span
             :class="[{ active: selected.name == 'robotec' }, 'cercle']"
             id="robot"
-            @click="select(2)"
+            @click="select(1)"
             ><img
               src="../../public/Design/robot.png"
               alt="robot"
@@ -72,7 +72,7 @@
           <span
             :class="[{ active: selected.name == 'totox' }, 'cercle']"
             id="totox"
-            @click="select(4)"
+            @click="select(5)"
             ><img
               src="../../public/Design/totox.png"
               alt="totox"
@@ -82,7 +82,7 @@
           <span
             :class="[{ active: selected.name == 'xmars' }, 'cercle']"
             id="xmars"
-            @click="select(5)"
+            @click="select(2)"
             ><img
               src="../../public/Design/xmars.png"
               alt="xmars"
@@ -186,10 +186,9 @@ export default {
     ],
     count: 0,
     lockedSpecies: null,
-    lockedChoices: []
+    lockedChoices: [],
+    gameId : "",
   }),
-
-  props: ["game", "player"],
 
   computed: {
     selected: function() {
@@ -222,9 +221,10 @@ export default {
     }
   },
   created: function() {
-    // if (localStorage.getItem("token") === null) {
-    //   this.$router.push("/");
-    // }
+    if (localStorage.getItem("token") === null) {
+      this.$router.push("/");
+    }
+    this.$socket.emit("gameState");
   },
   sockets:{
     availableSpecies : function(availableSpecies) {
@@ -235,10 +235,19 @@ export default {
     },
     gameId : function(gameId){
       this.gameId = gameId;
-      console.log("game id",gameId);
+      console.log("game id",this.gameId);
     },
     oops : function(error) {
       alert(error);
+    },
+    closeTab : function() {
+      this.$router.push("/menuPrincipal");
+    },
+    restricted : function() {
+      this.$router.push("/menuPrincipal");
+    },
+    inGame : function() {
+      this.$router.push("/Jeu");
     }
   }
 };
@@ -282,8 +291,8 @@ $content: #2f363c;
 }
 
 #container {
-  width: 100vw;
-  height: 100vh;
+  width: 100%;
+  height: 100%;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -291,7 +300,8 @@ $content: #2f363c;
 }
 
 #content {
-  width: 100vw;
+  width: 100%;
+  height: 100%;
   z-index: 0;
   color: #000;
   background-color: transparent;
@@ -326,7 +336,7 @@ $content: #2f363c;
   display: flex;
   padding: 3%;
   flex-grow: 1;
-  height: 80%;
+  height: 70%;
   flex-flow: column wrap;
   justify-content: space-evenly;
   align-content: center;
@@ -479,6 +489,8 @@ $content: #2f363c;
 
 #force {
   font-size: 15px;
+  padding-top: 3%;
+  padding-bottom: 3%;
 }
 
 #content input {

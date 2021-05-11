@@ -47,6 +47,8 @@ export default {
         }
       }
     });
+
+    this.$socket.emit("gameState");
   },
   methods : {
     didDropCard(cardIndex: number, playerIndex: number, generatorIndex: number) {
@@ -79,6 +81,9 @@ export default {
 
   },
   sockets : {
+    closeTab : function() {
+      this.$router.push("/menuPrincipal");
+    },
     gameId : function(gameId: string) {
       console.log(gameId)
     },
@@ -129,6 +134,9 @@ export default {
     },
     oops : function(error) {
       alert(error);
+    },
+    restricted : function() {
+      this.$router.push("/menuPrincipal");
     }
   }
 };
@@ -136,7 +144,7 @@ export default {
 
 <style scoped>
 #jeu {
-  width: 100vw;
-  height: 100vh;
+  width: 100%;
+  height: 100%;
 }
 </style>
