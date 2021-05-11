@@ -49,37 +49,40 @@ export default {
   // }
   sockets : {
     gameId : function(gameId) {
-
+      console.log(gameId)
     },
     joinGame : function(pseudo,species) {
-
+      console.log(pseudo,species)
     },
     players : function(players) {
+      console.log(players)
       // const player = new Player(pseudo, species);
       // this.scene.appendPlayer(player);
     },
     hand : function(cards) {
-
+      console.log(cards)
     },
     base : function(generators) {
-
+      console.log(generators)
     },
     checkCard : function(card) {
-
+      console.log(card)
     },
     playCard : function(card) {
-
+      console.log(card)
     },
     nextTurn : function(playerIdx) {
+      console.log(playerIdx)
       // this.scene.nextTurn(playerIdx);
     },
     discard : function(indexDiscard, cards) {
-
+      console.log(indexDiscard, cards)
     },
     leaveGame : function(playerIdx){
-
+      console.log(playerIdx)
     },
     endGame : function(winner) {
+      console.log(winner)
       // this.winnerIdx = winner;
     },
     oops : function(error) {
