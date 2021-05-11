@@ -55,10 +55,10 @@ describe("Back-front communication testing", () => {
   test("create game should work", (done) => {
     serverSocket.on("create game", (pseudo: string, species: Species) => {
       expect(pseudo).toBe("test username");
-      expect(species).toBe(Species.Sonyas);
+      expect(species).toBe(Species.Spectre);
       done();
     });
-    clientSocket.emit("create game", "test username", Species.Sonyas);
+    clientSocket.emit("create game", "test username", Species.Spectre);
   });
 
   test("get roomdId should work", (done) => {

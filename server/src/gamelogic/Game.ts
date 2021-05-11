@@ -22,10 +22,10 @@ export class Game {
     this.roomId = id || "";
     this.availableSpecies = [
       Species.Hutex,
-      Species.Sonyas,
+      Species.Robotec,
       Species.Spectre,
       Species.Totox,
-      Species.Ulysse,
+      Species.Fawkes,
       Species.Xmars,
     ];
     this.createDeck();
