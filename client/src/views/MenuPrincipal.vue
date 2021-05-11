@@ -34,7 +34,16 @@ export default {
     }
     this.username = localStorage.getItem("username");
     this.player = new Player(this.username, this.species);
-    this.game = new GameScene(this.player);
+    this.game = new GameScene("", this.player);
+  },
+  methods:{
+    async createGame() {
+      try {
+        this.$socket.emit("create game", (this.username));
+      } catch (err) {
+        console.log(err);
+      }
+    }
   },
   methods:{
     async createGame() {
@@ -61,7 +70,7 @@ export default {
         this.player = new Player(this.username, this.species);
     },
     player: function() {
-        this.game = new GameScene(this.player);
+        this.game = new GameScene("", this.player);
     }
   }, 
   sockets: {

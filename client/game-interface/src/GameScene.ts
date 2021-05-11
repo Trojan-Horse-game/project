@@ -17,13 +17,15 @@ import { ResponsiveScene } from "./ResponsiveScene";
 import { Specie, specieToString } from "./GameNetworkDelegate";
 
 export class GameScene extends ResponsiveScene {
-  constructor(currentPlayer: Player) {
+  constructor(id: string, currentPlayer: Player) {
     super({});
+    this.id = id;
     this.players = [currentPlayer];
     this.playerIndex = 0;
     this.currentPlayer = 0;
   }
 
+  id: string;
   players: Player[];
   playerIndex: number;
   currentPlayer: number;
