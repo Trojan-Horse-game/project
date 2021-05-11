@@ -1,7 +1,7 @@
 <template>
   <div id="jeu">
     <ion-phaser :game.prop="game" :initialize.prop="true" />
-    <span id="gameId">{{ gameId }}</span>
+    <span id="gameId">{{ this.gameId }}</span>
   </div>
 </template>
 
@@ -16,6 +16,7 @@ export default {
   name: "Jeu",
 
   data: () => ({
+    gameId: localStorage.getItem("gameId"),
     game: {
       type: Phaser.AUTO,
       title: "Les Cavaliers de Troie",
@@ -27,11 +28,12 @@ export default {
         height: window.innerHeight * window.devicePixelRatio,
         zoom: 1 / window.devicePixelRatio
       },
-      scene: [new GameScene("", new Player(localStorage.getItem("username"), Specie.Spectre))]
-    }
+      scene: [new GameScene(localStorage.getItem("gameId"), new Player(localStorage.getItem("username"), Specie.Hutex))]
+    },
   }),
 
   mounted: function() {
+    console.log(this.gameId)
     const game = new Phaser.Game(this.config);
 
     window.addEventListener("resize", function() {
@@ -49,7 +51,7 @@ export default {
       }
     });
 
-    this.$socket.emit("gameState");
+    // this.$socket.emit("gameState");
   },
   methods : {
     didDropCard(cardIndex: number, playerIndex: number, generatorIndex: number) {
@@ -153,7 +155,8 @@ export default {
   left: 0;
   bottom: 0;
   margin: 2%;
-  font-size: 25px;
-  color: white;
+  font-size: 100%;
+  color: #bbbbbb;
+  position: fixed;
 }
 </style>

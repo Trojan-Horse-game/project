@@ -14,6 +14,7 @@ var whitelist = [
   "https://www.trojanhorse.cc",
   "http://localhost:8081",
   "http://localhost:8080",
+  "*"
 ];
 
 var origin = {
