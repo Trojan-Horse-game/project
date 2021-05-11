@@ -55,8 +55,8 @@ export default {
 
     },
     players : function(players) {
-      const player = new Player(pseudo, species);
-      this.scene.appendPlayer(player);
+      // const player = new Player(pseudo, species);
+      // this.scene.appendPlayer(player);
     },
     hand : function(cards) {
 
@@ -71,7 +71,7 @@ export default {
 
     },
     nextTurn : function(playerIdx) {
-      this.scene.nextTurn(playerIdx);
+      // this.scene.nextTurn(playerIdx);
     },
     discard : function(indexDiscard, cards) {
 
@@ -80,7 +80,7 @@ export default {
 
     },
     endGame : function(winner) {
-      this.winnerIdx = winner;
+      // this.winnerIdx = winner;
     },
     oops : function(error) {
       alert(error);
