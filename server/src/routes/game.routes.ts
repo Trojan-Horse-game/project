@@ -144,7 +144,7 @@ module.exports = function (io: any) {
     socket.on("join game", (pseudo: string, roomId: string) => {
       try {
         let thisgame = findGame(roomId, games);
-        if ((thisgame.players.length = 6)) {
+        if (thisgame.players.length == 6) {
           throw "Room is full !";
         }
         const count = howManyGames(pseudo, thisgame);
