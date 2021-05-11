@@ -122,7 +122,7 @@ export class GameScene extends ResponsiveScene {
     );
     this.actionDropZone = new ActionDropZone(
       this,
-      70 * window.devicePixelRatio
+      75 * window.devicePixelRatio
     );
     this.add.existing(this.actionDropZone);
 

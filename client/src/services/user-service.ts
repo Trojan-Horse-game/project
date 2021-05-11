@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const API_URL = "http://localhost:3000/api/friendships";
+const API_URL = "https://localhost:3000/api/friendships";
 const myUserId: string = localStorage.getItem("userId");
 
 class userService {
@@ -20,7 +20,7 @@ class userService {
   addFriendship(friendUsername: string) {
     const friendUserId: string = this.getUserId(friendUsername);
 
-    axios.post("http://localhost:3000/api/friendships", {
+    axios.post("https://localhost:3000/api/friendships", {
       user1_id: myUserId,
       user2_id: friendUserId
     });

@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const API_URL = "http://api.trojanhorse.cc";
+const API_URL = "https://api.trojanhorse.cc";
 
 class AuthService {
   signin(user) {
@@ -13,6 +13,7 @@ class AuthService {
       .then(response => {
         if (response.data.token) {
           localStorage.setItem("userId", response.data.userId);
+          localStorage.setItem("username", user.username);
           localStorage.setItem("token", response.data.token);
         }
 
@@ -22,6 +23,7 @@ class AuthService {
 
   logout() {
     localStorage.removeItem("userId");
+    localStorage.removeItem("username");
     localStorage.removeItem("token");
   }
 
@@ -30,15 +32,6 @@ class AuthService {
     return axios.post(url, {
       username: user.username,
       password: user.password
-    });
-  }
-
-  postInfos(user) {
-    return axios.post(API_URL + "", {
-      firstName: user.firstName,
-      name: user.name,
-      username: user.username,
-      mail: user.mail
     });
   }
 }

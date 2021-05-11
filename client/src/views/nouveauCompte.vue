@@ -1,7 +1,7 @@
 <template>
   <v-app>
-    <div id="background-image"/>
-      <div id="logo">
+    <div id="background-image" />
+    <div id="logo">
       <img src="logo.png" alt="Logo du jeu" />
     </div>
     <div id="container">
@@ -26,9 +26,9 @@
 
         <div id="legal">
           <p>
-              Un enfant de moins de 15 ans doit avoir l'accord de son
-              représentant légal pour l'envoi de données personnelles.
-            </p>
+            Un enfant de moins de 15 ans doit avoir l'accord de son représentant
+            légal pour l'envoi de données personnelles.
+          </p>
 
           <v-checkbox
             v-model="checkbox"
@@ -55,7 +55,11 @@ export default {
     },
     checkbox: false
   }),
-
+  created: function() {
+    if (localStorage.getItem("token") !== null) {
+      this.$router.push("/menuPrincipal");
+    }
+  },
   methods: {
     submitForm() {
       const errors = [];
@@ -156,7 +160,7 @@ $content: #2f363c;
 
 #content .form_input {
   background-image: url("input.png");
-  background-repeat: round;
+  background-repeat: no-repeat;
   padding-left: 20px;
   font-size: 20px;
   background-size: contain;
