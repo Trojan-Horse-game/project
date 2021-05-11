@@ -31,10 +31,7 @@ export default {
       this.$router.push("/");
     }
   },
-  data: () => ({
-    id: "",
-  }),
-  sockets: {
+  methods:{
     async joinGame() {
       try {
         if(this.id.length > 0){
@@ -47,7 +44,10 @@ export default {
         alert(err);
       }
     }
-  }
+  },
+  data: () => ({
+    id: "",
+  }),
 };
 </script>
 

@@ -47,6 +47,44 @@ export default {
   //     }
   //   });
   // }
+  sockets : {
+    game_id : function(gameId) {
+
+    },
+    join_game : function(pseudo,species) {
+
+    },
+    players : function(players) {
+
+    },
+    hand : function(cards) {
+
+    },
+    base : function(generators) {
+
+    },
+    check_card : function(card) {
+
+    },
+    play_card : function(card) {
+
+    },
+    next_turn : function(playerIdx) {
+
+    },
+    discard : function(indexDiscard, cards) {
+
+    },
+    leave_game : function(playerIdx){
+
+    },
+    end_game : function(winner) {
+      this.winnerIdx = winner;
+    },
+    oops : function(error) {
+      alert(error);
+    }
+  }
 };
 </script>
 

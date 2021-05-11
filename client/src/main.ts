@@ -16,12 +16,7 @@ defineIonPhaser(window);
 Vue.use(
   new VueSocketIO({
     debug: true,
-    connection: SocketIO("https://api.trojanhorse.cc/"),
-    vuex: {
-      store,
-      actionPrefix: "SOCKET_",
-      mutationPrefix: "SOCKET_"
-    }
+    connection: SocketIO("https://api.trojanhorse.cc/")
   })
 );
 

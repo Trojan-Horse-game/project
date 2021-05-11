@@ -37,7 +37,17 @@ export default {
     // this.player = new Player(this.username, this.species);
     // this.game = new GameScene(this.player);
   },
+  methods:{
+    async createGame() {
+      try {
+        this.$socket.emit("create game", (this.username));
+      } catch (err) {
+        console.log(err);
+      }
+    }
+  },
   data: () => ({
+    game_id: "",
     species: "",
     username: "",
     player: null,
@@ -57,12 +67,11 @@ export default {
   //   }
   // }, 
   sockets: {
-    async createGame() {
-      try {
-        this.$socket.emit("create game", (this.username));
-      } catch (err) {
-        console.log(err);
-      }
+    game_id : function(game_id){
+      this.game_id = game_id;
+    },
+    oops : function(error) {
+      alert(error);
     }
   }
 };
