@@ -5,9 +5,9 @@
 </template>
 
 <script lang="ts">
-import Phaser from "phaser";
-import { GameScene, Player } from "../../game-interface/src/GameScene";
-import { ResponsiveScene } from "../../game-interface/src/ResponsiveScene";
+// import Phaser from "phaser";
+// import { GameScene, Player } from "../../game-interface/src/GameScene";
+// import { ResponsiveScene } from "../../game-interface/src/ResponsiveScene";
 
 export default {
   
