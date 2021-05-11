@@ -45,15 +45,6 @@ export default {
       }
     }
   },
-  methods:{
-    async createGame() {
-      try {
-        this.$socket.emit("create game", (this.username));
-      } catch (err) {
-        console.log(err);
-      }
-    }
-  },
   data: () => ({
     gameId: "",
     species: "",
