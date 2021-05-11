@@ -3,9 +3,9 @@
     <div
       id="background-image"
       :class="{
-        fawkes: selected.name == 'sonyas',
+        fawkes: selected.name == 'fawkes',
         hutex: selected.name == 'hutex',
-        robot: selected.name == 'ulysse',
+        robot: selected.name == 'robotec',
         spectre: selected.name == 'spectre',
         totox: selected.name == 'totox',
         xmars: selected.name == 'xmars'
@@ -20,7 +20,7 @@
       <div id="content">
         <div id="especes">
           <span
-            :class="[{ active: selected.name == 'sonyas' }, 'cercle']"
+            :class="[{ active: selected.name == 'fawkes' }, 'cercle']"
             id="fawkes"
             @click="select(0)"
           >
@@ -47,7 +47,7 @@
             <img src="../../public/Design/hutex_locked.png" alt="hutex" v-else
           /></span>
           <span
-            :class="[{ active: selected.name == 'ulysse' }, 'cercle']"
+            :class="[{ active: selected.name == 'robotec' }, 'cercle']"
             id="robot"
             @click="select(2)"
             ><img
@@ -101,22 +101,21 @@
 
             <div class="attribut">
               <span class="nom">Origine</span>
-              <span class="text"
-                ><p class="text-fill">{{ selected.origin }}</p></span
+              <div class="text"
+                ><p class="text-fill">{{ selected.origin }}</p></div
               >
             </div>
 
-            <div class="attribut" id="force">
-              <span class="nom">Force</span>
-              <span class="text"
-                ><p class="text-fill">{{ selected.strength }}</p></span
-              >
+            <div class="attribut">
+              <p class="nom">Force</p>
+              <div class="text"
+                ><p class="text-fill" id="force"> {{ selected.strength }}</p></div>
             </div>
 
             <div class="attribut" id="description">
               <span class="nom">Description</span>
-              <span class="text"
-                ><p class="text-fill">{{ selected.description }}</p></span
+              <div class="text"
+                ><p class="text-fill">{{ selected.description }}</p></div
               >
             </div>
           </div>
@@ -143,36 +142,42 @@ export default {
   data: () => ({
     species: [
       {
+        id: 4,
         name: "fawkes",
         origin: "fakous",
         strength: " Maîtrise du piratage et de l’aérospatial",
         description: "Étant plus petit que la moyenne humaine, Fawkes compense par sa perspicacité et son intelligence. Il a les cheveux longs et il s’habille d’une façon classique avec un chapeau melon lui rappelant ses origines. une forme corporelle assez petite, long cheveux, un bonnet sur la tête, portant des vêtements classiques. Un humanoïde qui a l’air presque comme les autres."
       },
       {
+        id: 0,
         name: "hutex",
         origin: "Hucex",
         strength: "Manipulation du champ gravitationnel",
         description: "Avec ses vêtements déchirés et son visage borgne, Hutex terrifie ses adversaires. Quelle que soit la situation, cet individu est plein de ressources et il sera prêt à y  faire face. Il est vétu d’un bandeau blanc, signifiant sa determination à atteindre ses objectifs. Ses vêtements déchirés et son œil gauche perdu sont exposés pour terrifier ses adversaires. Son sac à dos montre que cet individu est plein de ressources et toujours prêt à s'adapter à n’importe quelle situation qui se présente à lui. Et enfin son bandeau est toujours présenté comme blanc comme la neige pour montrer sa determination a atteindre ses objectifs."
       },
       {
+        id: 1,
         name: "robotec",
         origin: "Dingjal Orlov",
         strength: "Capacité de calculer 10 milliard d’équations par seconde",
         description: "Robotec possède un corps métallique, plaquée or. Le bas de son corps semble deformé suite à un des combats lors de la révolution."
       },
       {
+        id: 3,
         name: "spectre",
         origin: "Asgard",
         strength: "L’épée forgée dans le volcan de la planète Asgard",
         description: "Spectre possède des sourcils blancs et une longue barbe puisque jadis, ce fut un vieil homme. Vétu d’un linge blanc, il dégage une aura noire. Spectre a gardé sa forme humanoïde. Il porte dans son dos l’épée asgardienne et sur sa tête, tout comme la lampe de Pixar, il a une lumière aveuglante provenant de ses cornes."
       },
       {
+        id: 5,
         name: "totox",
         origin: "unknown",
         strength: "unknown",
         description: "Totox a une apparence monstrueuse issue de la fusion d’un octopus et d’un humanoïde. Il agit et communique comme les humains mais il a des tentacules comme les octopus. On peut y apercevoir sur ces derniers des ongles remplies de venin. Il porte une longue cape noire imitant son héros d’enfance Dracula (son apparence monstrueuse est une fusion entre une octopus et une forme humanoïde. Ce dernier marche, s’habille,parle comme un être human, il porte une long cape noir et ils possedent meme des ongles sur la pointes de ses tentacules!)"
       },
       {
+        id: 2,
         name: "xmars",
         origin: "mars",
         strength: "intimidation, ruse, tromperie",
@@ -194,6 +199,8 @@ export default {
   methods: {
     lockChoice() {
       this.lockedSpecies = this.selected.name;
+      this.lockedChoices.push(this.selected.name);
+      this.$socket.emit("choose species", this.selected.id);
       this.$router.push("/Jeu");
     },
 
@@ -215,30 +222,35 @@ export default {
     }
   },
   created: function() {
-    if (localStorage.getItem("token") === null) {
-      this.$router.push("/");
-    }
-  },
-  mounted () {
-    this.$socket.subscribe("available species", availableSpecies => {
-      for(const specie of this.species){
-        if (!(specie.name in availableSpecies))
-          this.lockedChoices.push(specie.name)
-      }
-    })
+    // if (localStorage.getItem("token") === null) {
+    //   this.$router.push("/");
+    // }
   },
   sockets:{
-    lockChoice() {
-      this.lockedSpecies = this.selected.name;
-      this.lockedChoices.push(this.selected.name);
-      this.$socket.emit("choose specie", this.selected.name);
-      this.$router.push("/Jeu");
+    availableSpecies : function(availableSpecies) {
+      for(const specie of this.species){
+        if (!(specie.id in availableSpecies))
+          this.lockedChoices.push(specie.name)
+      }
     },
+    gameId : function(gameId){
+      this.gameId = gameId;
+      console.log("game id",gameId);
+    },
+    oops : function(error) {
+      alert(error);
+    }
   }
 };
 </script>
 
 <style lang="scss" scoped>
+$content: #2f363c;
+
+#background-image {
+  height: 100%;
+}
+
 #background-image.fawkes {
   background-image: url("../../public/Design/fawkes.gif");
 }
@@ -339,11 +351,12 @@ export default {
 }
 
 .text {
-  background-image: url("../../public/Design/test_big.png");
-  color: #bbbbbb;
-  width: inherit;
-  height: inherit;
+  background-image: url("input.png");
+  color: $content;
+  width: 100%;
+  height: 100%;
   background-position: center;
+  background-size: contain;
   flex-grow: 1;
   margin: 0px 10px;
   text-align: center;
@@ -353,20 +366,23 @@ export default {
 
 .text .text-fill, #force .text .text-fill {
   width: 90%;
-  height: inherit;
+  height: 80%;
   margin: auto;
   text-align: center;
+  overflow-y: scroll;
 }
 
 #description .text {
-  background-image: url("../../public/Design/description_test.png");
-  color: #bbbbbb;
-  width: 98%;
-  height: 90%;
+  background-image: url("input.png");
+  color:$content;
+  width: 100%;
+  height: 100%;
   font-size:15px;
   background-position: top;
-  background-size: contain;
+  background-size: cover;
+  align-self: center;
   margin: 0px 10px;
+  padding: 8%;
 }
 
 .cercle:not(.lock) {
@@ -459,6 +475,10 @@ export default {
   top: 0;
   justify-content: center;
   display: flex;
+}
+
+#force {
+  font-size: 15px;
 }
 
 #content input {

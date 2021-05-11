@@ -3,10 +3,10 @@ import { GeneratorSlot, State } from "./GeneratorSlot";
 
 export enum Species {
   Hutex,
-  Sonyas,
+  Robotec,
   Xmars,
   Spectre,
-  Ulysse,
+  Fawkes,
   Totox,
 }
 
@@ -25,13 +25,13 @@ export class Player {
     if (species == 0) {
       this.species = Species.Hutex;
     } else if (species == 1) {
-      this.species = Species.Sonyas;
+      this.species = Species.Robotec;
     } else if (species == 2) {
       this.species = Species.Xmars;
     } else if (species == 3) {
       this.species = Species.Spectre;
     } else if (species == 4) {
-      this.species = Species.Ulysse;
+      this.species = Species.Fawkes;
     } else {
       this.species = Species.Totox;
     }

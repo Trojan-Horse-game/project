@@ -32,18 +32,26 @@ export default {
     if (localStorage.getItem("token") === null) {
       this.$router.push("/");
     }
-
     this.username = localStorage.getItem("username");
     this.player = new Player(this.username, this.species);
     this.game = new GameScene(this.player);
   },
+  methods:{
+    async createGame() {
+      try {
+        this.$socket.emit("create game", (this.username));
+      } catch (err) {
+        console.log(err);
+      }
+    }
+  },
   data: () => ({
+    gameId: "",
     species: "",
     username: "",
     player: null,
     game: null
   }),
-
   watch: {
     username: function() {
       this.player = new Player(this.username, this.species);
@@ -57,12 +65,13 @@ export default {
     }
   }, 
   sockets: {
-    async createGame() {
-      try {
-        this.$socket.emit("create game", (this.username));
-      } catch (err) {
-        console.log(err);
-      }
+    gameId : function(gameId){
+      this.gameId = gameId;
+      console.log("game id",gameId);
+      console.log("game id",this.gameId)
+    },
+    oops : function(error) {
+      alert(error);
     }
   }
 };

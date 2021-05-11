@@ -34,18 +34,25 @@ export default {
   data: () => ({
     id: "",
   }),
-  sockets: {
+  methods:{
     async joinGame() {
-      try {
+      // try {
         if(this.id.length > 0){
-          this.$sockets.emit("join game", localStorage.getItem("username"), this.id);
+          console.log(this.id)
+          this.$socket.emit("join game", localStorage.getItem("username"), this.id);
+          this.$router.push("/choixEspece");
         }
         else{
           throw "Id de la partie requis";
         }
-      } catch (err) {
-        alert(err);
-      }
+      // } catch (err) {
+      //   alert(err);
+      // }
+    }
+  },
+  sockets :{
+    oops: function(error) {
+      alert(error);
     }
   }
 };
