@@ -222,7 +222,7 @@ export default {
     }
   },
   sockets:{
-    available_species : function(availableSpecies) {
+    availableSpecies : function(availableSpecies) {
       for(const specie of this.species){
         if (!(specie.name in availableSpecies))
           this.lockedChoices.push(specie.name)

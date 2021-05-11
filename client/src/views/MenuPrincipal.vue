@@ -67,7 +67,7 @@ export default {
   //   }
   // }, 
   sockets: {
-    game_id : function(game_id){
+    gameId : function(game_id){
       this.game_id = game_id;
     },
     oops : function(error) {

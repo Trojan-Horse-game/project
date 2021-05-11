@@ -5,7 +5,7 @@
 </template>
 
 <script lang="ts">
-// import Phaser from "phaser";
+import Phaser from "phaser";
 // import { GameScene, Player } from "../../game-interface/src/GameScene";
 // import { ResponsiveScene } from "../../game-interface/src/ResponsiveScene";
 
@@ -48,14 +48,15 @@ export default {
   //   });
   // }
   sockets : {
-    game_id : function(gameId) {
+    gameId : function(gameId) {
 
     },
-    join_game : function(pseudo,species) {
+    joinGame : function(pseudo,species) {
 
     },
     players : function(players) {
-
+      const player = new Player(pseudo, species);
+      this.scene.appendPlayer(player);
     },
     hand : function(cards) {
 
@@ -63,22 +64,22 @@ export default {
     base : function(generators) {
 
     },
-    check_card : function(card) {
+    checkCard : function(card) {
 
     },
-    play_card : function(card) {
+    playCard : function(card) {
 
     },
-    next_turn : function(playerIdx) {
-
+    nextTurn : function(playerIdx) {
+      this.scene.nextTurn(playerIdx);
     },
     discard : function(indexDiscard, cards) {
 
     },
-    leave_game : function(playerIdx){
+    leaveGame : function(playerIdx){
 
     },
-    end_game : function(winner) {
+    endGame : function(winner) {
       this.winnerIdx = winner;
     },
     oops : function(error) {
