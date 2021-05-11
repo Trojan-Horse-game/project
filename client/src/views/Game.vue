@@ -6,6 +6,7 @@
 
 <script lang="ts">
 import Phaser from "phaser";
+import { Specie } from "../../game-interface/src/GameNetworkDelegate";
 import { GameScene, Player } from "../../game-interface/src/GameScene";
 import { ResponsiveScene } from "../../game-interface/src/ResponsiveScene";
 
@@ -25,7 +26,7 @@ export default {
         height: window.innerHeight * window.devicePixelRatio,
         zoom: 1 / window.devicePixelRatio
       },
-      scene: [new GameScene(new Player("Youness", "xmars_tete"))]
+      scene: [new GameScene(new Player("Youness", Specie.Spectre))]
     }
   }),
 
