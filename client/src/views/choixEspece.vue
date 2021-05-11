@@ -282,8 +282,8 @@ $content: #2f363c;
 }
 
 #container {
-  width: 100vw;
-  height: 100vh;
+  width: 100%;
+  height: 100%;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -291,7 +291,8 @@ $content: #2f363c;
 }
 
 #content {
-  width: 100vw;
+  width: 100%;
+  height: 100%;
   z-index: 0;
   color: #000;
   background-color: transparent;
@@ -326,7 +327,7 @@ $content: #2f363c;
   display: flex;
   padding: 3%;
   flex-grow: 1;
-  height: 80%;
+  height: 70%;
   flex-flow: column wrap;
   justify-content: space-evenly;
   align-content: center;

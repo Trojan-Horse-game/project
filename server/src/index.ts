@@ -9,7 +9,12 @@ import usersRouter from "./routes/user.routes";
 import friendshipsRouter from "./routes/friendship.routes";
 import { createConnection } from "typeorm";
 
-var whitelist = ["https://trojanhorse.cc", "https://www.trojanhorse.cc", "http://92.140.194.95/"];
+var whitelist = [
+  "https://trojanhorse.cc",
+  "https://www.trojanhorse.cc",
+  "http://localhost:8081",
+  "http://localhost:8080",
+];
 
 var origin = {
   origin: function (origin: any, callback: any) {
