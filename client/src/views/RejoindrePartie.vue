@@ -33,16 +33,17 @@ export default {
   },
   methods:{
     async joinGame() {
-      try {
+      // try {
         if(this.id.length > 0){
+          console.log(this.id)
           this.$sockets.emit("join game", localStorage.getItem("username"), this.id);
         }
         else{
           throw "Id de la partie requis";
         }
-      } catch (err) {
-        alert(err);
-      }
+      // } catch (err) {
+      //   alert(err);
+      // }
     }
   },
   data: () => ({
