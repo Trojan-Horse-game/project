@@ -126,6 +126,7 @@ module.exports = function (io: any) {
         }
         const room = "ROOM-" + socket.id;
         socket.join(room);
+        socket.emit("gameId", game.roomId);
         let game = new Game(room);
         socket.emit("availableSpecies", game.availableSpecies);
 
@@ -133,7 +134,6 @@ module.exports = function (io: any) {
           let player = new Player(pseudo, species, socket.id);
           game.addPlayer(player);
           games.push(game);
-          socket.emit("gameId", game.roomId);
         });
       } catch (err) {
         socket.emit("oops", err);
