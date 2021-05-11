@@ -143,36 +143,42 @@ export default {
   data: () => ({
     species: [
       {
+        id: 4,
         name: "fawkes",
         origin: "fakous",
         strength: " Maîtrise du piratage et de l’aérospatial",
         description: "Étant plus petit que la moyenne humaine, Fawkes compense par sa perspicacité et son intelligence. Il a les cheveux longs et il s’habille d’une façon classique avec un chapeau melon lui rappelant ses origines. une forme corporelle assez petite, long cheveux, un bonnet sur la tête, portant des vêtements classiques. Un humanoïde qui a l’air presque comme les autres."
       },
       {
+        id: 0,
         name: "hutex",
         origin: "Hucex",
         strength: "Manipulation du champ gravitationnel",
         description: "Avec ses vêtements déchirés et son visage borgne, Hutex terrifie ses adversaires. Quelle que soit la situation, cet individu est plein de ressources et il sera prêt à y  faire face. Il est vétu d’un bandeau blanc, signifiant sa determination à atteindre ses objectifs. Ses vêtements déchirés et son œil gauche perdu sont exposés pour terrifier ses adversaires. Son sac à dos montre que cet individu est plein de ressources et toujours prêt à s'adapter à n’importe quelle situation qui se présente à lui. Et enfin son bandeau est toujours présenté comme blanc comme la neige pour montrer sa determination a atteindre ses objectifs."
       },
       {
+        id: 1,
         name: "robotec",
         origin: "Dingjal Orlov",
         strength: "Capacité de calculer 10 milliard d’équations par seconde",
         description: "Robotec possède un corps métallique, plaquée or. Le bas de son corps semble deformé suite à un des combats lors de la révolution."
       },
       {
+        id: 3,
         name: "spectre",
         origin: "Asgard",
         strength: "L’épée forgée dans le volcan de la planète Asgard",
         description: "Spectre possède des sourcils blancs et une longue barbe puisque jadis, ce fut un vieil homme. Vétu d’un linge blanc, il dégage une aura noire. Spectre a gardé sa forme humanoïde. Il porte dans son dos l’épée asgardienne et sur sa tête, tout comme la lampe de Pixar, il a une lumière aveuglante provenant de ses cornes."
       },
       {
+        id: 5,
         name: "totox",
         origin: "unknown",
         strength: "unknown",
         description: "Totox a une apparence monstrueuse issue de la fusion d’un octopus et d’un humanoïde. Il agit et communique comme les humains mais il a des tentacules comme les octopus. On peut y apercevoir sur ces derniers des ongles remplies de venin. Il porte une longue cape noire imitant son héros d’enfance Dracula (son apparence monstrueuse est une fusion entre une octopus et une forme humanoïde. Ce dernier marche, s’habille,parle comme un être human, il porte une long cape noir et ils possedent meme des ongles sur la pointes de ses tentacules!)"
       },
       {
+        id: 2,
         name: "xmars",
         origin: "mars",
         strength: "intimidation, ruse, tromperie",
@@ -224,7 +230,7 @@ export default {
   sockets:{
     availableSpecies : function(availableSpecies) {
       for(const specie of this.species){
-        if (!(specie.name in availableSpecies))
+        if (!(specie.id in availableSpecies))
           this.lockedChoices.push(specie.name)
       }
     },
