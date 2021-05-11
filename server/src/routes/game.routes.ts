@@ -1,7 +1,11 @@
 // Required External Modules and Interfaces
 import { Socket } from "socket.io";
-import { Action } from "src/gamelogic/Action";
-import { Card } from "src/gamelogic/Card";
+import { Action } from "../gamelogic/Action";
+import { Card } from "../gamelogic/Card";
+import { FirewallCard } from "../gamelogic/FirewallCard";
+import { GeneratorCard } from "../gamelogic/GeneratorCard";
+import { SpecialCard } from "../gamelogic/SpecialCard";
+import { VirusCard } from "../gamelogic/VirusCard";
 import { Game } from "../gamelogic/Game";
 import { Player, Species } from "../gamelogic/Players";
 
@@ -79,9 +83,29 @@ function nextTurn(io: any, thisGame: Game) {
     if (thisGame.currentPlayer.hand.length === 0) {
       thisGame.draw(3);
     }
-    io.to(current.socketId).emit("hand", current.hand);
+    io.to(current.socketId).emit(
+      "hand",
+      current.hand,
+      cardsKinds(current.hand)
+    );
   } while (thisGame.currentPlayer.hand.length === 0);
   setTimeout(() => nextTurn(io, thisGame), 20000);
+}
+
+function cardsKinds(cards: Card[]): string[] {
+  return cards.map((value) => {
+    if (value instanceof FirewallCard) {
+      return "firewall";
+    } else if (value instanceof GeneratorCard) {
+      return "generator";
+    } else if (value instanceof VirusCard) {
+      return "virus";
+    } else if (value instanceof SpecialCard) {
+      return "action";
+    } else {
+      throw "Unexpected type";
+    }
+  });
 }
 
 module.exports = function (io: any) {
@@ -137,9 +161,18 @@ module.exports = function (io: any) {
           socket.join(thisgame.roomId);
           socket.emit("game id", thisgame.roomId);
 
-          for (let tmp of thisgame.players) {
-            socket.emit("players", tmp.pseudo, tmp.species);
-          }
+          socket.emit(
+            "players",
+            thisgame.players.map((value) => {
+              return value.pseudo;
+            }),
+            thisgame.players.map((value) => {
+              return value.species;
+            }),
+            thisgame.players.findIndex((value) => {
+              return value.socketId == socket.id;
+            })
+          );
 
           io.in(thisgame.roomId).emit(
             "join game",
@@ -164,10 +197,14 @@ module.exports = function (io: any) {
         }
 
         thisgame.init();
-        for (let player of thisgame.players) {
-          io.to(player.socketId).emit("hand", player.hand);
-          io.in(thisgame.roomId).emit("base", player.base);
-        }
+        thisgame.players.forEach((player, index) => {
+          io.to(player.socketId).emit(
+            "hand",
+            player.hand,
+            cardsKinds(player.hand)
+          );
+          io.in(thisgame.roomId).emit("base", player.base, index);
+        });
         io.in(thisgame.roomId).emit("next turn", thisgame.currentPlayerIdx);
       } catch (err) {
         socket.emit("oops", err);
@@ -204,7 +241,11 @@ module.exports = function (io: any) {
           socket.to(roomId).emit("play card", action);
 
           thisgame.playAction(action);
-          socket.emit("hand", thisgame.currentPlayer.hand);
+          const kinds = cardsKinds(thisgame.currentPlayer.hand);
+          socket.emit("hand", thisgame.currentPlayer.hand, kinds);
+          thisgame.players.forEach((player, index) => {
+            io.in(thisgame.roomId).emit("base", player.base, index);
+          });
 
           if (thisgame.inProgress) {
             nextTurn(io, thisgame);

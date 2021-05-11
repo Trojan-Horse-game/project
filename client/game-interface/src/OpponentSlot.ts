@@ -10,9 +10,11 @@ export class OpponentSlot extends Phaser.GameObjects.Container {
     playerCircleRadius: number,
     slotLayout: SlotLayout,
     name: string,
-    pictureName: string
+    pictureName: string,
+    index: number
   ) {
     super(scene);
+    this.index = index;
     const layoutInfo = new LayoutInfo(slotLayout);
     this.profilePicture = new ProfilePicture(
       scene,
@@ -32,7 +34,8 @@ export class OpponentSlot extends Phaser.GameObjects.Container {
         scene,
         0.428 * playerCircleRadius,
         GeneratorKind[generatorKind],
-        false
+        false,
+        i
       );
       generator.setGeneratorState(GeneratorState.Enabled);
       this.generators.set(generatorKind, generator);
@@ -48,7 +51,7 @@ export class OpponentSlot extends Phaser.GameObjects.Container {
 
   profilePicture: ProfilePicture;
   generators = new Map<string, Generator>();
-
+  index: number;
   get timerPercentage(): number {
     return this.profilePicture.timerPercentage;
   }
@@ -109,7 +112,7 @@ class LayoutInfo {
 
   textPosition: TextPosition;
   generatorRotationBuilder: (index: number) => number;
-
+  index: number;
   static baseYPositionFactor = 1.15;
 
   static makeGenPosBuild(

@@ -1,19 +1,21 @@
 /* eslint-disable @typescript-eslint/no-use-before-define */
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { Card } from "./Card";
-import { GameSceneDelegate, Species } from "./GameSceneDelegate";
+import { GameSceneDelegate } from "./GameSceneDelegate";
 import { io, Socket } from "socket.io-client";
 import { GameScene, Player } from "./GameScene";
 
 export class GameNetworkDelegate implements GameSceneDelegate {
   private socket: Socket;
   scene: GameScene;
-  availableSpecies: Species[] = [];
+  availableSpecies: Specie[] = [];
   room: string;
   playerIndex: number;
   winnerIndex: number;
 
   constructor() {
+    this.socket = io();
+
     this.socket.on("oops", err => {
       console.error(err);
     });
@@ -26,8 +28,12 @@ export class GameNetworkDelegate implements GameSceneDelegate {
   wasAddedToScene(scene: GameScene) {
     this.scene = scene;
 
-    this.socket.on("hand", hand => {
+    this.socket.on("hand", (hand: NetworkCard[], kind: string[]) => {
       console.log("hand");
+    });
+
+    this.socket.on("base", (generators: GeneratorSlot[], idx: number) => {
+      console.log("base");
     });
 
     this.socket.on("next turn", (playerIndex: number) => {
@@ -67,20 +73,23 @@ export class GameNetworkDelegate implements GameSceneDelegate {
       this.room = roomId;
     });
 
-    this.socket.on("players", (pseudo: string, species) => {
-      const player = new Player(pseudo, species);
-      this.scene.appendPlayer(player);
-    });
+    this.socket.on(
+      "players",
+      (pseudo: string[], species: Specie[], playerIndex: number) => {
+        const players: Player[] = [];
+        for (let i = 0; i < pseudo.length; i++) {
+          players.push(new Player(pseudo[i], species[i]));
+        }
+        this.scene.updatePlayers(players, -1);
+      }
+    );
   }
 
-  didDropCard(
-    card: Card,
-    cardIndex: number,
-    playerIndex: number,
-    generatorIndex: number
-  ) {
+  didDropCard(cardIndex: number, playerIndex: number, generatorIndex: number) {
     try {
+      console.log("didDropCard", cardIndex, playerIndex, generatorIndex);
       const action = new Action(cardIndex);
+      action.addTarget(playerIndex);
       action.addSlotTarget(generatorIndex);
       action.addTarget(playerIndex);
       this.socket.emit("play card", this.room, action);
@@ -90,6 +99,7 @@ export class GameNetworkDelegate implements GameSceneDelegate {
   }
 
   didDiscard(cardsIndices: number[]) {
+    console.log("Did discard", cardsIndices);
     try {
       this.socket.emit("discard", this.room, cardsIndices);
     } catch (err) {
@@ -105,7 +115,7 @@ export class GameNetworkDelegate implements GameSceneDelegate {
     }
   }
 
-  createGame(pseudo: string, specie: Species) {
+  createGame(pseudo: string, specie: Specie) {
     try {
       this.socket.emit("create game", pseudo, specie);
       // specie index or string ??
@@ -123,7 +133,7 @@ export class GameNetworkDelegate implements GameSceneDelegate {
     }
   }
 
-  chooseSpecie(specie: Species) {
+  chooseSpecie(specie: Specie) {
     try {
       this.socket.emit("choose species", specie);
     } catch (err) {
@@ -149,5 +159,62 @@ export class Action {
   /* add a BaseSlot's indexx target to the action */
   addSlotTarget(slot: number) {
     this.slotTarget.push(slot);
+  }
+}
+
+export enum NetworkColor {
+  Air,
+  Water,
+  Energy,
+  Radiation,
+  Joker
+}
+
+/* A generic interface for all the cards 
+
+   It is implemented by the class Generator, Virus,
+   Firewall and ActionSpe
+*/
+export interface NetworkCard {
+  color: NetworkColor;
+}
+
+export class GeneratorSlot {
+  state: NetworkState;
+  color: NetworkColor;
+  // cards: Card[] = [];
+}
+
+export enum NetworkState {
+  Empty,
+  Generator,
+  Virused,
+  Protected,
+  Immunized
+}
+
+export enum Specie {
+  Hutex,
+  Sonyas,
+  Xmars,
+  Spectre,
+  Ulysse,
+  Totox
+}
+
+export function specieToString(specie: Specie): string {
+  switch (specie) {
+    case Specie.Hutex:
+      return "hutex";
+    case Specie.Sonyas:
+      return "spectre";
+    case Specie.Xmars:
+      return "xmars";
+    case Specie.Spectre:
+      return "spectre";
+    case Specie.Ulysse:
+      return "ulysse";
+    case Specie.Totox:
+      return "totox";
   }
 }

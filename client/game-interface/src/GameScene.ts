@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-use-before-define */
 import "phaser";
 import { OpponentSlot, SlotLayout } from "./OpponentSlot";
 import { PlayerSlot } from "./PlayerSlot";
@@ -13,6 +14,7 @@ import { ProfilePicture } from "./ProfilePicture";
 import { CardSprite } from "./CardSprite";
 import { ActionDropZone } from "./ActionDropZone";
 import { ResponsiveScene } from "./ResponsiveScene";
+import { Specie, specieToString } from "./GameNetworkDelegate";
 
 export class GameScene extends ResponsiveScene {
   constructor(currentPlayer: Player) {
@@ -35,15 +37,17 @@ export class GameScene extends ResponsiveScene {
   actionDropZone: ActionDropZone;
   playerSlot: PlayerSlot;
   opponentsSlots: OpponentSlot[] = [];
+  timerUpdater: number;
+  timerTimeout: number;
 
   preload() {
     // Character pictures
-    this.load.image("fawkes_tete", "src/assets/Fawkes_tete.png");
-    this.load.image("hutex_tete", "src/assets/Hutex_tete.png");
-    this.load.image("robotec_tete", "src/assets/Robotec_tete.png");
-    this.load.image("spectre_tete", "src/assets/Spectre_tete.png");
-    this.load.image("totox_tete", "src/assets/Totox_tete.png");
-    this.load.image("xmars_tete", "src/assets/Xmars_tete.png");
+    this.load.image("fawkes", "src/assets/Fawkes_tete.png");
+    this.load.image("hutex", "src/assets/Hutex_tete.png");
+    this.load.image("robotec", "src/assets/Robotec_tete.png");
+    this.load.image("spectre", "src/assets/Spectre_tete.png");
+    this.load.image("totox", "src/assets/Totox_tete.png");
+    this.load.image("xmars", "src/assets/Xmars_tete.png");
 
     // Generator icons
     this.load.image("electricity", "src/assets/foudre_log.png");
@@ -108,6 +112,14 @@ export class GameScene extends ResponsiveScene {
       }
     };
 
+    this.updatePlayers(
+      [
+        new Player("Foo", Specie.Hutex),
+        new Player("Bar", Specie.Sonyas),
+        new Player("Baz", Specie.Totox)
+      ],
+      0
+    );
     this.actionDropZone = new ActionDropZone(
       this,
       75 * window.devicePixelRatio
@@ -119,7 +131,7 @@ export class GameScene extends ResponsiveScene {
       this,
       profileRadius,
       this.players[this.playerIndex].name,
-      this.players[this.playerIndex].specie
+      specieToString(this.players[this.playerIndex].specie)
     );
     this.playerSlot.setDepth(200);
     this.add.existing(this.playerSlot);
@@ -139,6 +151,7 @@ export class GameScene extends ResponsiveScene {
     const height = this.cameras.main.height;
     this.resize(width, height);
     this.nextTurn(0);
+    this.nextTurn(1);
   }
 
   resize(width: number, height: number) {
@@ -180,15 +193,15 @@ export class GameScene extends ResponsiveScene {
       nextPlayer > this.playerIndex ? nextPlayer - 1 : nextPlayer;
 
     if (this.currentPlayer) {
-      const opponentSlotIndex =
-        this.currentPlayer > this.playerIndex
-          ? this.currentPlayer - 1
-          : this.currentPlayer;
       // If current player is the user
       if (this.currentPlayer == this.playerIndex) {
         this.playerSlot.profilePicture.timerPercentage = 0;
         this.playerSlot.playerInteractive = false;
       } else {
+        const opponentSlotIndex =
+          this.currentPlayer > this.playerIndex
+            ? this.currentPlayer - 1
+            : this.currentPlayer;
         this.opponentsSlots[
           opponentSlotIndex
         ].profilePicture.timerPercentage = 0;
@@ -207,13 +220,13 @@ export class GameScene extends ResponsiveScene {
     const duration = 20000;
     const fps = 30;
     const increments = 1 / (duration / 1000) / fps;
-    const timerUpdater = window.setInterval(() => {
+    this.timerUpdater = window.setInterval(() => {
       const current = nextPlayerProfilePicture.timerPercentage;
       const next = Math.max(current - increments, 0);
       nextPlayerProfilePicture.timerPercentage = next;
     }, 1000 / fps);
-    window.setTimeout(() => {
-      clearInterval(timerUpdater);
+    this.timerTimeout = window.setTimeout(() => {
+      clearInterval(this.timerUpdater);
     }, duration + 50);
     this.currentPlayer = nextPlayer;
   }
@@ -235,7 +248,8 @@ export class GameScene extends ResponsiveScene {
         55 * window.devicePixelRatio,
         this.slotLayoutForOpponent(opponentIndex),
         opponent.name,
-        opponent.specie
+        specieToString(opponent.specie),
+        index
       );
 
       this.opponentsSlots.push(opponentSlot);
@@ -305,10 +319,10 @@ export class GameScene extends ResponsiveScene {
 type Position = { x: number; y: number };
 
 export class Player {
-  constructor(name: string, specie: string) {
+  constructor(name: string, specie: Specie) {
     this.name = name;
     this.specie = specie;
   }
   name: string;
-  specie: string;
+  specie: Specie;
 }
