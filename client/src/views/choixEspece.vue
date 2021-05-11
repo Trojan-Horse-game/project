@@ -382,7 +382,7 @@ $content: #2f363c;
   background-size: cover;
   align-self: center;
   margin: 0px 10px;
-  padding: 3%;
+  padding: 8%;
 }
 
 .cercle:not(.lock) {
