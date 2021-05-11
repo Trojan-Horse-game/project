@@ -108,8 +108,8 @@
 
             <div class="attribut">
               <p class="nom">Force</p>
-              <div class="text"
-                ><p class="text-fill" id="force"> {{ selected.strength }}</p></div>
+              <div class="text" id="force"
+                ><p class="text-fill"> {{ selected.strength }}</p></div>
             </div>
 
             <div class="attribut" id="description">
