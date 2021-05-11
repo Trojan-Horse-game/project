@@ -479,6 +479,8 @@ $content: #2f363c;
 
 #force {
   font-size: 15px;
+  padding-top: 3%;
+  padding-bottom: 3%;
 }
 
 #content input {

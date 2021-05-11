@@ -45,7 +45,7 @@ const routes: Array<RouteConfig> = [
     name: "Connexion",
     component: Login,
     meta: {
-      title: "Les Cavaliers de Troie - Login"
+      title: "Les Cavaliers de Troie - Connexion"
     }
   },
   {
@@ -53,7 +53,7 @@ const routes: Array<RouteConfig> = [
     name: "Paramètres",
     component: Parametres,
     meta: {
-      title: "Les Cavaliers de Troie - Parametres"
+      title: "Les Cavaliers de Troie - Paramètres"
     }
   },
   {
