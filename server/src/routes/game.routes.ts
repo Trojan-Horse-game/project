@@ -192,7 +192,7 @@ module.exports = function (io: any) {
         if (thisgame.roomId != socket.id) {
           throw "Not the host !";
         }
-        if ((thisgame.players.length = 1)) {
+        if (thisgame.players.length == 1) {
           throw "Not enough players !";
         }
 
