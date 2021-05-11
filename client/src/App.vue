@@ -1,6 +1,6 @@
 <template>
   <div id="appContainer">
-    <AudioPlayer />
+    <AudioPlayer/>
     <router-view></router-view>
   </div>
 </template>

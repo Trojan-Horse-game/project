@@ -574,7 +574,8 @@ input:focus {
 
 #buttons-row {
   display: flex;
-  justify-content: center;
+  margin: 4% auto;
+  justify-content: space-evenly;
 }
 
 #buttons-row .v-btn {

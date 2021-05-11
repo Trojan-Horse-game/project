@@ -9,10 +9,10 @@
 
       <div id="buttons">
         <router-link to="/reglesDuJeu">
-          <img src="../../public/Design/regles.png" alt="Règles du jeu" />
+          <img src="../../public/Design/regles.png" alt="Règles du jeu" title="Règles du jeu" />
         </router-link>
         <router-link to="/Profil">
-          <img src="../../public/Design/profil.png" alt="Profil" />
+          <img src="../../public/Design/profil.png" alt="Profil" title="Profil"/>
         </router-link>
       </div>
     </div>
@@ -76,7 +76,7 @@ export default {
 }
 
 #buttons {
-  width: 10vw;
+  width: 25%;
   display: flex;
   justify-content: space-evenly;
   margin: 2% 0% 0% 0%;
@@ -90,6 +90,7 @@ export default {
 }
 
 #buttons img {
+  margin: 5%;
   height: 50px;
   width: auto;
 }

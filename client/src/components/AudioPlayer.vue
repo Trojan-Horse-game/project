@@ -1,5 +1,5 @@
 <template>
-  <div id="audioplay">
+  <div id="audioplay" :class="$route.name == 'Jeu' ? 'bottom' : 'right'">
     <audio ref="player" autoplay loop>
       <source :src="audioFile" type="audio/mpeg" />
       Your browser does not support the audio element.
@@ -75,6 +75,15 @@ export default {
   position: fixed;
   right:0;
   z-index: 50;
+}
+
+.bottom{
+  bottom:0;
+}
+
+.bottom > #controls {
+  display: block;
+  height: 5%;
 }
 
 #controls {
