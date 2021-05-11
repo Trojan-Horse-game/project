@@ -3,12 +3,10 @@
     <div id="background-image" />
     <div id="container">
       <logo title="Menu principal" />
-      <router-link :to="{ name: 'Choix espèce', params: { game, player } }"
-        ><button id="lancer" @click="createGame()"
-      /></router-link>
-      <router-link :to="{ name: 'Rejoindre partie', params: { game, player } }"
-        ><button id="rejoindre"
-      /></router-link>
+      <router-link :to="{ name: 'Choix espèce' }"
+        ><button id="lancer" @click="createGame()"/></router-link>
+      <router-link :to="{ name: 'Rejoindre partie' }"
+        ><button id="rejoindre"/></router-link>
 
       <div id="buttons">
         <router-link to="/reglesDuJeu">
@@ -32,47 +30,16 @@ export default {
     if (localStorage.getItem("token") === null) {
       this.$router.push("/");
     }
-    this.username = localStorage.getItem("username");
-    this.player = new Player(this.username, this.species);
-    this.game = new GameScene("", this.player);
   },
   methods:{
     async createGame() {
       try {
-        this.$socket.emit("create game", (this.username));
+        this.$socket.emit("create game", (localStorage.getItem("username")));
       } catch (err) {
         console.log(err);
       }
     }
   },
-  methods:{
-    async createGame() {
-      try {
-        this.$socket.emit("create game", (this.username));
-      } catch (err) {
-        console.log(err);
-      }
-    }
-  },
-  data: () => ({
-    gameId: "",
-    species: "",
-    username: "",
-    player: null,
-    game: null
-  }),
-  watch: {
-    username: function() {
-      this.player = new Player(this.username, this.species);
-    },
-
-    species: function() {
-        this.player = new Player(this.username, this.species);
-    },
-    player: function() {
-        this.game = new GameScene("", this.player);
-    }
-  }, 
   sockets: {
     gameId : function(gameId){
       this.gameId = gameId;
