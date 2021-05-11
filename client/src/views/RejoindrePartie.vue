@@ -40,6 +40,7 @@ export default {
         if(this.id.length > 0){
           console.log(this.id)
           this.$socket.emit("join game", localStorage.getItem("username"), this.id);
+          this.$router.push("/choixEspece");
         }
         else{
           throw "Id de la partie requis";
