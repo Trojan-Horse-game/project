@@ -306,9 +306,9 @@ module.exports = function (io: any) {
     });
 
     socket.on("gameState", () => {
-      if(socket.rooms.length > 2)
+      if(socket.rooms.size > 2)
         socket.emit("inGame");
-      else if( socket.rooms.length == 1)
+      else if( socket.rooms.size == 1)
         socket.emit("restricted");
     });
 
