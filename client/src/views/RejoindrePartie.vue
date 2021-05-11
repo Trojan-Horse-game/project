@@ -31,12 +31,15 @@ export default {
       this.$router.push("/");
     }
   },
+  data: () => ({
+    id: "",
+  }),
   methods:{
     async joinGame() {
       // try {
         if(this.id.length > 0){
           console.log(this.id)
-          this.$sockets.emit("join game", localStorage.getItem("username"), this.id);
+          this.$socket.emit("join game", localStorage.getItem("username"), this.id);
         }
         else{
           throw "Id de la partie requis";
@@ -46,9 +49,11 @@ export default {
       // }
     }
   },
-  data: () => ({
-    id: "",
-  }),
+  sockets :{
+    oops: function(error) {
+      alert(error);
+    }
+  }
 };
 </script>
 
