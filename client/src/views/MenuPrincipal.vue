@@ -68,7 +68,8 @@ export default {
   sockets: {
     gameId : function(gameId){
       this.gameId = gameId;
-      console.log(this.gameId)
+      console.log("game id",gameId);
+      console.log("game id",this.gameId)
     },
     oops : function(error) {
       alert(error);
