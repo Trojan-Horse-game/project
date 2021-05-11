@@ -26,7 +26,7 @@ export default {
         height: window.innerHeight * window.devicePixelRatio,
         zoom: 1 / window.devicePixelRatio
       },
-      scene: [new GameScene(new Player(localStorage.getItem("username"), Specie.Spectre))]
+      scene: [new GameScene("", new Player(localStorage.getItem("username"), Specie.Spectre))]
     }
   }),
 
