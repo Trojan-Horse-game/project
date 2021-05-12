@@ -15,7 +15,10 @@
       </div>
     </div>
     <span id="gameId">{{ this.gameId }}</span>
+<<<<<<< HEAD
     <v-btn @click="abandon()" id="abandon" title="Quitter la partie" medium icon><v-icon>mdi-logout</v-icon></v-btn>
+=======
+>>>>>>> 0a6fd23073949fcb2b2e0b4d0b529fc2cbfaecce
   </div>
 </template>
 
