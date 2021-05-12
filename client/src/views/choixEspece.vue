@@ -200,14 +200,7 @@ export default {
     lockChoice() {
       this.lockedSpecies = this.selected.name;
       this.lockedChoices.push(this.selected.name);
-      let specieVal;
-      if(this.selected.id == "0") specieVal = Species.Hutex
-      else if(this.selected.id == "1") specieVal = Species.Robotec
-      else if(this.selected.id == "2") specieVal = Species.Xmars
-      else if(this.selected.id == "3") specieVal = Species.Spectre
-      else if(this.selected.id == "4") specieVal = Species.Fawkes
-      else specieVal = Species.Totox
-      this.$socket.emit("choose species", specieVal);
+      this.$socket.emit("choose species", this.selected.id);
       localStorage.setItem("specie", this.selected.name);
       this.$router.push("/Jeu");
     },

@@ -100,7 +100,7 @@ export default {
       else if(specie == 4) specieVal = Species.Fawkes
       else  specieVal = Species.Totox
       const player = new Player(pseudo, specieVal);
-      this.Jeu.scene.appendPlayer(player);
+      this.game.scene.appendPlayer(player);
     },
     players : function(pseudo: string[], species: Species[], playerIndex: number) {
       const players: Player[] = [];
@@ -108,7 +108,7 @@ export default {
           console.log("player :", playerIndex, pseudo[i], species[i])
           players.push(new Player(pseudo[i], species[i]));
         }
-        this.Jeu.scene.updatePlayers(players, -1);
+        this.game.scene.updatePlayers(players, -1);
     },
     hand : function(hand: NetworkCard[], kind: string[]) {
       console.log("hand",hand,kind)
@@ -131,14 +131,14 @@ export default {
       console.log("next turn", playerIdx)
       if(this.gameState == false)
         this.gameState = true;
-      this.Jeu.scene.nextTurn(playerIdx);
+      this.game.scene.nextTurn(playerIdx);
     },
     discard : function(indexDiscard: number, cards: NetworkCard[]) {
       console.log("discard",indexDiscard, cards)
     },
     leaveGame : function(playerIdx){
       console.log("left the game",playerIdx)
-      this.Jeu.scene.removePlayer(playerIdx);
+      this.game.scene.removePlayer(playerIdx);
     },
     endGame : function(winner) {
       this.gameState = false;
@@ -179,7 +179,7 @@ export default {
 }
 
 #gameId {
-  z-index: 100;
+  z-index: 49;
   left: 0;
   bottom: 0;
   margin: 2%;
@@ -198,7 +198,7 @@ export default {
 
 #filter {
   position: fixed;
-  z-index: 100;
+  z-index: 49;
   width: 100%;
   background-color: rgba(47,47,47,0.3);
   margin:auto;
@@ -212,7 +212,7 @@ export default {
 
 #endFilter{
   position: fixed;
-  z-index: 100;
+  z-index: 49;
   width: 100%;
   height: 100%;
   background-color: rgba(47,47,47,0.8);
