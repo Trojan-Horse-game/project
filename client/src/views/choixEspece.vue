@@ -200,7 +200,6 @@ export default {
       this.lockedSpecies = this.selected.name;
       this.lockedChoices.push(this.selected.name);
       this.$socket.emit("choose species", this.selected.id);
-      this.localStorage.setItem("Specie", this.selected.id);
       this.$router.push("/Jeu");
     },
 

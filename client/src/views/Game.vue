@@ -28,59 +28,57 @@ export default {
         height: window.innerHeight * window.devicePixelRatio,
         zoom: 1 / window.devicePixelRatio
       },
-      scene: [new GameScene(localStorage.getItem("gameId"), new Player(localStorage.getItem("username"), Specie.Hutex))]
+      scene: new GameScene(localStorage.getItem("gameId"), new Player(localStorage.getItem("username"), Specie.Hutex))
     },
   }),
 
   mounted: function() {
-    console.log(this.gameId)
-    const game = new Phaser.Game(this.config);
 
-    window.addEventListener("resize", function() {
+    this.window.addEventListener("resize", function() {
       const w = window.innerWidth * window.devicePixelRatio;
       const h = window.innerHeight * window.devicePixelRatio;
-      game.scale.resize(w, h);
+      this.game.scale.resize(w, h);
 
-      for (const scene of game.scene.scenes) {
-        if (scene.scene.settings.active) {
-          scene.cameras.main.setViewport(0, 0, w, h);
-          if (scene instanceof ResponsiveScene) {
-            scene.resize(w, h);
+      // for (const scene of game.scene.scenes) {
+        if (this.game.scene.settings.active) {
+          this.game.scene.cameras.main.setViewport(0, 0, w, h);
+          if (this.game.scene instanceof ResponsiveScene) {
+            this.game.scene.resize(w, h);
           }
         }
-      }
+      // }
     });
 
     // this.$socket.emit("gameState");
   },
   methods : {
-    didDropCard(cardIndex: number, playerIndex: number, generatorIndex: number) {
-      try {
-        console.log("didDropCard", cardIndex, playerIndex, generatorIndex);
-        const action = new Action(cardIndex);
-        action.addTarget(playerIndex);
-        action.addSlotTarget(generatorIndex);
-        action.addTarget(playerIndex);
-        this.$socket.emit("play card", this.room, action);
-      } catch (err) {
-        console.error(err);
-      }
-    },
-    didDiscard(cardsIndices: number[]) {
-      console.log("Did discard", cardsIndices);
-      try {
-        this.$socket.emit("discard", this.room, cardsIndices);
-      } catch (err) {
-        console.error(err);
-      }
-    },
-    launchGame(roomId: string) {
-      try {
-        this.$socket.emit("launch game", this.room);
-      } catch (err) {
-        console.error(err);
-      }
-    },
+    // didDropCard(cardIndex: number, playerIndex: number, generatorIndex: number) {
+    //   try {
+    //     console.log("didDropCard", cardIndex, playerIndex, generatorIndex);
+    //     const action = new Action(cardIndex);
+    //     action.addTarget(playerIndex);
+    //     action.addSlotTarget(generatorIndex);
+    //     action.addTarget(playerIndex);
+    //     this.$socket.emit("play card", this.room, action);
+    //   } catch (err) {
+    //     console.error(err);
+    //   }
+    // },
+    // didDiscard(cardsIndices: number[]) {
+    //   console.log("Did discard", cardsIndices);
+    //   try {
+    //     this.$socket.emit("discard", this.room, cardsIndices);
+    //   } catch (err) {
+    //     console.error(err);
+    //   }
+    // },
+    // launchGame(roomId: string) {
+    //   try {
+    //     this.$socket.emit("launch game", this.room);
+    //   } catch (err) {
+    //     console.error(err);
+    //   }
+    // },
 
   },
   sockets : {
