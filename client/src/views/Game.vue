@@ -15,6 +15,7 @@
       </div>
     </div>
     <span id="gameId">{{ this.gameId }}</span>
+    <v-btn @click="abandon()" id="abandon" title="Quitter la partie" medium icon><v-icon>mdi-logout</v-icon></v-btn>
   </div>
 </template>
 
@@ -96,6 +97,10 @@ export default {
         console.error(err);
       }
     },
+    abandon() {
+      this.$socket.emit("abbandon", this.gameId);
+      this.$router.push("/menuPrincipal");
+    }
 
   },
   sockets : {
@@ -153,6 +158,8 @@ export default {
       // this.winnerIdx = winner;
     },
     oops : function(error) {
+      this.gameState = false;
+      this.endGame = false;
       alert(error);
     },
     // restricted : function() {
@@ -189,6 +196,14 @@ export default {
   margin: 2%;
   font-size: 100%;
   color: #bbbbbb;
+  position: fixed;
+}
+
+#abandon {
+  z-index: 50;
+  right: 6%;
+  background-color:transparent !important;
+  bottom: 1%;
   position: fixed;
 }
 
