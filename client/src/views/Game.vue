@@ -28,8 +28,8 @@ export default {
 
   data: () => ({
     gameState : false,
-    endGame : true,
-    winner : true,
+    endGame : false,
+    winner : false,
     gameId: localStorage.getItem("gameId"),
     game: {
       type: Phaser.AUTO,
@@ -89,7 +89,7 @@ export default {
     launchGame() {
       try {
         this.gameState = true;
-        // this.$socket.emit("launch game", this.gameId);
+        this.$socket.emit("launch game", this.gameId);
       } catch (err) {
         console.error(err);
       }
@@ -145,6 +145,8 @@ export default {
       this.scene.removePlayer(playerIdx);
     },
     endGame : function(winner) {
+      this.gameState = false;
+      this.endGame = true;
       console.log(winner)
       // this.winnerIdx = winner;
     },

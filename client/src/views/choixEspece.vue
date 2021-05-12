@@ -23,7 +23,7 @@
           <span
             :class="[{ active: selected.name == 'fawkes' }, 'cercle']"
             id="fawkes"
-            @click="select(1)"
+            @click="select(0)"
           >
             <img
               src="../../public/Design/fawkes.png"
@@ -40,7 +40,7 @@
           <span
             :class="[{ active: selected.name == 'hutex' }, 'cercle']"
             id="hutex"
-            @click="select(2)"
+            @click="select(1)"
             ><img
               src="../../public/Design/hutex.png"
               alt="hutex"
@@ -50,7 +50,7 @@
           <span
             :class="[{ active: selected.name == 'robotec' }, 'cercle']"
             id="robot"
-            @click="select(3)"
+            @click="select(2)"
             ><img
               src="../../public/Design/robot.png"
               alt="robot"
@@ -60,7 +60,7 @@
           <span
             :class="[{ active: selected.name == 'spectre' }, 'cercle']"
             id="spectre"
-            @click="select(4)"
+            @click="select(3)"
             ><img
               src="../../public/Design/spectre.png"
               alt="spectre"
@@ -73,7 +73,7 @@
           <span
             :class="[{ active: selected.name == 'totox' }, 'cercle']"
             id="totox"
-            @click="select(5)"
+            @click="select(4)"
             ><img
               src="../../public/Design/totox.png"
               alt="totox"
@@ -83,7 +83,7 @@
           <span
             :class="[{ active: selected.name == 'xmars' }, 'cercle']"
             id="xmars"
-            @click="select(6)"
+            @click="select(5)"
             ><img
               src="../../public/Design/xmars.png"
               alt="xmars"
