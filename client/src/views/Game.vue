@@ -117,8 +117,8 @@ export default {
     gameId: function(gameId: string) {
       console.log(gameId);
     },
-    joinGame: (pseudo: string, specie: number) => {
-      console.log("joined the game :", pseudo, specie);
+    joinGame: function(pseudo: string, specie: number) {
+      console.log("joined the game :", pseudo);
       let specieVal;
       if (specie == 0) specieVal = Species.Hutex;
       else if (specie == 1) specieVal = Species.Robotec;
