@@ -20,11 +20,6 @@ export class GameNetworkDelegate implements GameSceneDelegate {
       console.error(err);
     });
 
-  }
-
-  wasAddedToScene(scene: GameScene) {
-    this.scene = scene;
-
     this.socket.on("hand", (hand: NetworkCard[], kind: string[]) => {
       console.log("hand");
     });
@@ -80,6 +75,9 @@ export class GameNetworkDelegate implements GameSceneDelegate {
         this.scene.updatePlayers(players, -1);
       }
     );
+  }
+
+  wasAddedToScene(scene: GameScene) {
   }
 
   didDropCard(cardIndex: number, playerIndex: number, generatorIndex: number) {
