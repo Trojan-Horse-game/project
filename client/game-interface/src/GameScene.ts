@@ -114,14 +114,14 @@ export class GameScene extends ResponsiveScene {
       }
     };
 
-    this.updatePlayers(
-      [
-        new Player("Foo", Specie.Hutex),
-        new Player("Bar", Specie.Sonyas),
-        new Player("Baz", Specie.Totox)
-      ],
-      0
-    );
+    // this.updatePlayers(
+    //   [
+    //     new Player("Foo", Specie.Hutex),
+    //     new Player("Bar", Specie.Sonyas),
+    //     new Player("Baz", Specie.Totox)
+    //   ],
+    //   0
+    // );
     this.actionDropZone = new ActionDropZone(
       this,
       75 * window.devicePixelRatio
@@ -152,8 +152,8 @@ export class GameScene extends ResponsiveScene {
     const width = this.cameras.main.width;
     const height = this.cameras.main.height;
     this.resize(width, height);
-    this.nextTurn(0);
-    this.nextTurn(1);
+    // this.nextTurn(0);
+    // this.nextTurn(1);
   }
 
   resize(width: number, height: number) {

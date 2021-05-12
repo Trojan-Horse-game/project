@@ -37,8 +37,9 @@ export default {
     gameId: localStorage.getItem("gameId"),
     initialize: false,
     game: {
-      width: "100%",
-      height: "100%",
+      width: window.innerWidth * window.devicePixelRatio,
+      height: window.innerHeight * window.devicePixelRatio,
+      zoom: 1 / window.devicePixelRatio,
       type: Phaser.AUTO,
       scene: new GameScene(localStorage.getItem("gameId"), new Player(localStorage.getItem("username"), Specie.Spectre))
     }
@@ -92,7 +93,7 @@ export default {
     joinGame : function(pseudo: string,specie: Specie) {
       console.log("joined the game :",pseudo, specie)
       const player = new Player(pseudo, specie);
-      this.scene.appendPlayer(player);
+      this.Jeu.appendPlayer(player);
     },
     players : function(pseudo: string[], species: Specie[], playerIndex: number) {
       const players: Player[] = [];
@@ -100,7 +101,7 @@ export default {
           console.log("player :", playerIndex, pseudo[i], species[i])
           players.push(new Player(pseudo[i], species[i]));
         }
-        this.scene.updatePlayers(players, -1);
+        this.Jeu.updatePlayers(players, -1);
     },
     hand : function(hand: NetworkCard[], kind: string[]) {
       console.log("hand",hand,kind)
@@ -121,14 +122,16 @@ export default {
     },
     nextTurn : function(playerIdx: number) {
       console.log("next turn", playerIdx)
-      this.scene.nextTurn(playerIdx);
+      if(this.gameState == false)
+        this.gameState = true;
+      this.Jeu.nextTurn(playerIdx);
     },
     discard : function(indexDiscard: number, cards: NetworkCard[]) {
       console.log("discard",indexDiscard, cards)
     },
     leaveGame : function(playerIdx){
       console.log("left the game",playerIdx)
-      this.scene.removePlayer(playerIdx);
+      this.Jeu.removePlayer(playerIdx);
     },
     endGame : function(winner) {
       this.gameState = false;
