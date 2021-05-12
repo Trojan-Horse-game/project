@@ -195,10 +195,10 @@ export enum NetworkState {
 
 export enum Specie {
   Hutex,
-  Sonyas,
+  Robotec,
   Xmars,
   Spectre,
-  Ulysse,
+  Fawkes,
   Totox
 }
 
@@ -206,14 +206,14 @@ export function specieToString(specie: Specie): string {
   switch (specie) {
     case Specie.Hutex:
       return "hutex";
-    case Specie.Sonyas:
-      return "spectre";
+    case Specie.Robotec:
+      return "robotec";
     case Specie.Xmars:
       return "xmars";
     case Specie.Spectre:
       return "spectre";
-    case Specie.Ulysse:
-      return "ulysse";
+    case Specie.Fawkes:
+      return "fawkes";
     case Specie.Totox:
       return "totox";
   }

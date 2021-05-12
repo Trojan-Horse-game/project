@@ -90,9 +90,16 @@ export default {
     gameId : function(gameId: string) {
       console.log(gameId)
     },
-    joinGame : function(pseudo: string,specie: Specie) {
+    joinGame : function(pseudo: string,specie: number) {
       console.log("joined the game :",pseudo, specie)
-      const player = new Player(pseudo, specie);
+      let specieVal;
+      if(specie == 0) specieVal = Specie.Hutex
+      else if(specie == 1) specieVal = Specie.Robotec
+      else if(specie == 2) specieVal = Specie.Xmars
+      else if(specie == 3) specieVal = Specie.Spectre
+      else if(specie == 4) specieVal = Specie.Fawkes
+      else  specieVal = Specie.Totox
+      const player = new Player(pseudo, specieVal);
       this.Jeu.appendPlayer(player);
     },
     players : function(pseudo: string[], species: Specie[], playerIndex: number) {
