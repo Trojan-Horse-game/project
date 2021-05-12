@@ -2,7 +2,8 @@
   <v-app>
     <div id="background-image" />
     <div id="logo">
-      <img src="logo.png" alt="Logo du jeu" />
+      <router-link to="/menuPrincipal">
+      <img src="logo.png" alt="Logo du jeu" /></router-link>
     </div>
     <div id="container">
       <span id="titre">Mon profil</span>
@@ -518,7 +519,9 @@ $content: #2f363c;
 .row {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  text-align: left;
+  justify-content: space-around;
+  text-align: center;
+  margin: 2% 0;
   vertical-align: middle;
 }
 
@@ -574,7 +577,7 @@ input:focus {
 
 #buttons-row {
   display: flex;
-  margin: 4% auto;
+  margin-top: 5%;
   justify-content: space-evenly;
 }
 
@@ -650,9 +653,9 @@ ul {
 
 #buttons {
   display: flex;
-  justify-content: center;
+  justify-content: space-evenly;
   align-items: flex-start;
-  width: 100vw;
+  width: 50%;
   height: 20%;
 }
 #buttons button {

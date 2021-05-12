@@ -12,7 +12,8 @@
       }"
     />
     <div id="logo">
-      <img src="logo.png" alt="Logo du jeu" />
+      <router-link to="/menuPrincipal">
+      <img src="logo.png" alt="Logo du jeu" /></router-link>
     </div>
     <div id="container">
       <div id="titre">Choix de l'espèce</div>
@@ -22,7 +23,7 @@
           <span
             :class="[{ active: selected.name == 'fawkes' }, 'cercle']"
             id="fawkes"
-            @click="select(4)"
+            @click="select(0)"
           >
             <img
               src="../../public/Design/fawkes.png"
@@ -39,7 +40,7 @@
           <span
             :class="[{ active: selected.name == 'hutex' }, 'cercle']"
             id="hutex"
-            @click="select(0)"
+            @click="select(1)"
             ><img
               src="../../public/Design/hutex.png"
               alt="hutex"
@@ -49,7 +50,7 @@
           <span
             :class="[{ active: selected.name == 'robotec' }, 'cercle']"
             id="robot"
-            @click="select(1)"
+            @click="select(2)"
             ><img
               src="../../public/Design/robot.png"
               alt="robot"
@@ -72,7 +73,7 @@
           <span
             :class="[{ active: selected.name == 'totox' }, 'cercle']"
             id="totox"
-            @click="select(5)"
+            @click="select(4)"
             ><img
               src="../../public/Design/totox.png"
               alt="totox"
@@ -82,7 +83,7 @@
           <span
             :class="[{ active: selected.name == 'xmars' }, 'cercle']"
             id="xmars"
-            @click="select(2)"
+            @click="select(5)"
             ><img
               src="../../public/Design/xmars.png"
               alt="xmars"
@@ -187,7 +188,6 @@ export default {
     count: 0,
     lockedSpecies: null,
     lockedChoices: [],
-    gameId : "",
   }),
 
   computed: {
@@ -224,7 +224,7 @@ export default {
     if (localStorage.getItem("token") === null) {
       this.$router.push("/");
     }
-    this.$socket.emit("gameState");
+    // this.$socket.emit("gameState");
   },
   sockets:{
     availableSpecies : function(availableSpecies) {
@@ -234,21 +234,20 @@ export default {
       }
     },
     gameId : function(gameId){
-      this.gameId = gameId;
-      console.log("game id",this.gameId);
+      localStorage.setItem("gameId", gameId)
     },
     oops : function(error) {
       alert(error);
     },
-    closeTab : function() {
-      this.$router.push("/menuPrincipal");
-    },
-    restricted : function() {
-      this.$router.push("/menuPrincipal");
-    },
-    inGame : function() {
-      this.$router.push("/Jeu");
-    }
+    // closeTab : function() {
+    //   this.$router.push("/menuPrincipal");
+    // },
+    // restricted : function() {
+    //   this.$router.push("/menuPrincipal");
+    // },
+    // inGame : function() {
+    //   this.$router.push("/Jeu");
+    // }
   }
 };
 </script>

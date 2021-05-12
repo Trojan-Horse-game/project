@@ -12,6 +12,7 @@ Vue.config.productionTip = false;
 Vue.config.ignoredElements = [/ion-\w*/];
 
 defineIonPhaser(window);
+Vue.prototype.window = window;
 
 Vue.use(
   new VueSocketIO({

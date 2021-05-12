@@ -21,6 +21,7 @@
         v-show="showSlider"
         v-model="volume"
         vertical
+        inverse-label
         max="1"
         min="0"
         step="0.01"
