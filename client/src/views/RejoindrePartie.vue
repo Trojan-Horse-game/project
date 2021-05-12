@@ -1,7 +1,7 @@
 <template>
   <v-app>
     <div id="background-image" />
-      <router-link to="/menuPrincipal">
+    <router-link to="/menuPrincipal">
       <div id="logo">
         <img src="logo.png" alt="Logo du jeu" />
       </div>
@@ -12,12 +12,12 @@
         <div class="form_input">
           <input placeholder="Id de la partie" color="#000" v-model="id" />
         </div>
-      <div id="boutons">
-        <router-link to="/menuPrincipal">
-          <button id="retour"></button>
-        </router-link>
-        <button  id="valider" @click="joinGame()"></button>
-      </div>
+        <div id="boutons">
+          <router-link to="/menuPrincipal">
+            <button id="retour"></button>
+          </router-link>
+          <button id="valider" @click="joinGame()"></button>
+        </div>
       </div>
     </div>
   </v-app>
@@ -32,25 +32,28 @@ export default {
     }
   },
   data: () => ({
-    id: "",
+    id: ""
   }),
-  methods:{
+  methods: {
     async joinGame() {
       // try {
-        if(this.id.length > 0){
-          console.log(this.id)
-          this.$socket.emit("join game", localStorage.getItem("username"), this.id);
-          this.$router.push("/choixEspece");
-        }
-        else{
-          throw "Id de la partie requis";
-        }
+      if (this.id.length > 0) {
+        console.log(this.id);
+        this.$socket.emit(
+          "join game",
+          localStorage.getItem("username"),
+          this.id
+        );
+        this.$router.push("/choixEspece");
+      } else {
+        throw "Id de la partie requis";
+      }
       // } catch (err) {
       //   alert(err);
       // }
     }
   },
-  sockets :{
+  sockets: {
     oops: function(error) {
       alert(error);
     }
@@ -71,7 +74,7 @@ $content: #2f363c;
   justify-content: center;
   align-items: center;
   flex-direction: column;
-  margin: 10% auto; 
+  margin: 10% auto;
 }
 
 #titre {
@@ -137,12 +140,13 @@ input:focus {
   height: auto;
 }
 
-#retour, #valider {
+#retour,
+#valider {
   margin: 0px 20px 20px 20px;
   width: 178px;
   height: 71px;
   background-size: contain;
-  background-color:none;
+  background-color: none;
 }
 
 #retour {

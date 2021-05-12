@@ -1,74 +1,102 @@
 <template>
   <div id="jeu">
     <div id="filter" v-if="gameState == false && endGame == false">
-      <button id="launch" @click="launchGame()" :disabled="this.gameId == 'ROOM-'+this.$socket.id ? false : true">Lancer la partie</button>
-      </div>
+      <button
+        id="launch"
+        @click="launchGame()"
+        :disabled="this.gameId == 'ROOM-' + this.$socket.id ? false : true"
+      >
+        Lancer la partie
+      </button>
+    </div>
     <div id="endFilter" v-if="gameState == false && endGame == true">
       <div id="logo">
         <img src="logo.png" alt="Logo du jeu" />
       </div>
-        <div id="container">
-          <div id="result" v-if="winner == true">YOU WIN</div>
-          <div id="result" v-if="winner == false">YOU LOOSE</div>
-          <router-link to="/menuPrincipal"><button id="retour"><p id="textRetour">Menu principal</p></button></router-link>
+      <div id="container">
+        <div id="result" v-if="winner == true">YOU WIN</div>
+        <div id="result" v-if="winner == false">YOU LOOSE</div>
+        <router-link to="/menuPrincipal"
+          ><button id="retour">
+            <p id="textRetour">Menu principal</p>
+          </button></router-link
+        >
       </div>
     </div>
-    <ion-phaser v-bind:game.prop="game"
-      v-bind:initialize.prop="initialize" />
+    <ion-phaser v-bind:game.prop="game" v-bind:initialize.prop="initialize" />
     <span id="gameId">{{ this.gameId }}</span>
-    <v-btn @click="abandon()" id="abandon" title="Quitter la partie" medium icon><v-icon>mdi-logout</v-icon></v-btn>
+    <v-btn @click="abandon()" id="abandon" title="Quitter la partie" medium icon
+      ><v-icon>mdi-logout</v-icon></v-btn
+    >
   </div>
 </template>
 
 <script lang="ts">
 import Phaser from "phaser";
-import { Action, GeneratorSlot, NetworkCard, Species, stringToSpecie } from "../../game-interface/src/GameNetworkDelegate";
+import {
+  Action,
+  GeneratorSlot,
+  NetworkCard,
+  Species,
+  stringToSpecie
+} from "../../game-interface/src/GameNetworkDelegate";
 import { GameScene, Player } from "../../game-interface/src/GameScene";
 import { ResponsiveScene } from "../../game-interface/src/ResponsiveScene";
 
 export default {
-  
   name: "Jeu",
   data: () => {
     return {
-    gameState : false,
-    endGame : false,
-    winner : false,
-    gameId: localStorage.getItem("gameId"),
-    initialize: false,
-    game: {
-      width: window.innerWidth * window.devicePixelRatio,
-      height: window.innerHeight * window.devicePixelRatio,
-      zoom: 1 / window.devicePixelRatio,
-      type: Phaser.AUTO,
-      scene: new GameScene(localStorage.getItem("gameId"), new Player(localStorage.getItem("username"), stringToSpecie(localStorage.getItem("specie"))))
-    }
-  }},
+      gameState: false,
+      endGame: false,
+      winner: false,
+      gameId: localStorage.getItem("gameId"),
+      initialize: false,
+      game: {
+        width: window.innerWidth * window.devicePixelRatio,
+        height: window.innerHeight * window.devicePixelRatio,
+        zoom: 1 / window.devicePixelRatio,
+        type: Phaser.AUTO,
+        scene: new GameScene(
+          localStorage.getItem("gameId"),
+          new Player(
+            localStorage.getItem("username"),
+            stringToSpecie(localStorage.getItem("specie"))
+          )
+        )
+      }
+    };
+  },
   mounted() {
     this.initialize = true;
     // this.$socket.emit("gameState");
+    console.log("ABC", this.game.scene);
   },
-  methods : {
-    // didDropCard(cardIndex: number, playerIndex: number, generatorIndex: number) {
-    //   try {
-    //     console.log("didDropCard", cardIndex, playerIndex, generatorIndex);
-    //     const action = new Action(cardIndex);
-    //     action.addTarget(playerIndex);
-    //     action.addSlotTarget(generatorIndex);
-    //     action.addTarget(playerIndex);
-    //     this.$socket.emit("play card", this.gameId, action);
-    //   } catch (err) {
-    //     console.error(err);
-    //   }
-    // },
-    // didDiscard(cardsIndices: number[]) {
-    //   console.log("Did discard", cardsIndices);
-    //   try {
-    //     this.$socket.emit("discard", this.gameId, cardsIndices);
-    //   } catch (err) {
-    //     console.error(err);
-    //   }
-    // },
+  methods: {
+    didDropCard(
+      cardIndex: number,
+      playerIndex: number,
+      generatorIndex: number
+    ) {
+      try {
+        console.log("didDropCard", cardIndex, playerIndex, generatorIndex);
+        const action = new Action(cardIndex);
+        action.addTarget(playerIndex);
+        action.addSlotTarget(generatorIndex);
+        action.addTarget(playerIndex);
+        this.$socket.emit("play card", this.gameId, action);
+      } catch (err) {
+        console.error(err);
+      }
+    },
+    didDiscard(cardsIndices: number[]) {
+      console.log("Did discard", cardsIndices);
+      try {
+        this.$socket.emit("discard", this.gameId, cardsIndices);
+      } catch (err) {
+        console.error(err);
+      }
+    },
     launchGame() {
       try {
         this.$socket.emit("launch game", this.gameId);
@@ -81,76 +109,77 @@ export default {
       this.$socket.emit("abbandon", this.gameId);
       this.$router.push("/menuPrincipal");
     }
-
   },
-  sockets : {
+  sockets: {
     // closeTab : function() {
     //   this.$router.push("/menuPrincipal");
     // },
-    gameId : function(gameId: string) {
-      console.log(gameId)
+    gameId: function(gameId: string) {
+      console.log(gameId);
     },
-    // joinGame : function(pseudo: string,specie: number) {
-    //   console.log("joined the game :",pseudo, specie)
-    //   let specieVal;
-    //   if(specie == 0) specieVal = Species.Hutex
-    //   else if(specie == 1) specieVal = Species.Robotec
-    //   else if(specie == 2) specieVal = Species.Xmars
-    //   else if(specie == 3) specieVal = Species.Spectre
-    //   else if(specie == 4) specieVal = Species.Fawkes
-    //   else  specieVal = Species.Totox
-    //   const player = new Player(pseudo, specieVal);
-    //   this.game.scene.appendPlayer(player);
-    // },
-    // players : function(pseudo: string[], species: Species[], playerIndex: number) {
-    //   const players: Player[] = [];
-    //     for (let i = 0; i < pseudo.length; i++) {
-    //       console.log("player :", playerIndex, pseudo[i], species[i])
-    //       players.push(new Player(pseudo[i], species[i]));
-    //     }
-    //     this.game.scene.updatePlayers(players, -1);
-    // },
-    // hand : function(hand: NetworkCard[], kind: string[]) {
-    //   console.log("hand",hand,kind)
-    // },
-    // base : function(generators: GeneratorSlot[], idx: number) {
-    //   console.log("base",generators)
-    // },
-    // checkCard : function(action: Action, result: string | null) {
-    //   if (typeof result == "string") {
-    //     console.log("valid action",action, result)
-    //   }
-    //   else console.log("invalid action", action)
-    // },
-    // playCard : function(action: Action) {
-    //   console.log("play card", action)
-    //   const opponent = action.target[0];
-    //   const slotTarget = action.slotTarget[0];
-    // },
-    // nextTurn : function(playerIdx: number) {
-    //   console.log("next turn", playerIdx)
-    //   if(this.gameState == false)
-    //     this.gameState = true;
-    //   this.game.scene.nextTurn(playerIdx);
-    // },
-    // discard : function(indexDiscard: number, cards: NetworkCard[]) {
-    //   console.log("discard",indexDiscard, cards)
-    // },
-    // leaveGame : function(playerIdx){
-    //   console.log("left the game",playerIdx)
-    //   this.game.scene.removePlayer(playerIdx);
-    // },
-    endGame : function(winner) {
+    joinGame: (pseudo: string, specie: number) => {
+      console.log("joined the game :", pseudo, specie);
+      let specieVal;
+      if (specie == 0) specieVal = Species.Hutex;
+      else if (specie == 1) specieVal = Species.Robotec;
+      else if (specie == 2) specieVal = Species.Xmars;
+      else if (specie == 3) specieVal = Species.Spectre;
+      else if (specie == 4) specieVal = Species.Fawkes;
+      else specieVal = Species.Totox;
+      const player = new Player(pseudo, specieVal);
+      this.game.scene.appendPlayer(player);
+    },
+    players: function(
+      pseudo: string[],
+      species: Species[],
+      playerIndex: number
+    ) {
+      const players: Player[] = [];
+      for (let i = 0; i < pseudo.length; i++) {
+        console.log("player :", playerIndex, pseudo[i], species[i]);
+        players.push(new Player(pseudo[i], species[i]));
+      }
+      this.game.scene.updatePlayers(players, -1);
+    },
+    hand: function(hand: NetworkCard[], kind: string[]) {
+      console.log("hand", hand, kind);
+    },
+    base: function(generators: GeneratorSlot[], idx: number) {
+      console.log("base", generators);
+    },
+    checkCard: function(action: Action, result: string | null) {
+      if (typeof result == "string") {
+        console.log("valid action", action, result);
+      } else console.log("invalid action", action);
+    },
+    playCard: function(action: Action) {
+      console.log("play card", action);
+      const opponent = action.target[0];
+      const slotTarget = action.slotTarget[0];
+    },
+    nextTurn: function(playerIdx: number) {
+      console.log("next turn", playerIdx);
+      if (this.gameState == false) this.gameState = true;
+      this.game.scene.nextTurn(playerIdx);
+    },
+    discard: function(indexDiscard: number, cards: NetworkCard[]) {
+      console.log("discard", indexDiscard, cards);
+    },
+    leaveGame: function(playerIdx) {
+      console.log("left the game", playerIdx);
+      this.game.scene.removePlayer(playerIdx);
+    },
+    endGame: function(winner) {
       this.gameState = false;
       this.endGame = true;
-      console.log(winner)
+      console.log(winner);
       // this.winnerIdx = winner;
     },
-    oops : function(error) {
+    oops: function(error) {
       this.gameState = false;
       this.endGame = false;
       alert(error);
-    },
+    }
     // restricted : function() {
     //   this.$router.push("/menuPrincipal");
     // }
@@ -190,18 +219,18 @@ export default {
 
 #abandon {
   z-index: 50;
-    right: 105px;
-    background-color: transparent!important;
-    bottom: 8px;
-    position: fixed;
+  right: 105px;
+  background-color: transparent !important;
+  bottom: 8px;
+  position: fixed;
 }
 
 #filter {
   position: fixed;
   z-index: 49;
   width: 100%;
-  background-color: rgba(47,47,47,0.3);
-  margin:auto;
+  background-color: rgba(47, 47, 47, 0.3);
+  margin: auto;
   text-align-last: center;
   height: 100%;
   color: white;
@@ -210,12 +239,12 @@ export default {
   justify-content: center;
 }
 
-#endFilter{
+#endFilter {
   position: fixed;
   z-index: 49;
   width: 100%;
   height: 100%;
-  background-color: rgba(47,47,47,0.8);
+  background-color: rgba(47, 47, 47, 0.8);
 }
 
 #container {
@@ -231,45 +260,45 @@ export default {
   position: relative;
 }
 
-#launch:hover{
+#launch:hover {
   color: #bbbbbb;
 }
 
 #result {
- background-color: #2f363c;
-    font-size: 700%;
-    margin: auto;
-    text-align: center;
-    width: -webkit-min-content;
-    width: -moz-min-content;
-    width: min-content;
-    height: -webkit-min-content;
-    height: -moz-min-content;
-    height: min-content;
-    color: #bbbbbb;
-    padding: 2%;
+  background-color: #2f363c;
+  font-size: 700%;
+  margin: auto;
+  text-align: center;
+  width: -webkit-min-content;
+  width: -moz-min-content;
+  width: min-content;
+  height: -webkit-min-content;
+  height: -moz-min-content;
+  height: min-content;
+  color: #bbbbbb;
+  padding: 2%;
 }
 
 #retour {
-  background-image : url("../../public/Design/boutonMenu.png");
+  background-image: url("../../public/Design/boutonMenu.png");
   color: #fff;
-    width: 100%;
-    margin: auto;
-    height: 12%;
-    background-size: contain;
-    background-position: center;
-    padding: 2%;
-    text-align: center;
-    font-size: 50%;
-    vertical-align: sub;
-    margin: 3% 0;
+  width: 100%;
+  margin: auto;
+  height: 12%;
+  background-size: contain;
+  background-position: center;
+  padding: 2%;
+  text-align: center;
+  font-size: 50%;
+  vertical-align: sub;
+  margin: 3% 0;
 }
 
 #textRetour {
-    width: 10%;
-    margin: 2%;
-    margin: auto;
-    text-align: center;
-    font-size: large;
+  width: 10%;
+  margin: 2%;
+  margin: auto;
+  text-align: center;
+  font-size: large;
 }
 </style>

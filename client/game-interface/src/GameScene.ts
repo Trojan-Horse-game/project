@@ -18,60 +18,12 @@ import { Species, specieToString } from "./GameNetworkDelegate";
 import { io, Socket } from "socket.io-client";
 
 export class GameScene extends ResponsiveScene {
-  private socket: Socket;
-
   constructor(id: string, currentPlayer: Player) {
     super({});
     this.id = id;
     this.players = [currentPlayer];
     this.playerIndex = 0;
     this.currentPlayer = 0;
-
-    this.socket = io("https://api.trojanhorse.cc/");
-    
-    this.socket.on("next turn", (playerIndex: number) => {
-      this.nextTurn(playerIndex);
-    });
-
-    // this.socket.on("check card", (action: Action, result: string | null) => {
-    //   if (typeof result == "string") return action;
-    //   // Valid action
-    //   else return; // Invalid action
-    // });
-
-    // this.socket.on("play card", (action: Action) => {
-    //   const opponent = action.target[0];
-    //   const slotTarget = action.slotTarget[0];
-    //   // Voir avec trevor
-    // });
-
-    this.socket.on("discard", (indexDiscard, cards) => {
-      // Voir avec trevor
-    });
-
-    this.socket.on("leave game", (playerIdx) => {
-      this.removePlayer(playerIdx);
-    });
-
-    this.socket.on("join game", (pseudo, specie) => {
-      const player = new Player(pseudo, specie);
-      this.appendPlayer(player);
-    });
-
-    // this.socket.on("end game", (winner: number) => {
-    //   this.winnerIndex = winner;
-    // });
-
-    this.socket.on(
-      "players",
-      (pseudo: string[], species: Species[], playerIndex: number) => {
-        const players: Player[] = [];
-        for (let i = 0; i < pseudo.length; i++) {
-          players.push(new Player(pseudo[i], species[i]));
-        }
-        this.updatePlayers(players, -1);
-      }
-    );
   }
 
   id: string;
@@ -148,7 +100,7 @@ export class GameScene extends ResponsiveScene {
       GeneratorKind.Water
     ];
 
-    document.onkeypress = (e) => {
+    document.onkeypress = e => {
       if (e.code == "KeyD") {
         const cards: GeneratorCard[] = [];
         for (let i = 0; i < this.playerSlot.discardedIndices.length; i++) {
