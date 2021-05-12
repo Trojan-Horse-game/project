@@ -218,3 +218,18 @@ export function specieToString(specie: Specie): string {
       return "totox";
   }
 }
+
+export function stringToSpecie(specie: string): Specie {
+  switch (specie) {
+    case "hutex":
+      return Specie.Hutex;
+    case "robotec":
+      return Specie.Robotec;
+    case "xmars":
+      return Specie.Xmars;
+    case "fawkes":
+      return Specie.Fawkes;
+    case "totox":
+      return Specie.Totox;
+  }
+}

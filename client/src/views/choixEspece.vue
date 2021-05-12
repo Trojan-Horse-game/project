@@ -139,6 +139,7 @@
 </template>
 
 <script lang="ts">
+import { Specie } from "../../game-interface/src/GameNetworkDelegate";
 export default {
   data: () => ({
     species: [
@@ -199,7 +200,15 @@ export default {
     lockChoice() {
       this.lockedSpecies = this.selected.name;
       this.lockedChoices.push(this.selected.name);
-      this.$socket.emit("choose species", this.selected.id);
+      let specieVal;
+      if(this.selected.id == "0") specieVal = Specie.Hutex
+      else if(this.selected.id == "1") specieVal = Specie.Robotec
+      else if(this.selected.id == "2") specieVal = Specie.Xmars
+      else if(this.selected.id == "3") specieVal = Specie.Spectre
+      else if(this.selected.id == "4") specieVal = Specie.Fawkes
+      else specieVal = Specie.Totox
+      this.$socket.emit("choose species", specieVal);
+      localStorage.setItem("specie", this.selected.name);
       this.$router.push("/Jeu");
     },
 

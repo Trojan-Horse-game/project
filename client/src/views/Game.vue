@@ -22,7 +22,7 @@
 
 <script lang="ts">
 import Phaser from "phaser";
-import { Action, GeneratorSlot, NetworkCard, Specie } from "../../game-interface/src/GameNetworkDelegate";
+import { Action, GeneratorSlot, NetworkCard, Specie, stringToSpecie } from "../../game-interface/src/GameNetworkDelegate";
 import { GameScene, Player } from "../../game-interface/src/GameScene";
 import { ResponsiveScene } from "../../game-interface/src/ResponsiveScene";
 
@@ -35,13 +35,14 @@ export default {
     endGame : false,
     winner : false,
     gameId: localStorage.getItem("gameId"),
+    specie : Specie,
     initialize: false,
     game: {
       width: window.innerWidth * window.devicePixelRatio,
       height: window.innerHeight * window.devicePixelRatio,
       zoom: 1 / window.devicePixelRatio,
       type: Phaser.AUTO,
-      scene: new GameScene(localStorage.getItem("gameId"), new Player(localStorage.getItem("username"), Specie.Spectre))
+      scene: new GameScene(localStorage.getItem("gameId"), new Player(localStorage.getItem("username"), stringToSpecie(localStorage.getItem("specie"))))
     }
   }},
   mounted() {
@@ -100,7 +101,7 @@ export default {
       else if(specie == 4) specieVal = Specie.Fawkes
       else  specieVal = Specie.Totox
       const player = new Player(pseudo, specieVal);
-      this.Jeu.appendPlayer(player);
+      this.Jeu.scene.appendPlayer(player);
     },
     players : function(pseudo: string[], species: Specie[], playerIndex: number) {
       const players: Player[] = [];
@@ -108,7 +109,7 @@ export default {
           console.log("player :", playerIndex, pseudo[i], species[i])
           players.push(new Player(pseudo[i], species[i]));
         }
-        this.Jeu.updatePlayers(players, -1);
+        this.Jeu.scene.updatePlayers(players, -1);
     },
     hand : function(hand: NetworkCard[], kind: string[]) {
       console.log("hand",hand,kind)
@@ -131,14 +132,14 @@ export default {
       console.log("next turn", playerIdx)
       if(this.gameState == false)
         this.gameState = true;
-      this.Jeu.nextTurn(playerIdx);
+      this.Jeu.scene.nextTurn(playerIdx);
     },
     discard : function(indexDiscard: number, cards: NetworkCard[]) {
       console.log("discard",indexDiscard, cards)
     },
     leaveGame : function(playerIdx){
       console.log("left the game",playerIdx)
-      this.Jeu.removePlayer(playerIdx);
+      this.Jeu.scene.removePlayer(playerIdx);
     },
     endGame : function(winner) {
       this.gameState = false;
