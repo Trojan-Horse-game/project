@@ -1,6 +1,5 @@
 <template>
   <div id="jeu">
-    <ion-phaser :game.prop="game" :initialize.prop="true" />
     <div id="filter" v-if="gameState == false && endGame == false">
       <button id="launch" @click="launchGame()" :disabled="this.gameId == 'ROOM-'+this.$socket.id ? false : true">Lancer la partie</button>
       </div>
@@ -14,6 +13,8 @@
           <router-link to="/menuPrincipal"><button id="retour"><p id="textRetour">Menu principal</p></button></router-link>
       </div>
     </div>
+    <ion-phaser v-bind:game.prop="game"
+      v-bind:initialize.prop="initialize" />
     <span id="gameId">{{ this.gameId }}</span>
     <v-btn @click="abandon()" id="abandon" title="Quitter la partie" medium icon><v-icon>mdi-logout</v-icon></v-btn>
   </div>
@@ -28,44 +29,22 @@ import { ResponsiveScene } from "../../game-interface/src/ResponsiveScene";
 export default {
   
   name: "Jeu",
-
-  data: () => ({
+  data: () => {
+    return {
     gameState : false,
     endGame : false,
     winner : false,
     gameId: localStorage.getItem("gameId"),
+    initialize: false,
     game: {
+      width: "100%",
+      height: "100%",
       type: Phaser.AUTO,
-      title: "Les Cavaliers de Troie",
-      mipmapFilter: "LINEAR_MIPMAP_LINEAR",
-      scale: {
-        parent: "jeu",
-        mode: Phaser.Scale.ScaleModes.NONE,
-        width: window.innerWidth * window.devicePixelRatio,
-        height: window.innerHeight * window.devicePixelRatio,
-        zoom: 1 / window.devicePixelRatio
-      },
-      scene: new GameScene(localStorage.getItem("gameId"), new Player(localStorage.getItem("username"), Specie.Hutex))
-    },
-  }),
-
-  mounted: function() {
-
-    this.window.addEventListener("resize", () => {
-      const w = window.innerWidth * window.devicePixelRatio;
-      const h = window.innerHeight * window.devicePixelRatio;
-      this.game.scale.resize(w, h);
-
-      // for (const scene of game.scene.scenes) {
-        if (this.game.scene.settings.active) {
-          this.game.scene.cameras.main.setViewport(0, 0, w, h);
-          if (this.game.scene instanceof ResponsiveScene) {
-            this.game.scene.resize(w, h);
-          }
-        }
-      // }
-    });
-
+      scene: new GameScene(localStorage.getItem("gameId"), new Player(localStorage.getItem("username"), Specie.Spectre))
+    }
+  }},
+  mounted() {
+    this.initialize = true;
     // this.$socket.emit("gameState");
   },
   methods : {
@@ -91,8 +70,8 @@ export default {
     },
     launchGame() {
       try {
-        this.gameState = true;
         this.$socket.emit("launch game", this.gameId);
+        this.gameState = true;
       } catch (err) {
         console.error(err);
       }
@@ -190,7 +169,7 @@ export default {
 }
 
 #gameId {
-  z-index: 50;
+  z-index: 100;
   left: 0;
   bottom: 0;
   margin: 2%;
@@ -209,7 +188,7 @@ export default {
 
 #filter {
   position: fixed;
-  z-index: 49;
+  z-index: 100;
   width: 100%;
   background-color: rgba(47,47,47,0.3);
   margin:auto;
@@ -223,7 +202,7 @@ export default {
 
 #endFilter{
   position: fixed;
-  z-index: 49;
+  z-index: 100;
   width: 100%;
   height: 100%;
   background-color: rgba(47,47,47,0.8);
