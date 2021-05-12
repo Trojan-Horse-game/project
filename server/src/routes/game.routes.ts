@@ -133,6 +133,7 @@ module.exports = function (io: any) {
         socket.emit("availableSpecies", game.availableSpecies);
 
         socket.on("choose species", (species: Species) => {
+          console.log(species);
           let player = new Player(pseudo, species, socket.id);
           game.addPlayer(player);
           games.push(game);
