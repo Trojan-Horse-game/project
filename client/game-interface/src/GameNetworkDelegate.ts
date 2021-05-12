@@ -78,6 +78,7 @@ export class GameNetworkDelegate implements GameSceneDelegate {
   }
 
   wasAddedToScene(scene: GameScene) {
+    console.log("ok");
   }
 
   didDropCard(cardIndex: number, playerIndex: number, generatorIndex: number) {

@@ -190,10 +190,10 @@ export default {
 
 #abandon {
   z-index: 50;
-  right: 6%;
-  background-color:transparent !important;
-  bottom: 1%;
-  position: fixed;
+    right: 105px;
+    background-color: transparent!important;
+    bottom: 8px;
+    position: fixed;
 }
 
 #filter {
