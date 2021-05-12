@@ -191,7 +191,7 @@ module.exports = function (io: any) {
     socket.on("launch game", (roomId: string) => {
       try {
         let thisgame = findGame(roomId, games);
-        if (thisgame.roomId != socket.id) {
+        if (thisgame.roomId != "ROOM-"+socket.id) {
           throw "Not the host !";
         }
         if (thisgame.players.length == 1) {
