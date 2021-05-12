@@ -14,7 +14,7 @@ import { ProfilePicture } from "./ProfilePicture";
 import { CardSprite } from "./CardSprite";
 import { ActionDropZone } from "./ActionDropZone";
 import { ResponsiveScene } from "./ResponsiveScene";
-import { Specie, specieToString } from "./GameNetworkDelegate";
+import { Species, specieToString } from "./GameNetworkDelegate";
 
 export class GameScene extends ResponsiveScene {
   constructor(id: string, currentPlayer: Player) {
@@ -116,9 +116,9 @@ export class GameScene extends ResponsiveScene {
 
     // this.updatePlayers(
     //   [
-    //     new Player("Foo", Specie.Hutex),
-    //     new Player("Bar", Specie.Sonyas),
-    //     new Player("Baz", Specie.Totox)
+    //     new Player("Foo", Species.Hutex),
+    //     new Player("Bar", Species.Sonyas),
+    //     new Player("Baz", Species.Totox)
     //   ],
     //   0
     // );
@@ -321,10 +321,10 @@ export class GameScene extends ResponsiveScene {
 type Position = { x: number; y: number };
 
 export class Player {
-  constructor(name: string, specie: Specie) {
+  constructor(name: string, specie: Species) {
     this.name = name;
     this.specie = specie;
   }
   name: string;
-  specie: Specie;
+  specie: Species;
 }

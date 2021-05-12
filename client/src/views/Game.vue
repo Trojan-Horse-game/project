@@ -22,7 +22,7 @@
 
 <script lang="ts">
 import Phaser from "phaser";
-import { Action, GeneratorSlot, NetworkCard, Specie, stringToSpecie } from "../../game-interface/src/GameNetworkDelegate";
+import { Action, GeneratorSlot, NetworkCard, Species, stringToSpecie } from "../../game-interface/src/GameNetworkDelegate";
 import { GameScene, Player } from "../../game-interface/src/GameScene";
 import { ResponsiveScene } from "../../game-interface/src/ResponsiveScene";
 
@@ -35,7 +35,6 @@ export default {
     endGame : false,
     winner : false,
     gameId: localStorage.getItem("gameId"),
-    specie : Specie,
     initialize: false,
     game: {
       width: window.innerWidth * window.devicePixelRatio,
@@ -94,16 +93,16 @@ export default {
     joinGame : function(pseudo: string,specie: number) {
       console.log("joined the game :",pseudo, specie)
       let specieVal;
-      if(specie == 0) specieVal = Specie.Hutex
-      else if(specie == 1) specieVal = Specie.Robotec
-      else if(specie == 2) specieVal = Specie.Xmars
-      else if(specie == 3) specieVal = Specie.Spectre
-      else if(specie == 4) specieVal = Specie.Fawkes
-      else  specieVal = Specie.Totox
+      if(specie == 0) specieVal = Species.Hutex
+      else if(specie == 1) specieVal = Species.Robotec
+      else if(specie == 2) specieVal = Species.Xmars
+      else if(specie == 3) specieVal = Species.Spectre
+      else if(specie == 4) specieVal = Species.Fawkes
+      else  specieVal = Species.Totox
       const player = new Player(pseudo, specieVal);
       this.Jeu.scene.appendPlayer(player);
     },
-    players : function(pseudo: string[], species: Specie[], playerIndex: number) {
+    players : function(pseudo: string[], species: Species[], playerIndex: number) {
       const players: Player[] = [];
         for (let i = 0; i < pseudo.length; i++) {
           console.log("player :", playerIndex, pseudo[i], species[i])

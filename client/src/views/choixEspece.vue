@@ -139,7 +139,7 @@
 </template>
 
 <script lang="ts">
-import { Specie } from "../../game-interface/src/GameNetworkDelegate";
+import { Species } from "../../game-interface/src/GameNetworkDelegate";
 export default {
   data: () => ({
     species: [
@@ -201,12 +201,12 @@ export default {
       this.lockedSpecies = this.selected.name;
       this.lockedChoices.push(this.selected.name);
       let specieVal;
-      if(this.selected.id == "0") specieVal = Specie.Hutex
-      else if(this.selected.id == "1") specieVal = Specie.Robotec
-      else if(this.selected.id == "2") specieVal = Specie.Xmars
-      else if(this.selected.id == "3") specieVal = Specie.Spectre
-      else if(this.selected.id == "4") specieVal = Specie.Fawkes
-      else specieVal = Specie.Totox
+      if(this.selected.id == "0") specieVal = Species.Hutex
+      else if(this.selected.id == "1") specieVal = Species.Robotec
+      else if(this.selected.id == "2") specieVal = Species.Xmars
+      else if(this.selected.id == "3") specieVal = Species.Spectre
+      else if(this.selected.id == "4") specieVal = Species.Fawkes
+      else specieVal = Species.Totox
       this.$socket.emit("choose species", specieVal);
       localStorage.setItem("specie", this.selected.name);
       this.$router.push("/Jeu");

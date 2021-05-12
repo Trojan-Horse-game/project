@@ -1,11 +1,11 @@
 import { GameScene } from "./GameScene";
-import { Specie } from "./GameNetworkDelegate";
+import { Species } from "./GameNetworkDelegate";
 
 export interface GameSceneDelegate {
   wasAddedToScene(scene: GameScene);
-  createGame(pseudo: string, specie: Specie): void;
+  createGame(pseudo: string, specie: Species): void;
   joinGame(pseudo: string, roomId: string): void;
-  chooseSpecie(specie: Specie): void;
+  chooseSpecie(specie: Species): void;
   launchGame(roomId: string): void;
   didDropCard(
     cardIndex: number,

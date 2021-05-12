@@ -8,7 +8,7 @@ import { GameScene, Player } from "./GameScene";
 export class GameNetworkDelegate implements GameSceneDelegate {
   private socket: Socket;
   scene: GameScene;
-  availableSpecies: Specie[] = [];
+  availableSpecies: Species[] = [];
   room: string;
   playerIndex: number;
   winnerIndex: number;
@@ -75,7 +75,7 @@ export class GameNetworkDelegate implements GameSceneDelegate {
 
     this.socket.on(
       "players",
-      (pseudo: string[], species: Specie[], playerIndex: number) => {
+      (pseudo: string[], species: Species[], playerIndex: number) => {
         const players: Player[] = [];
         for (let i = 0; i < pseudo.length; i++) {
           players.push(new Player(pseudo[i], species[i]));
@@ -115,7 +115,7 @@ export class GameNetworkDelegate implements GameSceneDelegate {
     }
   }
 
-  createGame(pseudo: string, specie: Specie) {
+  createGame(pseudo: string, specie: Species) {
     try {
       this.socket.emit("create game", pseudo, specie);
       // specie index or string ??
@@ -133,7 +133,7 @@ export class GameNetworkDelegate implements GameSceneDelegate {
     }
   }
 
-  chooseSpecie(specie: Specie) {
+  chooseSpecie(specie: Species) {
     try {
       this.socket.emit("choose species", specie);
     } catch (err) {
@@ -193,7 +193,7 @@ export enum NetworkState {
   Immunized
 }
 
-export enum Specie {
+export enum Species {
   Hutex,
   Robotec,
   Xmars,
@@ -202,34 +202,36 @@ export enum Specie {
   Totox
 }
 
-export function specieToString(specie: Specie): string {
+export function specieToString(specie: Species): string {
   switch (specie) {
-    case Specie.Hutex:
+    case Species.Hutex:
       return "hutex";
-    case Specie.Robotec:
+    case Species.Robotec:
       return "robotec";
-    case Specie.Xmars:
+    case Species.Xmars:
       return "xmars";
-    case Specie.Spectre:
+    case Species.Spectre:
       return "spectre";
-    case Specie.Fawkes:
+    case Species.Fawkes:
       return "fawkes";
-    case Specie.Totox:
+    case Species.Totox:
       return "totox";
   }
 }
 
-export function stringToSpecie(specie: string): Specie {
+export function stringToSpecie(specie: string): Species {
   switch (specie) {
     case "hutex":
-      return Specie.Hutex;
+      return Species.Hutex;
     case "robotec":
-      return Specie.Robotec;
+      return Species.Robotec;
     case "xmars":
-      return Specie.Xmars;
+      return Species.Xmars;
+    case "spectre":
+      return Species.Spectre;
     case "fawkes":
-      return Specie.Fawkes;
+      return Species.Fawkes;
     case "totox":
-      return Specie.Totox;
+      return Species.Totox;
   }
 }
