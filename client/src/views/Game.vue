@@ -1,7 +1,9 @@
 <template>
   <div id="jeu">
     <ion-phaser :game.prop="game" :initialize.prop="true" />
-    <div id="filter" v-if="gameState == false && endGame == false"><button id="launch" @click="launchGame()">Lancer la partie</button></div>
+    <div id="filter" v-if="gameState == false && endGame == false">
+      <button id="launch" @click="launchGame()" :disabled="this.gameId == 'ROOM-'+this.$socket.id ? false : true">Lancer la partie</button>
+      </div>
     <div id="endFilter" v-if="gameState == false && endGame == true">
       <div id="logo">
         <img src="logo.png" alt="Logo du jeu" />
