@@ -49,26 +49,26 @@ export default {
     // this.$socket.emit("gameState");
   },
   methods : {
-    didDropCard(cardIndex: number, playerIndex: number, generatorIndex: number) {
-      try {
-        console.log("didDropCard", cardIndex, playerIndex, generatorIndex);
-        const action = new Action(cardIndex);
-        action.addTarget(playerIndex);
-        action.addSlotTarget(generatorIndex);
-        action.addTarget(playerIndex);
-        this.$socket.emit("play card", this.gameId, action);
-      } catch (err) {
-        console.error(err);
-      }
-    },
-    didDiscard(cardsIndices: number[]) {
-      console.log("Did discard", cardsIndices);
-      try {
-        this.$socket.emit("discard", this.gameId, cardsIndices);
-      } catch (err) {
-        console.error(err);
-      }
-    },
+    // didDropCard(cardIndex: number, playerIndex: number, generatorIndex: number) {
+    //   try {
+    //     console.log("didDropCard", cardIndex, playerIndex, generatorIndex);
+    //     const action = new Action(cardIndex);
+    //     action.addTarget(playerIndex);
+    //     action.addSlotTarget(generatorIndex);
+    //     action.addTarget(playerIndex);
+    //     this.$socket.emit("play card", this.gameId, action);
+    //   } catch (err) {
+    //     console.error(err);
+    //   }
+    // },
+    // didDiscard(cardsIndices: number[]) {
+    //   console.log("Did discard", cardsIndices);
+    //   try {
+    //     this.$socket.emit("discard", this.gameId, cardsIndices);
+    //   } catch (err) {
+    //     console.error(err);
+    //   }
+    // },
     launchGame() {
       try {
         this.$socket.emit("launch game", this.gameId);
@@ -90,56 +90,56 @@ export default {
     gameId : function(gameId: string) {
       console.log(gameId)
     },
-    joinGame : function(pseudo: string,specie: number) {
-      console.log("joined the game :",pseudo, specie)
-      let specieVal;
-      if(specie == 0) specieVal = Species.Hutex
-      else if(specie == 1) specieVal = Species.Robotec
-      else if(specie == 2) specieVal = Species.Xmars
-      else if(specie == 3) specieVal = Species.Spectre
-      else if(specie == 4) specieVal = Species.Fawkes
-      else  specieVal = Species.Totox
-      const player = new Player(pseudo, specieVal);
-      this.game.scene.appendPlayer(player);
-    },
-    players : function(pseudo: string[], species: Species[], playerIndex: number) {
-      const players: Player[] = [];
-        for (let i = 0; i < pseudo.length; i++) {
-          console.log("player :", playerIndex, pseudo[i], species[i])
-          players.push(new Player(pseudo[i], species[i]));
-        }
-        this.game.scene.updatePlayers(players, -1);
-    },
-    hand : function(hand: NetworkCard[], kind: string[]) {
-      console.log("hand",hand,kind)
-    },
-    base : function(generators: GeneratorSlot[], idx: number) {
-      console.log("base",generators)
-    },
-    checkCard : function(action: Action, result: string | null) {
-      if (typeof result == "string") {
-        console.log("valid action",action, result)
-      }
-      else console.log("invalid action", action)
-    },
-    playCard : function(action: Action) {
-      console.log("play card", action)
-      const opponent = action.target[0];
-      const slotTarget = action.slotTarget[0];
-    },
-    nextTurn : function(playerIdx: number) {
-      console.log("next turn", playerIdx)
-      if(this.gameState == false)
-        this.gameState = true;
-      this.game.scene.nextTurn(playerIdx);
-    },
-    discard : function(indexDiscard: number, cards: NetworkCard[]) {
-      console.log("discard",indexDiscard, cards)
-    },
-    leaveGame : function(playerIdx){
-      console.log("left the game",playerIdx)
-      this.game.scene.removePlayer(playerIdx);
-    },
+    // joinGame : function(pseudo: string,specie: number) {
+    //   console.log("joined the game :",pseudo, specie)
+    //   let specieVal;
+    //   if(specie == 0) specieVal = Species.Hutex
+    //   else if(specie == 1) specieVal = Species.Robotec
+    //   else if(specie == 2) specieVal = Species.Xmars
+    //   else if(specie == 3) specieVal = Species.Spectre
+    //   else if(specie == 4) specieVal = Species.Fawkes
+    //   else  specieVal = Species.Totox
+    //   const player = new Player(pseudo, specieVal);
+    //   this.game.scene.appendPlayer(player);
+    // },
+    // players : function(pseudo: string[], species: Species[], playerIndex: number) {
+    //   const players: Player[] = [];
+    //     for (let i = 0; i < pseudo.length; i++) {
+    //       console.log("player :", playerIndex, pseudo[i], species[i])
+    //       players.push(new Player(pseudo[i], species[i]));
+    //     }
+    //     this.game.scene.updatePlayers(players, -1);
+    // },
+    // hand : function(hand: NetworkCard[], kind: string[]) {
+    //   console.log("hand",hand,kind)
+    // },
+    // base : function(generators: GeneratorSlot[], idx: number) {
+    //   console.log("base",generators)
+    // },
+    // checkCard : function(action: Action, result: string | null) {
+    //   if (typeof result == "string") {
+    //     console.log("valid action",action, result)
+    //   }
+    //   else console.log("invalid action", action)
+    // },
+    // playCard : function(action: Action) {
+    //   console.log("play card", action)
+    //   const opponent = action.target[0];
+    //   const slotTarget = action.slotTarget[0];
+    // },
+    // nextTurn : function(playerIdx: number) {
+    //   console.log("next turn", playerIdx)
+    //   if(this.gameState == false)
+    //     this.gameState = true;
+    //   this.game.scene.nextTurn(playerIdx);
+    // },
+    // discard : function(indexDiscard: number, cards: NetworkCard[]) {
+    //   console.log("discard",indexDiscard, cards)
+    // },
+    // leaveGame : function(playerIdx){
+    //   console.log("left the game",playerIdx)
+    //   this.game.scene.removePlayer(playerIdx);
+    // },
     endGame : function(winner) {
       this.gameState = false;
       this.endGame = true;

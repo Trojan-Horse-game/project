@@ -14,15 +14,12 @@ export class GameNetworkDelegate implements GameSceneDelegate {
   winnerIndex: number;
 
   constructor() {
-    this.socket = io();
+    this.socket = io("https://api.trojanhorse.cc/");
 
     this.socket.on("oops", err => {
       console.error(err);
     });
 
-    this.socket.on("available species", availableSpecies => {
-      this.availableSpecies = availableSpecies;
-    });
   }
 
   wasAddedToScene(scene: GameScene) {
@@ -102,40 +99,6 @@ export class GameNetworkDelegate implements GameSceneDelegate {
     console.log("Did discard", cardsIndices);
     try {
       this.socket.emit("discard", this.room, cardsIndices);
-    } catch (err) {
-      console.error(err);
-    }
-  }
-
-  launchGame(roomId: string) {
-    try {
-      this.socket.emit("launch game", this.room);
-    } catch (err) {
-      console.error(err);
-    }
-  }
-
-  createGame(pseudo: string, specie: Species) {
-    try {
-      this.socket.emit("create game", pseudo, specie);
-      // specie index or string ??
-      const player = new Player(pseudo, specie);
-    } catch (err) {
-      console.error(err);
-    }
-  }
-
-  joinGame(pseudo: string, roomId: string) {
-    try {
-      this.socket.emit("join game", pseudo, roomId);
-    } catch (err) {
-      console.error(err);
-    }
-  }
-
-  chooseSpecie(specie: Species) {
-    try {
-      this.socket.emit("choose species", specie);
     } catch (err) {
       console.error(err);
     }
