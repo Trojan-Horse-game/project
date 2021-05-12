@@ -181,7 +181,7 @@ module.exports = function (io: any) {
                 return value.socketId == socket.id;
               })
             );
-
+            console.log("emit join game with", player.pseudo, player.species)
             io.in(thisgame.roomId).emit(
               "joinGame",
               player.pseudo,
