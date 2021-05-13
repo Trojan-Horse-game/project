@@ -237,10 +237,11 @@ export default {
     // this.$socket.emit("gameState");
   },
   sockets: {
-    availableSpecies: function(availableSpecies) {
+    availableSpecies: function(data) {
       for (const specie of this.species) {
-        if (!(specie.id in availableSpecies))
+        if (!(data.includes(specie.id))){
           this.lockedChoices.push(specie.name);
+        }
       }
     },
     gameId: function(gameId) {
