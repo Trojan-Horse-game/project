@@ -133,15 +133,16 @@ export default {
       console.log(gameId);
     },
     joinGame: function(data) {
-      const pseudo: string = data[0];
-      const specie: Species = data[1];
+      console.log(data);
+      const pseudo: string = data.pseudo;
+      const specie: Species = data.specie;
       const player = new Player(pseudo, specie);
       this.game.scene.appendPlayer(player);
     },
     players: function(data) {
-      const pseudo: string[] = data[0];
-      const species: Species[] = data[1];
-      const playerIndex: number = data[2];
+      const pseudo: string[] = data.pseudo;
+      const species: Species[] = data.species;
+      const playerIndex: number = data.index;
       const playersList: Player[] = [];
       for (let i = 0; i < pseudo.length; i++) {
         console.log("player :", playerIndex, pseudo[i], species[i]);
@@ -150,20 +151,20 @@ export default {
       this.game.scene.updatePlayers(playersList, -1);
     },
     hand: function(data) {
-      const hand: NetworkCard[] = data[0];
-      const kind: string[] = data[1];
+      const hand: NetworkCard[] = data.hand;
+      const kind: string[] = data.kind;
       this.gameState = true;
       console.log("hand", hand, kind);
     },
     base: function(data) {
-      const generators: GeneratorSlot[] = data[0];
-      const idx: number = data[1];
+      const generators: GeneratorSlot[] = data.generators;
+      const idx: number = data.idx;
       this.gameState = true;
       console.log("base", generators);
     },
     checkCard: function(data) {
-      const action: Action = data[0];
-      const result: string | null = data[1];
+      const action: Action = data.action;
+      const result: string | null = data.result;
       if (typeof result == "string") {
         console.log("valid action", action, result);
       } else console.log("invalid action", action);
@@ -179,8 +180,8 @@ export default {
       this.game.scene.nextTurn(playerIdx);
     },
     discard: function(data) {
-      const indexDiscard: number = data[0];
-      const cards: NetworkCard[] = data[0];
+      const indexDiscard: number = data.indexDiscard;
+      const cards: NetworkCard[] = data.cards;
       console.log("discard", indexDiscard, cards);
     },
     leaveGame: function(playerIdx) {
