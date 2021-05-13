@@ -148,7 +148,9 @@ module.exports = function (io: any) {
     });
 
     // When joining a game
-    socket.on("join game", (pseudo: string, roomId: string) => {
+    socket.on("join game", (data: any) => {
+      const pseudo: string = data[0];
+      const roomId: string = data[1];
       try {
         let thisgame = findGame(roomId, games);
         if (thisgame.players.length == 6) {
