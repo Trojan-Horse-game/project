@@ -2,11 +2,11 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { Card } from "./Card";
 import { GameSceneDelegate } from "./GameSceneDelegate";
-import { io, Socket } from "socket.io-client";
+// import { io, Socket } from "socket.io-client";
 import { GameScene, Player } from "./GameScene";
 
 export class GameNetworkDelegate implements GameSceneDelegate {
-  private socket: Socket;
+  // private socket: Socket;
   scene: GameScene;
   availableSpecies: Species[] = [];
   room: string;
@@ -88,7 +88,7 @@ export class GameNetworkDelegate implements GameSceneDelegate {
       action.addTarget(playerIndex);
       action.addSlotTarget(generatorIndex);
       action.addTarget(playerIndex);
-      this.socket.emit("play card", this.room, action);
+      // this.socket.emit("play card", this.room, action);
     } catch (err) {
       console.error(err);
     }
@@ -97,7 +97,7 @@ export class GameNetworkDelegate implements GameSceneDelegate {
   didDiscard(cardsIndices: number[]) {
     console.log("Did discard", cardsIndices);
     try {
-      this.socket.emit("discard", this.room, cardsIndices);
+      // this.socket.emit("discard", this.room, cardsIndices);
     } catch (err) {
       console.error(err);
     }
