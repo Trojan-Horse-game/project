@@ -40,8 +40,8 @@ export default {
         console.log(this.id);
         this.$socket.emit(
           "join game",
-          localStorage.getItem("username"),
-          this.id
+          {pseudo:localStorage.getItem("username"),
+          roomId:this.id}
         );
         this.$router.push("/choixEspece");
       } else {
