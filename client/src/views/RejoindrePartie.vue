@@ -36,7 +36,6 @@ export default {
   }),
   methods: {
     async joinGame() {
-      // try {
       if (this.id.length > 0) {
         console.log(this.id);
         this.$socket.emit(
@@ -46,11 +45,8 @@ export default {
         );
         this.$router.push("/choixEspece");
       } else {
-        throw "Id de la partie requis";
+        alert("Id de la partie requis");
       }
-      // } catch (err) {
-      //   alert(err);
-      // }
     }
   },
   sockets: {

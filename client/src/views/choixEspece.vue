@@ -238,6 +238,7 @@ export default {
   },
   sockets: {
     availableSpecies: function(availableSpecies) {
+      console.log("available species", availableSpecies)
       for (const specie of this.species) {
         if (!(specie.id in availableSpecies))
           this.lockedChoices.push(specie.name);
