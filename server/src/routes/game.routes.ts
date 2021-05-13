@@ -148,7 +148,7 @@ module.exports = function (io: any) {
     });
 
     // When joining a game
-    socket.on("join game", (data:any) => {
+    socket.on("join game", data => {
       console.log("data",data);
       const pseudo: string = data.pseudo;
       console.log("pseudo",pseudo)
