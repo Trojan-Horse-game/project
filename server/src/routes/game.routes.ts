@@ -217,7 +217,7 @@ module.exports = function (io: any) {
             {hand: player.hand,
             kind: cardsKinds(player.hand)}
           );
-          io.in(thisgame.roomId).emit("base", {base: player.base, index: index});
+          io.in(thisgame.roomId).emit("base", {base: player.base, idx: index});
         });
         io.in(thisgame.roomId).emit("nextTurn", thisgame.currentPlayerIdx);
       } catch (err) {
@@ -260,9 +260,9 @@ module.exports = function (io: any) {
 
           thisgame.playAction(action);
           const kinds = cardsKinds(thisgame.currentPlayer.hand);
-          socket.emit("hand", {hand: thisgame.currentPlayer.hand, kinds: kinds});
+          socket.emit("hand", {hand: thisgame.currentPlayer.hand, kind: kinds});
           thisgame.players.forEach((player, index) => {
-            io.in(thisgame.roomId).emit("base", {base: player.base, index: index});
+            io.in(thisgame.roomId).emit("base", {base: player.base, idx: index});
           });
 
           if (thisgame.inProgress) {
