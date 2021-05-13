@@ -14,7 +14,7 @@ var whitelist = [
   "https://www.trojanhorse.cc",
   "http://localhost:8081",
   "http://localhost:8080",
-  "*"
+  "*",
 ];
 
 var origin = {
@@ -23,7 +23,7 @@ var origin = {
     if (whitelist.indexOf(origin) !== -1) {
       callback(null, true);
     } else {
-      console.log("origin:",origin);
+      console.log("origin:", origin);
       callback(new Error("Not allowed by CORS"));
     }
   },
@@ -38,6 +38,8 @@ const io = require("socket.io")(http, {
     credentials: true,
   },
   allowEIO3: true,
+  pingInterval: 10,
+  pingTimeout: 4000,
 });
 
 require("./routes/game.routes")(io);
