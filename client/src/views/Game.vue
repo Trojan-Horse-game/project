@@ -151,16 +151,16 @@ export default {
       this.game.scene.updatePlayers(playersList, -1);
     },
     hand: function(data) {
-      const hand: NetworkCard[] = data.hand;
-      const kind: string[] = data.kind;
+      const hand = data.hand;
+      const kind = data.kind;
       this.gameState = true;
       console.log("hand", hand, kind);
     },
     base: function(data) {
-      const generators: GeneratorSlot[] = data.generators;
+      const generators = data.generators;
       const idx: number = data.idx;
       this.gameState = true;
-      console.log("base", generators);
+      console.log("base", generators, idx);
     },
     checkCard: function(data) {
       const action: Action = data.action;

@@ -86,8 +86,8 @@ function nextTurn(io: any, thisGame: Game) {
     }
     io.to(current.socketId).emit(
       "hand",
-      current.hand,
-      cardsKinds(current.hand)
+      {hand: current.hand,
+      kind: cardsKinds(current.hand)}
     );
   } while (thisGame.currentPlayer.hand.length === 0);
   setTimeout(() => nextTurn(io, thisGame), 20000);
