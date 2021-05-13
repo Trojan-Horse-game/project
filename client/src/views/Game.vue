@@ -53,9 +53,13 @@ export default {
       gameId: localStorage.getItem("gameId"),
       initialize: false,
       game: {
-        width: window.innerWidth * window.devicePixelRatio,
-        height: window.innerHeight * window.devicePixelRatio,
-        zoom: 1 / window.devicePixelRatio,
+        scale: {
+          parent: "game",
+          mode: Phaser.Scale.ScaleModes.NONE,
+          width: window.innerWidth * window.devicePixelRatio,
+          height: window.innerHeight * window.devicePixelRatio,
+          zoom: 1 / window.devicePixelRatio
+        },
         type: Phaser.AUTO,
         scene: new GameScene(
           localStorage.getItem("gameId"),
@@ -68,13 +72,10 @@ export default {
     };
   },
   mounted() {
-    console.log("socket id", this.$socket.id);
     this.initialize = true;
-    console.log(this.game);
     window.addEventListener("resize", () => {
       const w = window.innerWidth * window.devicePixelRatio;
       const h = window.innerHeight * window.devicePixelRatio;
-      console.log(this.game);
       console.log(this.game.scale);
       this.game.scale.resize(w, h);
       for (const scene of this.game.scene.scenes) {
@@ -157,7 +158,7 @@ export default {
       console.log("hand", hand, kind);
     },
     base: function(data) {
-      const generators = data.generators;
+      const generators = data.base;
       const idx: number = data.idx;
       this.gameState = true;
       console.log("base", generators, idx);
