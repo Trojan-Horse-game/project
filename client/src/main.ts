@@ -16,7 +16,7 @@ defineIonPhaser(window);
 Vue.use(
   new VueSocketIO({
     debug: true,
-    connection: SocketIO("https://api.trojanhorse.cc/",  { transports: ["polling"] })
+    connection: "https://api.trojanhorse.cc/"
   })
 );
 
