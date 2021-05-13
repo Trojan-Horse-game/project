@@ -133,10 +133,14 @@ module.exports = function (io: any) {
         socket.emit("availableSpecies", game.availableSpecies);
 
         socket.on("choose species", (species: Species) => {
-          console.log(species);
-          let player = new Player(pseudo, species, socket.id);
-          game.addPlayer(player);
-          games.push(game);
+          try{
+            console.log(species);
+            let player = new Player(pseudo, species, socket.id);
+            game.addPlayer(player);
+            games.push(game);
+          } catch(err) {
+            socket.emit("oops", err);
+          }
         });
       } catch (err) {
         socket.emit("oops", err);
@@ -159,29 +163,33 @@ module.exports = function (io: any) {
         socket.emit("availableSpecies", thisgame.availableSpecies);
 
         socket.on("choose species", (species: Species) => {
-          let player = new Player(pseudo, species, socket.id);
-          thisgame.addPlayer(player);
-          socket.join(thisgame.roomId);
-          socket.emit("gameId", thisgame.roomId);
+          try {
+            let player = new Player(pseudo, species, socket.id);
+            thisgame.addPlayer(player);
+            socket.join(thisgame.roomId);
+            socket.emit("gameId", thisgame.roomId);
 
-          socket.emit(
-            "players",
-            thisgame.players.map((value) => {
-              return value.pseudo;
-            }),
-            thisgame.players.map((value) => {
-              return value.species;
-            }),
-            thisgame.players.findIndex((value) => {
-              return value.socketId == socket.id;
-            })
-          );
-
-          io.in(thisgame.roomId).emit(
-            "joinGame",
-            player.pseudo,
-            player.species
-          );
+            socket.emit(
+              "players",
+              thisgame.players.map((value) => {
+                return value.pseudo;
+              }),
+              thisgame.players.map((value) => {
+                return value.species;
+              }),
+              thisgame.players.findIndex((value) => {
+                return value.socketId == socket.id;
+              })
+            );
+            console.log("emit join game with", player.pseudo, player.species)
+            io.in(thisgame.roomId).emit(
+              "joinGame",
+              player.pseudo,
+              player.species
+            );
+          } catch (err) {  
+            socket.emit("oops", err);
+          }
         });
       } catch (err) {
         socket.emit("oops", err);
