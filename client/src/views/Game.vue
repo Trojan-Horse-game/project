@@ -76,15 +76,17 @@ export default {
     window.addEventListener("resize", () => {
       const w = window.innerWidth * window.devicePixelRatio;
       const h = window.innerHeight * window.devicePixelRatio;
-      this.game.scale.resize(w, h);
-      for (const scene of this.game.scene.scenes) {
+      console.log("Inner game", this.game.instance);
+      this.game.instance.scale.resize(w, h);
+      console.log(this.game.instance.scene.scenes);
+      this.game.instance.scene.scenes.forEach(scene => {
         if (scene.scene.settings.active) {
           scene.cameras.main.setViewport(0, 0, w, h);
           if (scene instanceof ResponsiveScene) {
             scene.resize(w, h);
           }
         }
-      }
+      });
     });
   },
   methods: {
