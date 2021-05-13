@@ -4,7 +4,7 @@
       <button
         id="launch"
         @click="launchGame()"
-        :disabled="this.gameId == 'ROOM-' + this.$socket.id ? false : true"
+        v-if="gameId == 'ROOM-' + this.$socket.id"
       >
         Lancer la partie
       </button>
@@ -68,6 +68,7 @@ export default {
     };
   },
   mounted() {
+    console.log("socket id",this.$socket.id)
     this.initialize = true;
     console.log(this.game);
     window.addEventListener("resize", () => {
@@ -149,9 +150,11 @@ export default {
       this.game.scene.updatePlayers(playersList, -1);
     },
     hand: function(hand: NetworkCard[], kind: string[]) {
+      this.gameState = true;
       console.log("hand", hand, kind);
     },
     base: function(generators: GeneratorSlot[], idx: number) {
+      this.gameState = true;
       console.log("base", generators);
     },
     checkCard: function(action: Action, result: string | null) {
@@ -166,7 +169,7 @@ export default {
     },
     nextTurn: function(playerIdx: number) {
       console.log("next turn", playerIdx);
-      if (this.gameState == false) this.gameState = true;
+      this.gameState = true;
       this.game.scene.nextTurn(playerIdx);
     },
     discard: function(indexDiscard: number, cards: NetworkCard[]) {

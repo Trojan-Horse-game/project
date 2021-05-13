@@ -326,8 +326,9 @@ module.exports = function (io: any) {
         socket.emit("restricted");
     });
 
-    // When a user disconnects from the game
+    //When a user disconnects from the game
     socket.on("disconnecting", (_reason) => {
+      console.log(_reason);
       for (const room of socket.rooms) {
         if (room !== socket.id) {
           forfeit(io, room, socket);
