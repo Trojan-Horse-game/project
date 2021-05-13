@@ -2,9 +2,9 @@ import { GameScene, Player } from "./GameScene";
 import { ResponsiveScene } from "./ResponsiveScene";
 import "phaser";
 import { GameNetworkDelegate } from "./GameNetworkDelegate";
-import { Specie } from "./GameNetworkDelegate";
+import { Species } from "./GameNetworkDelegate";
 
-const scene = new GameScene("", new Player("Youness", Specie.Totox));
+const scene = new GameScene("", new Player("Youness", Species.Totox));
 const delegate = new GameNetworkDelegate();
 scene.delegate = delegate;
 const config: Phaser.Types.Core.GameConfig = {

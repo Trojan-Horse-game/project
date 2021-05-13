@@ -18,14 +18,6 @@ import { Species, specieToString } from "./GameNetworkDelegate";
 import { io, Socket } from "socket.io-client";
 
 export class GameScene extends ResponsiveScene {
-  constructor(id: string, currentPlayer: Player) {
-    super({});
-    this.id = id;
-    this.players = [currentPlayer];
-    this.playerIndex = 0;
-    this.currentPlayer = 0;
-  }
-
   id: string;
   players: Player[];
   playerIndex: number;
@@ -42,6 +34,14 @@ export class GameScene extends ResponsiveScene {
   opponentsSlots: OpponentSlot[] = [];
   timerUpdater: number;
   timerTimeout: number;
+
+  constructor(id: string, currentPlayer: Player) {
+    super({});
+    this.id = id;
+    this.players = [currentPlayer];
+    this.playerIndex = 0;
+    this.currentPlayer = 0;
+  }
 
   preload() {
     // Character pictures

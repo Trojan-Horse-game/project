@@ -53,6 +53,7 @@ export default {
       gameId: localStorage.getItem("gameId"),
       initialize: false,
       game: {
+        type: Phaser.AUTO,
         scale: {
           parent: "game",
           mode: Phaser.Scale.ScaleModes.NONE,
@@ -60,7 +61,6 @@ export default {
           height: window.innerHeight * window.devicePixelRatio,
           zoom: 1 / window.devicePixelRatio
         },
-        type: Phaser.AUTO,
         scene: new GameScene(
           localStorage.getItem("gameId"),
           new Player(
@@ -76,7 +76,6 @@ export default {
     window.addEventListener("resize", () => {
       const w = window.innerWidth * window.devicePixelRatio;
       const h = window.innerHeight * window.devicePixelRatio;
-      console.log(this.game.scale);
       this.game.scale.resize(w, h);
       for (const scene of this.game.scene.scenes) {
         if (scene.scene.settings.active) {
