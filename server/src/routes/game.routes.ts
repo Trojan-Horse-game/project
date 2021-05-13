@@ -133,12 +133,12 @@ module.exports = function (io: any) {
         socket.emit("availableSpecies", game.availableSpecies);
 
         socket.on("choose species", (species: Species) => {
-          try{
+          try {
             console.log(species);
             let player = new Player(pseudo, species, socket.id);
             game.addPlayer(player);
             games.push(game);
-          } catch(err) {
+          } catch (err) {
             socket.emit("oops", err);
           }
         });
@@ -148,12 +148,12 @@ module.exports = function (io: any) {
     });
 
     // When joining a game
-    socket.on("join game", data => {
-      console.log("data",data);
+    socket.on("join game", (data: any) => {
+      console.log("data", data);
       const pseudo: string = data.pseudo;
-      console.log("pseudo",pseudo)
+      console.log("pseudo", pseudo);
       const roomId: string = data.roomId;
-      console.log("roomId",roomId)
+      console.log("roomId", roomId);
       try {
         let thisgame = findGame(roomId, games);
         if (thisgame.players.length == 6) {
@@ -174,25 +174,23 @@ module.exports = function (io: any) {
             socket.join(thisgame.roomId);
             socket.emit("gameId", thisgame.roomId);
 
-            socket.emit(
-              "players",
-              thisgame.players.map((value) => {
+            socket.emit("players", {
+              pseudo: thisgame.players.map((value) => {
                 return value.pseudo;
               }),
-              thisgame.players.map((value) => {
+              species: thisgame.players.map((value) => {
                 return value.species;
               }),
-              thisgame.players.findIndex((value) => {
+              index: thisgame.players.findIndex((value) => {
                 return value.socketId == socket.id;
-              })
-            );
-            console.log("emit join game with", player.pseudo, player.species)
-            io.in(thisgame.roomId).emit(
-              "joinGame",
-              player.pseudo,
-              player.species
-            );
-          } catch (err) {  
+              }),
+            });
+            console.log("emit join game with", player.pseudo, player.species);
+            io.in(thisgame.roomId).emit("joinGame", {
+              pseudo: player.pseudo,
+              species: player.species,
+            });
+          } catch (err) {
             socket.emit("oops", err);
           }
         });
@@ -205,7 +203,7 @@ module.exports = function (io: any) {
     socket.on("launch game", (roomId: string) => {
       try {
         let thisgame = findGame(roomId, games);
-        if (thisgame.roomId != "ROOM-"+socket.id) {
+        if (thisgame.roomId != "ROOM-" + socket.id) {
           throw "Not the host !";
         }
         if (thisgame.players.length == 1) {
@@ -216,10 +214,10 @@ module.exports = function (io: any) {
         thisgame.players.forEach((player, index) => {
           io.to(player.socketId).emit(
             "hand",
-            player.hand,
-            cardsKinds(player.hand)
+            {hand: player.hand,
+            kind: cardsKinds(player.hand)}
           );
-          io.in(thisgame.roomId).emit("base", player.base, index);
+          io.in(thisgame.roomId).emit("base", {base: player.base, index: index});
         });
         io.in(thisgame.roomId).emit("nextTurn", thisgame.currentPlayerIdx);
       } catch (err) {
@@ -228,7 +226,9 @@ module.exports = function (io: any) {
     });
 
     // When a user selects a card
-    socket.on("check card", (roomId: string, action: Action) => {
+    socket.on("check card", (data: any) => {
+      const roomId: string = data.roomId;
+      const action: Action = data.action;
       try {
         let thisgame = findGame(roomId, games);
         let player = findPlayer(socket.id, thisgame);
@@ -237,7 +237,7 @@ module.exports = function (io: any) {
           throw "Not your turn !";
         } else {
           let result = thisgame.checkAction(action);
-          socket.to(socket.id).emit("checkCard", action, result);
+          socket.to(socket.id).emit("checkCard", {action: action, result: result});
         }
       } catch (err) {
         socket.emit("oops", err);
@@ -245,7 +245,9 @@ module.exports = function (io: any) {
     });
 
     // when a user plays a card
-    socket.on("play card", (roomId: string, action: Action) => {
+    socket.on("play card", (data: any) => {
+      const roomId: string = data.roomId;
+      const action: Action = data.action;
       try {
         let thisgame = findGame(roomId, games);
         let player = findPlayer(socket.id, thisgame);
@@ -258,9 +260,9 @@ module.exports = function (io: any) {
 
           thisgame.playAction(action);
           const kinds = cardsKinds(thisgame.currentPlayer.hand);
-          socket.emit("hand", thisgame.currentPlayer.hand, kinds);
+          socket.emit("hand", {hand: thisgame.currentPlayer.hand, kinds: kinds});
           thisgame.players.forEach((player, index) => {
-            io.in(thisgame.roomId).emit("base", player.base, index);
+            io.in(thisgame.roomId).emit("base", {base: player.base, index: index});
           });
 
           if (thisgame.inProgress) {
@@ -275,7 +277,9 @@ module.exports = function (io: any) {
     });
 
     // when a user discard
-    socket.on("discard", (roomId: string, indexDiscard: number[]) => {
+    socket.on("discard", (data: any) => {
+      const roomId: string = data.roomId;
+      const indexDiscard: number[] = data.indexDiscard;
       try {
         let thisgame = findGame(roomId, games);
         let player = findPlayer(socket.id, thisgame);
@@ -292,7 +296,7 @@ module.exports = function (io: any) {
           }
 
           thisgame.discardHand(indexDiscard);
-          socket.to(roomId).emit("discard", indexDiscard, cards);
+          socket.to(roomId).emit("discard", {indexDiscard: indexDiscard, cards: cards});
 
           nextTurn(io, thisgame);
         }
@@ -325,10 +329,8 @@ module.exports = function (io: any) {
       for (const game of games) {
         count += howManyGames(pseudo, game);
       }
-      if(socket.rooms.size >= 2 && count > 1)
-        socket.emit("inGame");
-      else if( socket.rooms.size < 2 && count == 0)
-        socket.emit("restricted");
+      if (socket.rooms.size >= 2 && count > 1) socket.emit("inGame");
+      else if (socket.rooms.size < 2 && count == 0) socket.emit("restricted");
     });
 
     //When a user disconnects from the game
