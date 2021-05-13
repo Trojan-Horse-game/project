@@ -260,6 +260,7 @@ export class GameScene extends ResponsiveScene {
       index = (index + 1) % this.players.length;
       opponentIndex++;
     }
+    this.resize(this.cameras.main.width, this.cameras.main.height);
   }
 
   slotLayoutForOpponent(opponentIndex: number): SlotLayout {

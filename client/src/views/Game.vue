@@ -70,8 +70,22 @@ export default {
   mounted() {
     console.log("socket id",this.$socket.id)
     this.initialize = true;
-    // this.$socket.emit("gameState");
-    console.log("ABC", this.game.scene);
+    console.log(this.game);
+    window.addEventListener("resize", () => {
+      const w = window.innerWidth * window.devicePixelRatio;
+      const h = window.innerHeight * window.devicePixelRatio;
+      console.log(this.game);
+      console.log(this.game.scale);
+      this.game.scale.resize(w, h);
+      for (const scene of this.game.scene.scenes) {
+        if (scene.scene.settings.active) {
+          scene.cameras.main.setViewport(0, 0, w, h);
+          if (scene instanceof ResponsiveScene) {
+            scene.resize(w, h);
+          }
+        }
+      }
+    });
   },
   methods: {
     didDropCard(
