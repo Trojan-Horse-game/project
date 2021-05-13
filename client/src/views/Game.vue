@@ -119,16 +119,8 @@ export default {
     },
     joinGame: function(data) {
       const pseudo: string = data[0];
-      const specie: number = data[1];
-      console.log("joined the game :", pseudo, specie);
-      let specieVal;
-      if (specie == 0) specieVal = Species.Hutex;
-      else if (specie == 1) specieVal = Species.Robotec;
-      else if (specie == 2) specieVal = Species.Xmars;
-      else if (specie == 3) specieVal = Species.Spectre;
-      else if (specie == 4) specieVal = Species.Fawkes;
-      else specieVal = Species.Totox;
-      const player = new Player(pseudo, specieVal);
+      const specie: Species = data[1];
+      const player = new Player(pseudo, specie);
       this.game.scene.appendPlayer(player);
     },
     players: function(data) {
