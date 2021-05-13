@@ -38,8 +38,6 @@ const io = require("socket.io")(http, {
     credentials: true,
   },
   allowEIO3: true,
-  pingInterval: 10,
-  pingTimeout: 4000,
 });
 
 require("./routes/game.routes")(io);
