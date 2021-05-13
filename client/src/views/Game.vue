@@ -72,6 +72,7 @@ export default {
     };
   },
   mounted() {
+    console.log("currentScene", this.currentScene);
     this.initialize = true;
     window.addEventListener("resize", () => {
       const w = window.innerWidth * window.devicePixelRatio;
@@ -88,6 +89,11 @@ export default {
         }
       });
     });
+  },
+  computed: {
+    currentScene: function(): GameScene {
+      return this.game.scene;
+    }
   },
   methods: {
     didDropCard(
@@ -135,11 +141,11 @@ export default {
       console.log(gameId);
     },
     joinGame: function(data) {
-      console.log(data);
+      console.log(this.currentScene);
       const pseudo: string = data.pseudo;
       const specie: Species = data.specie;
       const player = new Player(pseudo, specie);
-      this.game.scene.appendPlayer(player);
+      this.currentScene.appendPlayer(player);
     },
     players: function(data) {
       const pseudo: string[] = data.pseudo;
@@ -150,7 +156,7 @@ export default {
         console.log("player :", playerIndex, pseudo[i], species[i]);
         playersList.push(new Player(pseudo[i], species[i]));
       }
-      this.game.scene.updatePlayers(playersList, -1);
+      this.currentScene.updatePlayers(playersList, -1);
     },
     hand: function(data) {
       const hand = data.hand;
@@ -179,7 +185,7 @@ export default {
     nextTurn: function(playerIdx: number) {
       console.log("next turn", playerIdx);
       this.gameState = true;
-      this.game.scene.nextTurn(playerIdx);
+      this.currentScene.nextTurn(playerIdx);
     },
     discard: function(data) {
       const indexDiscard: number = data.indexDiscard;
@@ -188,7 +194,7 @@ export default {
     },
     leaveGame: function(playerIdx) {
       console.log("left the game", playerIdx);
-      this.game.scene.removePlayer(playerIdx);
+      this.currentScene.removePlayer(playerIdx);
     },
     endGame: function(winner) {
       this.gameState = false;
