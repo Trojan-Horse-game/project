@@ -68,7 +68,7 @@ export default {
     };
   },
   mounted() {
-    console.log("socket id",this.$socket.id)
+    console.log("socket id", this.$socket.id);
     this.initialize = true;
     console.log(this.game);
     window.addEventListener("resize", () => {
@@ -149,15 +149,21 @@ export default {
       }
       this.game.scene.updatePlayers(playersList, -1);
     },
-    hand: function(hand: NetworkCard[], kind: string[]) {
+    hand: function(data) {
+      const hand: NetworkCard[] = data[0];
+      const kind: string[] = data[1];
       this.gameState = true;
       console.log("hand", hand, kind);
     },
-    base: function(generators: GeneratorSlot[], idx: number) {
+    base: function(data) {
+      const generators: GeneratorSlot[] = data[0];
+      const idx: number = data[1];
       this.gameState = true;
       console.log("base", generators);
     },
-    checkCard: function(action: Action, result: string | null) {
+    checkCard: function(data) {
+      const action: Action = data[0];
+      const result: string | null = data[1];
       if (typeof result == "string") {
         console.log("valid action", action, result);
       } else console.log("invalid action", action);
@@ -172,7 +178,9 @@ export default {
       this.gameState = true;
       this.game.scene.nextTurn(playerIdx);
     },
-    discard: function(indexDiscard: number, cards: NetworkCard[]) {
+    discard: function(data) {
+      const indexDiscard: number = data[0];
+      const cards: NetworkCard[] = data[0];
       console.log("discard", indexDiscard, cards);
     },
     leaveGame: function(playerIdx) {

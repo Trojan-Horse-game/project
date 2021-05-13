@@ -158,6 +158,7 @@ export class GameScene extends ResponsiveScene {
   }
 
   resize(width: number, height: number) {
+    console.log("Called resize", width, height);
     this.updateSlotsPositions(width, height);
     for (let i = 0; i < this.opponentsSlots.length; i++) {
       const position = this.playerPosition(i);
