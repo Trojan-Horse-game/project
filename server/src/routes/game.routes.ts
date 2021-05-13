@@ -150,9 +150,9 @@ module.exports = function (io: any) {
     // When joining a game
     socket.on("join game", (data:any) => {
       console.log("data",data);
-      const pseudo: string = data[0];
+      const pseudo: string = data.pseudo;
       console.log("pseudo",pseudo)
-      const roomId: string = data[1];
+      const roomId: string = data.roomId;
       console.log("roomId",roomId)
       try {
         let thisgame = findGame(roomId, games);
