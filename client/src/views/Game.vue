@@ -9,7 +9,7 @@
         Lancer la partie
       </button>
     </div>
-    <div id="endFilter" v-if="gameState == false && endGame == true">
+    <!-- <div id="endFilter" v-if="gameState == false && endGame == true">
       <div id="logo">
         <img src="logo.png" alt="Logo du jeu" />
       </div>
@@ -22,7 +22,7 @@
           </button></router-link
         >
       </div>
-    </div>
+    </div> -->
     <ion-phaser v-bind:game.prop="game" v-bind:initialize.prop="initialize" />
     <span id="gameId">{{ this.gameId }}</span>
     <v-btn @click="abandon()" id="abandon" title="Quitter la partie" medium icon
