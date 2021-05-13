@@ -117,7 +117,9 @@ export default {
     gameId: function(gameId: string) {
       console.log(gameId);
     },
-    joinGame: (pseudo: string, specie: number) => {
+    joinGame: function(data) {
+      const pseudo: string = data[0];
+      const specie: number = data[1];
       console.log("joined the game :", pseudo, specie);
       let specieVal;
       if (specie == 0) specieVal = Species.Hutex;
@@ -129,17 +131,16 @@ export default {
       const player = new Player(pseudo, specieVal);
       this.game.scene.appendPlayer(player);
     },
-    players: function(
-      pseudo: string[],
-      species: Species[],
-      playerIndex: number
-    ) {
-      const players: Player[] = [];
+    players: function(data) {
+      const pseudo: string[] = data[0];
+      const species: Species[] = data[1];
+      const playerIndex: number = data[2];
+      const playersList: Player[] = [];
       for (let i = 0; i < pseudo.length; i++) {
         console.log("player :", playerIndex, pseudo[i], species[i]);
-        players.push(new Player(pseudo[i], species[i]));
+        playersList.push(new Player(pseudo[i], species[i]));
       }
-      this.game.scene.updatePlayers(players, -1);
+      this.game.scene.updatePlayers(playersList, -1);
     },
     hand: function(hand: NetworkCard[], kind: string[]) {
       console.log("hand", hand, kind);
