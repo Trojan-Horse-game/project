@@ -245,9 +245,9 @@ module.exports = function (io: any) {
 
     // when a user plays a card
     socket.on("play card", (data: any) => {
-      const roomId: string = data.roomId;
-      const action: Action = data.action;
       try {
+        const roomId: string = data.roomId;
+        const action: Action = data.action;
         let thisgame = findGame(roomId, games);
         let player = findPlayer(socket.id, thisgame);
 
