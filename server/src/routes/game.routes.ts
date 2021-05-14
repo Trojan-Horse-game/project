@@ -247,6 +247,7 @@ module.exports = function (io: any) {
         const action: Action = data.action;
         let thisgame = findGame(roomId, games);
         let player = findPlayer(socket.id, thisgame);
+        action.card = player.hand[action.indexInHand];
 
         if (player !== thisgame.currentPlayer) {
           throw "Not your turn !";
