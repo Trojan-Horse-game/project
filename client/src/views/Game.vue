@@ -325,7 +325,7 @@ export default {
   width: 100%;
   background-color: rgba(47, 47, 47, 0.3);
   margin: auto;
-  text-align-last: center;
+  text-align: center;
   height: 100%;
   color: white;
   align-self: center;
