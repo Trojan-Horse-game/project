@@ -50,7 +50,6 @@ export default {
   },
   sockets: {
     oops: function(error) {
-      this.$router.push("/rejoindrePartie");
       alert(error);
     },
     valid: function(){
