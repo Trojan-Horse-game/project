@@ -149,12 +149,9 @@ module.exports = function (io: any) {
 
     // When joining a game
     socket.on("join game", (data: any) => {
-      console.log("data", data);
-      const pseudo: string = data.pseudo;
-      console.log("pseudo", pseudo);
-      const roomId: string = data.roomId;
-      console.log("roomId", roomId);
       try {
+        const pseudo: string = data.pseudo;
+        const roomId: string = data.roomId;
         let thisgame = findGame(roomId, games);
         if (thisgame.players.length == 6) {
           throw "Room is full !";
@@ -226,9 +223,9 @@ module.exports = function (io: any) {
 
     // When a user selects a card
     socket.on("check card", (data: any) => {
-      const roomId: string = data.roomId;
-      const action: Action = data.action;
       try {
+        const roomId: string = data.roomId;
+        const action: Action = data.action;
         let thisgame = findGame(roomId, games);
         let player = findPlayer(socket.id, thisgame);
 
@@ -277,9 +274,9 @@ module.exports = function (io: any) {
 
     // when a user discard
     socket.on("discard", (data: any) => {
-      const roomId: string = data.roomId;
-      const indexDiscard: number[] = data.indexDiscard;
       try {
+        const roomId: string = data.roomId;
+        const indexDiscard: number[] = data.indexDiscard;
         let thisgame = findGame(roomId, games);
         let player = findPlayer(socket.id, thisgame);
 

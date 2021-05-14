@@ -72,7 +72,7 @@ export default {
   };
   },
   mounted() {
-    console.log("scene",this.game.scene)
+    console.log(this.gameId);
     this.game.scene.delegate = new GameNetworkDelegate(this.gameId, this.$socket);
     this.initialize = true;
     window.addEventListener("resize", () => {

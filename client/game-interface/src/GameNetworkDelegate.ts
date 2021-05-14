@@ -25,7 +25,7 @@ export class GameNetworkDelegate implements GameSceneDelegate {
       action.addTarget(playerIndex);
       action.addSlotTarget(generatorIndex);
       action.addTarget(playerIndex);
-      this.socket.emit("play card", this.room, action);
+      this.socket.emit("play card", {roomId: this.room, action: action});
     } catch (err) {
       console.error(err);
     }
