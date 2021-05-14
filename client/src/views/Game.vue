@@ -39,10 +39,19 @@ import {
   GeneratorSlot,
   NetworkCard,
   Species,
-  stringToSpecie
+  stringToSpecie,
+  colorToAction,
+  colorToGenerator,
+  NetworkColor
 } from "../../game-interface/src/GameNetworkDelegate";
 import { GameScene, Player } from "../../game-interface/src/GameScene";
 import { ResponsiveScene } from "../../game-interface/src/ResponsiveScene";
+import {
+  ActionCard,
+  Card,
+  GeneratorCard,
+  GeneratorCardKind
+} from "../../game-interface/src/Card";
 
 export default {
   name: "Jeu",
@@ -62,18 +71,22 @@ export default {
           height: window.innerHeight * window.devicePixelRatio,
           zoom: 1 / window.devicePixelRatio
         },
-        scene : new GameScene(
+        scene: new GameScene(
           localStorage.getItem("gameId"),
           new Player(
             localStorage.getItem("username"),
             stringToSpecie(localStorage.getItem("specie"))
-          ))
-      },
-  };
+          )
+        )
+      }
+    };
   },
   mounted() {
     console.log(this.gameId);
-    this.game.scene.delegate = new GameNetworkDelegate(this.gameId, this.$socket);
+    this.game.scene.delegate = new GameNetworkDelegate(
+      this.gameId,
+      this.$socket
+    );
     this.initialize = true;
     window.addEventListener("resize", () => {
       const w = window.innerWidth * window.devicePixelRatio;
@@ -92,7 +105,7 @@ export default {
   computed: {
     currentScene: function(): GameScene {
       return this.game.scene;
-    },
+    }
   },
   methods: {
     didDropCard(
@@ -155,12 +168,48 @@ export default {
         console.log("player :", playerIndex, pseudo[i], species[i]);
         playersList.push(new Player(pseudo[i], species[i]));
       }
-      console.log(playersList, playerIndex)
+      console.log(playersList, playerIndex);
       this.currentScene.updatePlayers(playersList, playerIndex);
     },
     hand: function(data) {
-      const hand = data.hand;
-      const kind = data.kind;
+      const hand: NetworkCard[] = data.hand;
+      const kind: string[] = data.kind;
+      const colors: NetworkColor[] = hand.map(value => {
+        return value.color;
+      });
+      const cards: Card[] = [];
+      for (let i = 0; i < hand.length; i++) {
+        switch (kind[i]) {
+          case "firewall":
+            cards.push(
+              new GeneratorCard(
+                GeneratorCardKind.Medicine,
+                colorToGenerator(colors[i])
+              )
+            );
+            break;
+          case "generator":
+            cards.push(
+              new GeneratorCard(
+                GeneratorCardKind.Generator,
+                colorToGenerator(colors[i])
+              )
+            );
+            break;
+          case "virus":
+            cards.push(
+              new GeneratorCard(
+                GeneratorCardKind.Virus,
+                colorToGenerator(colors[i])
+              )
+            );
+            break;
+          case "action":
+            cards.push(new ActionCard(colorToAction(colors[i])));
+            break;
+        }
+      }
+      this.currentScene.deck.distributeCards(cards);
       this.gameState = true;
       console.log("hand", hand, kind);
     },

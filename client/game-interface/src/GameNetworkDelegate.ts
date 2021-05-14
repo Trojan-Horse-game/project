@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-use-before-define */
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import { Card } from "./Card";
+import { ActionCard, Card, GeneratorKind, ActionCardKind } from "./Card";
 import { GameSceneDelegate } from "./GameSceneDelegate";
 import { io, Socket } from "socket.io-client";
 import { GameScene, Player } from "./GameScene";
@@ -25,7 +25,7 @@ export class GameNetworkDelegate implements GameSceneDelegate {
       action.addTarget(playerIndex);
       action.addSlotTarget(generatorIndex);
       action.addTarget(playerIndex);
-      this.socket.emit("play card", {roomId: this.room, action: action});
+      this.socket.emit("play card", { roomId: this.room, action: action });
     } catch (err) {
       console.error(err);
     }
@@ -34,7 +34,7 @@ export class GameNetworkDelegate implements GameSceneDelegate {
   didDiscard(cardsIndices: number[]) {
     console.log("Did discard", cardsIndices);
     try {
-      console.log("ok")
+      console.log("ok");
       // this.socket.emit("discard", this.room, cardsIndices);
     } catch (err) {
       console.error(err);
@@ -68,6 +68,36 @@ export enum NetworkColor {
   Energy,
   Radiation,
   Joker
+}
+
+export function colorToGenerator(color: NetworkColor): GeneratorKind {
+  switch (color) {
+    case NetworkColor.Air:
+      return GeneratorKind.Air;
+    case NetworkColor.Water:
+      return GeneratorKind.Water;
+    case NetworkColor.Radiation:
+      return GeneratorKind.Shield;
+    case NetworkColor.Energy:
+      return GeneratorKind.Electricity;
+    case NetworkColor.Joker:
+      return GeneratorKind.Joker;
+  }
+}
+
+export function colorToAction(color: NetworkColor): ActionCardKind {
+  switch (color) {
+    case NetworkColor.Air:
+      return ActionCardKind.DiscardOpponents;
+    case NetworkColor.Joker:
+      return ActionCardKind.Spread;
+    case NetworkColor.Radiation:
+      return ActionCardKind.Steal;
+    case NetworkColor.Energy:
+      return ActionCardKind.Swap;
+    case NetworkColor.Water:
+      return ActionCardKind.SwapAll;
+  }
 }
 
 /* A generic interface for all the cards 

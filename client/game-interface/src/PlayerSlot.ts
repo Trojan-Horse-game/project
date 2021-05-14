@@ -27,10 +27,16 @@ export class PlayerSlot extends Phaser.GameObjects.Container {
       );
       this.configureCardInteraction(card);
       card.setX(offset);
+      card.setAlpha(0);
+      card.startX = card.x;
+      card.startY = card.y;
+      card.startWidth = card.displayWidth;
+      card.startHeight = card.displayHeight;
       this.add(card);
       this.cards.push(card);
       this.playerInteractive = false;
     }
+    this.discardedIndices = [0, 1, 2];
 
     // Profile picture
     this.profilePicture = new ProfilePicture(
