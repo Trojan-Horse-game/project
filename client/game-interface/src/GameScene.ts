@@ -185,33 +185,42 @@ export class GameScene extends ResponsiveScene {
   }
 
   nextTurn(nextPlayer: number) {
+    console.log("nextPlayer index is", nextPlayer);
     const nextOpponentSlotIndex =
       nextPlayer > this.playerIndex ? nextPlayer - 1 : nextPlayer;
+    console.log("nextOpponentSlotIndex is:", nextOpponentSlotIndex);
 
     if (this.timerUpdater != undefined) {
+      console.log("timerUpdater is defined");
       clearInterval(this.timerUpdater);
     }
 
     if (this.timerTimeout != undefined) {
+      console.log("timerTimeout is defined");
       clearTimeout(this.timerTimeout);
     }
 
     if (this.playerIndex == this.currentPlayer) {
+      console.log("this.playerIndex == this.currentPlayer");
       this.playerSlot.profilePicture.timerPercentage = 0;
       this.playerSlot.playerInteractive = false;
     } else {
+      console.log("!(this.playerIndex == this.currentPlayer)");
       const opponentSlotIndex =
         this.currentPlayer > this.playerIndex
           ? this.currentPlayer - 1
           : this.currentPlayer;
+      console.log("opponentSlotIndex = ", opponentSlotIndex);
       this.opponentsSlots[opponentSlotIndex].profilePicture.timerPercentage = 0;
     }
 
     let nextPlayerProfilePicture: ProfilePicture;
     if (nextPlayer == this.playerIndex) {
+      console.log("nextPlayer == this.playerIndex");
       nextPlayerProfilePicture = this.playerSlot.profilePicture;
       this.playerSlot.playerInteractive = true;
     } else {
+      console.log("!(nextPlayer == this.playerIndex)");
       nextPlayerProfilePicture = this.opponentsSlots[nextOpponentSlotIndex]
         .profilePicture;
     }
