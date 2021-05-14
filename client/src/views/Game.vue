@@ -261,13 +261,16 @@ export default {
       if (winner == this.playerIndex) this.winner = true;
       else this.winner = false;
     },
+    valid: function() {
+      this.currentScene.reactToDropAction(true);
+    },
     oops: function(error) {
       this.gameState = false;
       this.endGame = false;
       alert(error);
     },
     oopsGame: function(error) {
-      console.error(error);
+      this.currentScene.reactToDropAction(false);
     }
     /*
     restricted : function() {
