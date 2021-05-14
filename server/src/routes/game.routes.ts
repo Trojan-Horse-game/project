@@ -76,7 +76,10 @@ function forfeit(io: any, room: string, playerSocket: Socket) {
 
 // Envoie l'index du prochain joueur et gère le cas de la distraction nucléaire
 function nextTurn(io: any, thisGame: Game) {
+  
   console.log("Calling next turn, current player is:", thisGame.currentPlayer.pseudo);
+  console.trace();
+  console.log("==================");
   clearTimeout(nextTurnTimeout);
   do {
     thisGame.endTurn();
@@ -94,6 +97,8 @@ function nextTurn(io: any, thisGame: Game) {
   } while (thisGame.currentPlayer.hand.length === 0);
   nextTurnTimeout = setTimeout(() => {
     console.log("nextTurn triggered by timeout, current player is:", thisGame.currentPlayer.pseudo);
+    console.trace();
+    console.log("==================");
     nextTurn(io, thisGame);
     
   }, 20000);
