@@ -85,11 +85,11 @@ function nextTurn(io: any, thisGame: Game) {
 
     if (thisGame.currentPlayer.hand.length === 0) {
       thisGame.draw(3);
+      io.to(current.socketId).emit("hand", {
+        hand: current.hand,
+        kind: cardsKinds(current.hand),
+      });
     }
-    io.to(current.socketId).emit("hand", {
-      hand: current.hand,
-      kind: cardsKinds(current.hand),
-    });
   } while (thisGame.currentPlayer.hand.length === 0);
   nextTurnTimeout = setTimeout(() => nextTurn(io, thisGame), 20000);
 }
@@ -314,11 +314,17 @@ module.exports = function (io: any) {
             }
 
             thisgame.discardHand(indexDiscard);
+            const currentPlayerIdxCopy = thisgame.currentPlayerIdx;
             socket
               .to(roomId)
               .emit("discard", { indexDiscard: indexDiscard, cards: cards });
 
             nextTurn(io, thisgame);
+            const lastPlayer = thisgame.players[currentPlayerIdxCopy];
+            io.to(lastPlayer.socketId).emit("hand", {
+              hand: lastPlayer.hand,
+              kind: cardsKinds(lastPlayer.hand),
+            });
           }
         } catch (err) {
           socket.emit("oopsGame", err);
