@@ -304,7 +304,11 @@ module.exports = function (io: any) {
     // When a user forfeit from the game on purpose
     socket.on("abbandon", (room: string) => {
       try {
-        forfeit(io, room, socket);
+        for (const room of socket.rooms) {
+          if (room !== socket.id) {
+            forfeit(io, room, socket);
+          }
+        }
       } catch (err) {
         socket.emit("oops", err);
       }

@@ -8,8 +8,16 @@
       >
         Lancer la partie
       </button>
+      <button
+        id="launch"
+        disabled
+        @click="launchGame()"
+        v-if="gameId != 'ROOM-' + this.$socket.id"
+      >
+        En attente de lancement
+      </button>
     </div>
-    <!-- <div id="endFilter" v-if="gameState == false && endGame == true">
+    <div id="endFilter" v-if="gameState == false && endGame == true">
       <div id="logo">
         <img src="logo.png" alt="Logo du jeu" />
       </div>
@@ -22,7 +30,7 @@
           </button></router-link
         >
       </div>
-    </div> -->
+    </div>
     <ion-phaser v-bind:game.prop="game" v-bind:initialize.prop="initialize" />
     <span id="gameId">{{ this.gameId }}</span>
     <v-btn @click="abandon()" id="abandon" title="Quitter la partie" medium icon
@@ -60,6 +68,7 @@ export default {
       gameState: false,
       endGame: false,
       winner: false,
+      playersIndex: 0,
       gameId: localStorage.getItem("gameId"),
       initialize: false,
       game: {
@@ -82,7 +91,6 @@ export default {
     };
   },
   mounted() {
-    console.log(this.gameId);
     this.game.scene.delegate = new GameNetworkDelegate(
       this.gameId,
       this.$socket
@@ -168,7 +176,7 @@ export default {
         console.log("player :", playerIndex, pseudo[i], species[i]);
         playersList.push(new Player(pseudo[i], species[i]));
       }
-      console.log(playersList, playerIndex);
+      this.playerIndex = playerIndex;
       this.currentScene.updatePlayers(playersList, playerIndex);
     },
     hand: function(data) {
@@ -248,8 +256,8 @@ export default {
     endGame: function(winner) {
       this.gameState = false;
       this.endGame = true;
-      console.log(winner);
-      // this.winnerIdx = winner;
+      if (winner == this.playerIndex) this.winner = true;
+      else this.winner = false;
     },
     oops: function(error) {
       this.gameState = false;
