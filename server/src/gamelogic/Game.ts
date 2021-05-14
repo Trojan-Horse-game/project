@@ -18,7 +18,7 @@ export class Game {
   get currentPlayerIdx(): number {
     return this._currentPlayerIdx;
   }
-  set currentPlayerIndex(newValue: number) {
+  set currentPlayerIdx(newValue: number) {
     if (newValue < 0 || newValue >= this.players.length) {
       console.error("Invalid value set for currentPlayerIndex:", newValue)
       console.error("Previous value was:", this._currentPlayerIdx);
