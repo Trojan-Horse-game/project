@@ -164,7 +164,7 @@ module.exports = function (io: any) {
           socket.emit("closeTab");
           throw "Already in a game !";
         }
-
+        socket.emit("valid");
         socket.emit("availableSpecies", thisgame.availableSpecies);
 
         socket.on("choose species", (species: Species) => {

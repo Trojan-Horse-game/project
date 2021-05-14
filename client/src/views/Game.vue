@@ -72,14 +72,11 @@ export default {
     };
   },
   mounted() {
-    console.log("currentScene", this.currentScene);
     this.initialize = true;
     window.addEventListener("resize", () => {
       const w = window.innerWidth * window.devicePixelRatio;
       const h = window.innerHeight * window.devicePixelRatio;
-      console.log("Inner game", this.game.instance);
       this.game.instance.scale.resize(w, h);
-      console.log(this.game.instance.scene.scenes);
       this.game.instance.scene.scenes.forEach(scene => {
         if (scene.scene.settings.active) {
           scene.cameras.main.setViewport(0, 0, w, h);
@@ -143,7 +140,7 @@ export default {
     joinGame: function(data) {
       console.log(this.currentScene);
       const pseudo: string = data.pseudo;
-      const specie: Species = data.specie;
+      const specie: Species = data.species;
       const player = new Player(pseudo, specie);
       this.currentScene.appendPlayer(player);
     },

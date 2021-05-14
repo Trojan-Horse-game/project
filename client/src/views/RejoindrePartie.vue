@@ -43,7 +43,6 @@ export default {
           {pseudo: localStorage.getItem("username"),
           roomId: this.id}
         );
-        this.$router.push("/choixEspece");
       } else {
         alert("Id de la partie requis");
       }
@@ -51,7 +50,12 @@ export default {
   },
   sockets: {
     oops: function(error) {
+      this.$router.push("/rejoindrePartie");
       alert(error);
+    },
+    valid: function(){
+      localStorage.setItem("gameId", this.id)
+      this.$router.push("/choixEspece");
     }
   }
 };

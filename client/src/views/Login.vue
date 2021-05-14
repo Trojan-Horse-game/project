@@ -72,12 +72,12 @@ export default {
 
         alert(alertMessage);
       } else {
-        this.$store.dispatch("auth/signin", this.user).then(
+        const result = this.$store.dispatch("auth/signin", this.user).then(
           () => {
             this.$router.push("/menuPrincipal");
           },
           error => {
-            alert(error);
+            alert(result);
           }
         );
       }
