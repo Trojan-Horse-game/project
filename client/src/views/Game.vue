@@ -154,9 +154,9 @@ export default {
     }
   },
   sockets: {
-    // closeTab : function() {
-    //   this.$router.push("/menuPrincipal");
-    // },
+    closeTab : function() {
+      this.$router.push("/menuPrincipal");
+    },
     gameId: function(gameId: string) {
       console.log(gameId);
     },
@@ -266,10 +266,10 @@ export default {
     },
     oopsGame: function(error) {
       console.error(error);
+    },
+    restricted : function() {
+      this.$router.push("/menuPrincipal");
     }
-    // restricted : function() {
-    //   this.$router.push("/menuPrincipal");
-    // }
   }
 };
 </script>
