@@ -34,7 +34,6 @@ export class GameNetworkDelegate implements GameSceneDelegate {
   didDiscard(cardsIndices: number[]) {
     console.log("Did discard", cardsIndices);
     try {
-      console.log("ok")
       this.socket.emit("discard", {roomId: this.room, indexDiscard: cardsIndices});
     } catch (err) {
       console.error(err);

@@ -215,6 +215,9 @@ export default {
       this.gameState = false;
       this.endGame = false;
       alert(error);
+    },
+    oopsGame: function(error) {
+      console.error(error);
     }
     // restricted : function() {
     //   this.$router.push("/menuPrincipal");
