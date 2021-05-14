@@ -76,6 +76,7 @@ function forfeit(io: any, room: string, playerSocket: Socket) {
 
 // Envoie l'index du prochain joueur et gère le cas de la distraction nucléaire
 function nextTurn(io: any, thisGame: Game) {
+  console.log("Calling next turn, current player is:", thisGame.currentPlayer.pseudo);
   clearTimeout(nextTurnTimeout);
   do {
     thisGame.endTurn();
@@ -91,7 +92,11 @@ function nextTurn(io: any, thisGame: Game) {
       });
     }
   } while (thisGame.currentPlayer.hand.length === 0);
-  nextTurnTimeout = setTimeout(() => nextTurn(io, thisGame), 20000);
+  nextTurnTimeout = setTimeout(() => {
+    console.log("nextTurn triggered by timeout, current player is:", thisGame.currentPlayer.pseudo);
+    nextTurn(io, thisGame);
+    
+  }, 20000);
 }
 
 function cardsKinds(cards: Card[]): string[] {
