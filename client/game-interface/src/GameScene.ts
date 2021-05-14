@@ -107,21 +107,6 @@ export class GameScene extends ResponsiveScene {
       GeneratorKind.Water
     ];
 
-    document.onkeypress = e => {
-      if (e.code == "KeyD") {
-        const cards: GeneratorCard[] = [];
-        for (let i = 0; i < this.playerSlot.discardedIndices.length; i++) {
-          cards.push(
-            new GeneratorCard(
-              kinds[Math.floor(Math.random() * kinds.length)],
-              generatorKinds[Math.floor(Math.random() * generatorKinds.length)]
-            )
-          );
-        }
-        this.deck.distributeCards(cards);
-      }
-    };
-
     // this.updatePlayers(
     //   [
     //     new Player("Foo", Species.Hutex),
