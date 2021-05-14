@@ -35,6 +35,7 @@
 import Phaser from "phaser";
 import {
   Action,
+  GameNetworkDelegate,
   GeneratorSlot,
   NetworkCard,
   Species,
@@ -61,17 +62,18 @@ export default {
           height: window.innerHeight * window.devicePixelRatio,
           zoom: 1 / window.devicePixelRatio
         },
-        scene: new GameScene(
+        scene : new GameScene(
           localStorage.getItem("gameId"),
           new Player(
             localStorage.getItem("username"),
             stringToSpecie(localStorage.getItem("specie"))
-          )
-        )
-      }
-    };
+          ))
+      },
+  };
   },
   mounted() {
+    console.log("scene",this.game.scene)
+    this.game.scene.delegate = new GameNetworkDelegate(this.$socket);
     this.initialize = true;
     window.addEventListener("resize", () => {
       const w = window.innerWidth * window.devicePixelRatio;
@@ -90,7 +92,7 @@ export default {
   computed: {
     currentScene: function(): GameScene {
       return this.game.scene;
-    }
+    },
   },
   methods: {
     didDropCard(
@@ -153,6 +155,7 @@ export default {
         console.log("player :", playerIndex, pseudo[i], species[i]);
         playersList.push(new Player(pseudo[i], species[i]));
       }
+      console.log(playersList, playerIndex)
       this.currentScene.updatePlayers(playersList, playerIndex);
     },
     hand: function(data) {

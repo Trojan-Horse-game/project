@@ -14,18 +14,19 @@ import { ProfilePicture } from "./ProfilePicture";
 import { CardSprite } from "./CardSprite";
 import { ActionDropZone } from "./ActionDropZone";
 import { ResponsiveScene } from "./ResponsiveScene";
-import { Species, specieToString } from "./GameNetworkDelegate";
+import { GameNetworkDelegate, Species, specieToString } from "./GameNetworkDelegate";
 import { io, Socket } from "socket.io-client";
 
 export class GameScene extends ResponsiveScene {
   id: string;
+  // socket: Socket;
   players: Player[];
   playerIndex: number;
   currentPlayer: number;
 
   positions: Position[];
 
-  delegate: GameSceneDelegate;
+  delegate: GameNetworkDelegate;
 
   // Phaser game objects
   deck: CardDeck;
@@ -41,6 +42,8 @@ export class GameScene extends ResponsiveScene {
     this.players = [currentPlayer];
     this.playerIndex = 0;
     this.currentPlayer = 0;
+    // this.socket = socket;
+    // this.delegate = new GameNetworkDelegate(this.socket)
   }
 
   preload() {
