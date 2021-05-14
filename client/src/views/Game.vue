@@ -24,11 +24,9 @@
       <div id="container">
         <div id="result" v-if="winner == true">YOU WIN</div>
         <div id="result" v-if="winner == false">YOU LOOSE</div>
-        <router-link to="/menuPrincipal"
-          ><button id="retour">
+          <button id="retour" @click="done()">
             <p id="textRetour">Menu principal</p>
-          </button></router-link
-        >
+          </button>
       </div>
     </div>
     <ion-phaser v-bind:game.prop="game" v-bind:initialize.prop="initialize" />
@@ -150,6 +148,10 @@ export default {
     },
     abandon() {
       this.$socket.emit("abbandon", this.gameId);
+      this.$router.push("/menuPrincipal");
+    },
+    done() {
+      this.$socket.emit("leave game", this.gameId);
       this.$router.push("/menuPrincipal");
     }
   },

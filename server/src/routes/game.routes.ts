@@ -349,6 +349,10 @@ module.exports = function (io: any) {
       }
     });
 
+    socket.on("leave game", (roomId: string) => {
+      socket.leave(roomId);
+    })
+
     socket.on("gameState", (pseudo: string) => {
       let count = 0;
       for (const game of games) {
