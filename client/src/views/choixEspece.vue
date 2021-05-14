@@ -239,7 +239,7 @@ export default {
   sockets: {
     availableSpecies: function(data) {
       for (const specie of this.species) {
-        if (!(data.includes(specie.id))){
+        if (!data.includes(specie.id)) {
           this.lockedChoices.push(specie.name);
         }
       }
@@ -249,16 +249,20 @@ export default {
     },
     oops: function(error) {
       alert(error);
+    },
+    /*
+    closeTab: function() {
+      this.$router.push("/menuPrincipal");
+    },
+    */
+    /*
+    restricted : function() {
+      this.$router.push("/menuPrincipal");
+    },
+    */
+    inGame: function() {
+      this.$router.push("/Jeu");
     }
-    // closeTab : function() {
-    //   this.$router.push("/menuPrincipal");
-    // },
-    // restricted : function() {
-    //   this.$router.push("/menuPrincipal");
-    // },
-    // inGame : function() {
-    //   this.$router.push("/Jeu");
-    // }
   }
 };
 </script>

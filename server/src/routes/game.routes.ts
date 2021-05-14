@@ -84,11 +84,10 @@ function nextTurn(io: any, thisGame: Game) {
     if (thisGame.currentPlayer.hand.length === 0) {
       thisGame.draw(3);
     }
-    io.to(current.socketId).emit(
-      "hand",
-      {hand: current.hand,
-      kind: cardsKinds(current.hand)}
-    );
+    io.to(current.socketId).emit("hand", {
+      hand: current.hand,
+      kind: cardsKinds(current.hand),
+    });
   } while (thisGame.currentPlayer.hand.length === 0);
   setTimeout(() => nextTurn(io, thisGame), 20000);
 }
@@ -208,12 +207,14 @@ module.exports = function (io: any) {
 
         thisgame.init();
         thisgame.players.forEach((player, index) => {
-          io.to(player.socketId).emit(
-            "hand",
-            {hand: player.hand,
-            kind: cardsKinds(player.hand)}
-          );
-          io.in(thisgame.roomId).emit("base", {base: player.base, idx: index});
+          io.to(player.socketId).emit("hand", {
+            hand: player.hand,
+            kind: cardsKinds(player.hand),
+          });
+          io.in(thisgame.roomId).emit("base", {
+            base: player.base,
+            idx: index,
+          });
         });
         io.in(thisgame.roomId).emit("nextTurn", thisgame.currentPlayerIdx);
       } catch (err) {
@@ -229,11 +230,17 @@ module.exports = function (io: any) {
         let thisgame = findGame(roomId, games);
         let player = findPlayer(socket.id, thisgame);
 
-        if (player !== thisgame.currentPlayer) {
-          throw "Not your turn !";
-        } else {
-          let result = thisgame.checkAction(action);
-          socket.to(socket.id).emit("checkCard", {action: action, result: result});
+        try {
+          if (player !== thisgame.currentPlayer) {
+            throw "Not your turn !";
+          } else {
+            let result = thisgame.checkAction(action);
+            socket
+              .to(socket.id)
+              .emit("checkCard", { action: action, result: result });
+          }
+        } catch (err) {
+          socket.emit("oopsGame", err);
         }
       } catch (err) {
         socket.emit("oops", err);
@@ -249,24 +256,35 @@ module.exports = function (io: any) {
         let player = findPlayer(socket.id, thisgame);
         action.card = player.hand[action.indexInHand];
 
-        if (player !== thisgame.currentPlayer) {
-          throw "Not your turn !";
-        } else {
-          thisgame.checkAction(action);
-          socket.to(roomId).emit("playCard", action);
-
-          thisgame.playAction(action);
-          const kinds = cardsKinds(thisgame.currentPlayer.hand);
-          socket.emit("hand", {hand: thisgame.currentPlayer.hand, kind: kinds});
-          thisgame.players.forEach((player, index) => {
-            io.in(thisgame.roomId).emit("base", {base: player.base, idx: index});
-          });
-
-          if (thisgame.inProgress) {
-            nextTurn(io, thisgame);
+        try {
+          if (player !== thisgame.currentPlayer) {
+            throw "Not your turn !";
           } else {
-            io.in(roomId).emit("endGame", thisgame.winnerIdx);
+            thisgame.checkAction(action);
+            socket.emit("valid");
+            socket.to(roomId).emit("playCard", action);
+
+            thisgame.playAction(action);
+            const kinds = cardsKinds(thisgame.currentPlayer.hand);
+            socket.emit("hand", {
+              hand: thisgame.currentPlayer.hand,
+              kind: kinds,
+            });
+            thisgame.players.forEach((player, index) => {
+              io.in(thisgame.roomId).emit("base", {
+                base: player.base,
+                idx: index,
+              });
+            });
+
+            if (thisgame.inProgress) {
+              nextTurn(io, thisgame);
+            } else {
+              io.in(roomId).emit("endGame", thisgame.winnerIdx);
+            }
           }
+        } catch (err) {
+          socket.emit("oopsGame", err);
         }
       } catch (err) {
         socket.emit("oops", err);
@@ -281,21 +299,27 @@ module.exports = function (io: any) {
         let thisgame = findGame(roomId, games);
         let player = findPlayer(socket.id, thisgame);
 
-        if (player !== thisgame.currentPlayer) {
-          throw "Not your turn !";
-        } else {
-          thisgame.checkDiscard(indexDiscard);
+        try {
+          if (player !== thisgame.currentPlayer) {
+            throw "Not your turn !";
+          } else {
+            thisgame.checkDiscard(indexDiscard);
 
-          let index: number;
-          let cards: Card[] = [];
-          for (index of indexDiscard) {
-            cards.push(thisgame.currentPlayer.hand[index]);
+            let index: number;
+            let cards: Card[] = [];
+            for (index of indexDiscard) {
+              cards.push(thisgame.currentPlayer.hand[index]);
+            }
+
+            thisgame.discardHand(indexDiscard);
+            socket
+              .to(roomId)
+              .emit("discard", { indexDiscard: indexDiscard, cards: cards });
+
+            nextTurn(io, thisgame);
           }
-
-          thisgame.discardHand(indexDiscard);
-          socket.to(roomId).emit("discard", {indexDiscard: indexDiscard, cards: cards});
-
-          nextTurn(io, thisgame);
+        } catch (err) {
+          socket.emit("oopsGame", err);
         }
       } catch (err) {
         socket.emit("oops", err);
@@ -324,6 +348,10 @@ module.exports = function (io: any) {
         socket.emit("oops", err);
       }
     });
+
+    socket.on("leave game", (roomId: string) => {
+      socket.leave(roomId);
+    })
 
     socket.on("gameState", (pseudo: string) => {
       let count = 0;
