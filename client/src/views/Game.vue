@@ -153,7 +153,7 @@ export default {
         console.log("player :", playerIndex, pseudo[i], species[i]);
         playersList.push(new Player(pseudo[i], species[i]));
       }
-      this.currentScene.updatePlayers(playersList, -1);
+      this.currentScene.updatePlayers(playersList, playerIndex);
     },
     hand: function(data) {
       const hand = data.hand;
