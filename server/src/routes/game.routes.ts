@@ -76,6 +76,10 @@ function forfeit(io: any, room: string, playerSocket: Socket) {
 
 // Envoie l'index du prochain joueur et gère le cas de la distraction nucléaire
 function nextTurn(io: any, thisGame: Game) {
+  
+  console.log("Calling next turn, current player is:", thisGame.currentPlayer.pseudo);
+  console.trace();
+  console.log("==================");
   clearTimeout(nextTurnTimeout);
   do {
     thisGame.endTurn();
@@ -85,13 +89,19 @@ function nextTurn(io: any, thisGame: Game) {
 
     if (thisGame.currentPlayer.hand.length === 0) {
       thisGame.draw(3);
+      io.to(current.socketId).emit("hand", {
+        hand: current.hand,
+        kind: cardsKinds(current.hand),
+      });
     }
-    io.to(current.socketId).emit("hand", {
-      hand: current.hand,
-      kind: cardsKinds(current.hand),
-    });
   } while (thisGame.currentPlayer.hand.length === 0);
-  nextTurnTimeout = setTimeout(() => nextTurn(io, thisGame), 20000);
+  nextTurnTimeout = setTimeout(() => {
+    console.log("nextTurn triggered by timeout, current player is:", thisGame.currentPlayer.pseudo);
+    console.trace();
+    console.log("==================");
+    nextTurn(io, thisGame);
+    
+  }, 20000);
 }
 
 function cardsKinds(cards: Card[]): string[] {
@@ -314,11 +324,17 @@ module.exports = function (io: any) {
             }
 
             thisgame.discardHand(indexDiscard);
+            const currentPlayerIdxCopy = thisgame.currentPlayerIdx;
             socket
               .to(roomId)
               .emit("discard", { indexDiscard: indexDiscard, cards: cards });
 
             nextTurn(io, thisgame);
+            const lastPlayer = thisgame.players[currentPlayerIdxCopy];
+            io.to(lastPlayer.socketId).emit("hand", {
+              hand: lastPlayer.hand,
+              kind: cardsKinds(lastPlayer.hand),
+            });
           }
         } catch (err) {
           socket.emit("oopsGame", err);

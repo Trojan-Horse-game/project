@@ -172,6 +172,7 @@ export default {
       const species: Species[] = data.species;
       const playerIndex: number = data.index;
       const playersList: Player[] = [];
+      console.log("players", pseudo, playersList);
       for (let i = 0; i < pseudo.length; i++) {
         console.log("player :", playerIndex, pseudo[i], species[i]);
         playersList.push(new Player(pseudo[i], species[i]));
@@ -222,7 +223,7 @@ export default {
       console.log("hand", hand, kind);
     },
     base: function(data) {
-      const generators = data.base;
+      const generators: GeneratorSlot[] = data.base;
       const idx: number = data.idx;
       this.gameState = true;
       console.log("base", generators, idx);
@@ -240,6 +241,10 @@ export default {
       const slotTarget = action.slotTarget[0];
     },
     nextTurn: function(playerIdx: number) {
+      console.log("players from nextTurn", this.currentScene.players);
+      console.log("playerIndex:", this.currentScene.playerIndex);
+      console.log("currentPlayer:", this.currentScene.currentPlayer);
+
       console.log("next turn", playerIdx);
       this.gameState = true;
       this.currentScene.nextTurn(playerIdx);
@@ -321,7 +326,7 @@ export default {
   width: 100%;
   background-color: rgba(47, 47, 47, 0.3);
   margin: auto;
-  text-align-last: center;
+  text-align: center;
   height: 100%;
   color: white;
   align-self: center;
