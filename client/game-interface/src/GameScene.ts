@@ -203,20 +203,23 @@ export class GameScene extends ResponsiveScene {
     const nextOpponentSlotIndex =
       nextPlayer > this.playerIndex ? nextPlayer - 1 : nextPlayer;
 
-    if (this.currentPlayer) {
-      // If current player is the user
-      if (this.currentPlayer == this.playerIndex) {
-        this.playerSlot.profilePicture.timerPercentage = 0;
-        this.playerSlot.playerInteractive = false;
-      } else {
-        const opponentSlotIndex =
-          this.currentPlayer > this.playerIndex
-            ? this.currentPlayer - 1
-            : this.currentPlayer;
-        this.opponentsSlots[
-          opponentSlotIndex
-        ].profilePicture.timerPercentage = 0;
-      }
+    if (this.timerUpdater != undefined) {
+      clearInterval(this.timerUpdater);
+    }
+
+    if (this.timerTimeout != undefined) {
+      clearTimeout(this.timerTimeout);
+    }
+
+    if (this.playerIndex == this.currentPlayer) {
+      this.playerSlot.profilePicture.timerPercentage = 0;
+      this.playerSlot.playerInteractive = false;
+    } else {
+      const opponentSlotIndex =
+        this.currentPlayer > this.playerIndex
+          ? this.currentPlayer - 1
+          : this.currentPlayer;
+      this.opponentsSlots[opponentSlotIndex].profilePicture.timerPercentage = 0;
     }
 
     let nextPlayerProfilePicture: ProfilePicture;
