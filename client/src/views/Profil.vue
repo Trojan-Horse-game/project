@@ -454,6 +454,7 @@ export default {
 
       try {
         axios.put(url, body);
+        this.getUserInfos();
       } catch (errors) {
         console.error(errors);
       }
