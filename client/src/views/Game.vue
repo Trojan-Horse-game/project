@@ -239,6 +239,10 @@ export default {
       const opponent = action.target[0];
       const slotTarget = action.slotTarget[0];
     },
+    valid: function() {
+      console.log("Received valid");
+      this.currentScene.reactToDropAction(true);
+    },
     nextTurn: function(playerIdx: number) {
       console.log("next turn", playerIdx);
       this.gameState = true;

@@ -273,8 +273,28 @@ export class CardSprite extends Phaser.GameObjects.Container {
           });
         } else if (
           target instanceof Generator &&
-          this.parentContainer instanceof PlayerSlot
+          this.parentContainer instanceof PlayerSlot &&
+          this.scene instanceof GameScene
         ) {
+          console.log("Dropped card");
+          this.dropped = true;
+          this.scene.dropAction = (isValid: boolean) => {
+            if (isValid) {
+              console.log("Running valid animation");
+              scene.tweens.add({
+                targets: this,
+                alpha: 0,
+                scale: 0,
+                duration: 400,
+                ease: "power4"
+              });
+            } else {
+              console.log("Running invalid animation");
+              PlayerSlot.animateDropBack(this.scene, this);
+            }
+          };
+          const cardIndex = this.parentContainer.selectedCards.indexOf(this);
+          this.parentContainer.discardedIndices.push(cardIndex);
           let targetPlayerIndex;
           if (target.parentContainer instanceof PlayerSlot) {
             targetPlayerIndex = scene.playerIndex;

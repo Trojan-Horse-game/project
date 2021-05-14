@@ -20,11 +20,10 @@ export class GameNetworkDelegate implements GameSceneDelegate {
 
   didDropCard(cardIndex: number, playerIndex: number, generatorIndex: number) {
     try {
-      console.log("didDropCard", cardIndex, playerIndex, generatorIndex);
+      console.log("didDropCard new", cardIndex, playerIndex, generatorIndex);
       const action = new Action(cardIndex);
       action.addTarget(playerIndex);
       action.addSlotTarget(generatorIndex);
-      action.addTarget(playerIndex);
       this.socket.emit("play card", { roomId: this.room, action: action });
     } catch (err) {
       console.error(err);
@@ -34,8 +33,11 @@ export class GameNetworkDelegate implements GameSceneDelegate {
   didDiscard(cardsIndices: number[]) {
     console.log("Did discard", cardsIndices);
     try {
-      console.log("ok")
-      this.socket.emit("discard", {roomId: this.room, indexDiscard: cardsIndices});
+      console.log("ok");
+      this.socket.emit("discard", {
+        roomId: this.room,
+        indexDiscard: cardsIndices
+      });
     } catch (err) {
       console.error(err);
     }
@@ -43,6 +45,7 @@ export class GameNetworkDelegate implements GameSceneDelegate {
 }
 
 export class Action {
+  card: NetworkCard;
   indexInHand: number;
   target: number[] = [];
   slotTarget: number[] = [];
@@ -106,6 +109,11 @@ export function colorToAction(color: NetworkColor): ActionCardKind {
    Firewall and ActionSpe
 */
 export interface NetworkCard {
+  /*
+  constructor(color: NetworkColor) {
+    this.color = color;
+  }
+  */
   color: NetworkColor;
 }
 

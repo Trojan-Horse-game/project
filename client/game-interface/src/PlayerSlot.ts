@@ -115,20 +115,7 @@ export class PlayerSlot extends Phaser.GameObjects.Container {
         if (selectedCard.dropped) {
           continue;
         }
-        this.scene.input.setDraggable(selectedCard, false);
-        this.scene.tweens
-          .add({
-            targets: selectedCard,
-            x: selectedCard.startX,
-            y: selectedCard.startY,
-            alpha: 1,
-            scale: 1,
-            duration: 400,
-            ease: "power4"
-          })
-          .on("complete", () => {
-            this.scene.input.setDraggable(selectedCard);
-          });
+        PlayerSlot.animateDropBack(this.scene, selectedCard);
       }
     });
 
@@ -157,5 +144,22 @@ export class PlayerSlot extends Phaser.GameObjects.Container {
         }
       }
     );
+  }
+
+  static animateDropBack(scene: Phaser.Scene, selectedCard: CardSprite) {
+    scene.input.setDraggable(selectedCard, false);
+    scene.tweens
+      .add({
+        targets: selectedCard,
+        x: selectedCard.startX,
+        y: selectedCard.startY,
+        alpha: 1,
+        scale: 1,
+        duration: 400,
+        ease: "power4"
+      })
+      .on("complete", () => {
+        scene.input.setDraggable(selectedCard);
+      });
   }
 }

@@ -14,7 +14,11 @@ import { ProfilePicture } from "./ProfilePicture";
 import { CardSprite } from "./CardSprite";
 import { ActionDropZone } from "./ActionDropZone";
 import { ResponsiveScene } from "./ResponsiveScene";
-import { GameNetworkDelegate, Species, specieToString } from "./GameNetworkDelegate";
+import {
+  GameNetworkDelegate,
+  Species,
+  specieToString
+} from "./GameNetworkDelegate";
 import { io, Socket } from "socket.io-client";
 
 export class GameScene extends ResponsiveScene {
@@ -294,6 +298,14 @@ export class GameScene extends ResponsiveScene {
   playerPosition(playerIndex: number): { x: number; y: number } {
     const index = GameScene.slotsMappings[this.players.length][playerIndex];
     return this.positions[index];
+  }
+
+  dropAction: (isValid: boolean) => void;
+
+  reactToDropAction(isValid: boolean) {
+    if (this.dropAction != undefined) {
+      this.dropAction(isValid);
+    }
   }
 
   static slotsMappings = {
