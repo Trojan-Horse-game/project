@@ -10,6 +10,7 @@ import { Game } from "../gamelogic/Game";
 import { Player, Species } from "../gamelogic/Players";
 
 let games: Game[] = [];
+let nextTurnTimeout: any;
 
 // Finds a game from a roomId
 export function findGame(roomId: string, games: Game[]): Game {
@@ -75,6 +76,7 @@ function forfeit(io: any, room: string, playerSocket: Socket) {
 
 // Envoie l'index du prochain joueur et gère le cas de la distraction nucléaire
 function nextTurn(io: any, thisGame: Game) {
+  clearTimeout(nextTurnTimeout);
   do {
     thisGame.endTurn();
 
@@ -89,7 +91,7 @@ function nextTurn(io: any, thisGame: Game) {
       kind: cardsKinds(current.hand),
     });
   } while (thisGame.currentPlayer.hand.length === 0);
-  setTimeout(() => nextTurn(io, thisGame), 20000);
+  nextTurnTimeout = setTimeout(() => nextTurn(io, thisGame), 20000);
 }
 
 function cardsKinds(cards: Card[]): string[] {
