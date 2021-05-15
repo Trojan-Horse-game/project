@@ -35,12 +35,15 @@
           <img id="paysage" src="../../public/Design/h11.png" v-if="this.count==11"/>
           <img id="paysage" src="../../public/Design/h12.png" v-if="this.count==12"/>
       </div>
-      <div id="boutons">
-        <button id="prev" @click="prev()"></button>
-        <button id="back" @click="$router.go(-1)"></button>
-        <button id="next" @click="next()"></button>
+      <div id="cont">
+        <div id="boutons">
+            <button id="prev" @click="prev()" />
+            <button id="retour"
+              @click="$router.go(-1)"/>
+            <button id="next" @click="next()" />
+          </div>
+        </div>
       </div>
-    </div>
   </v-app>
 </template>
 
@@ -77,7 +80,7 @@ $textColor: #bbbbbb;
 $content: #2f363c;
 
 #background-image {
-  background-image: url("../../public/Design/default-bck.gif");
+  background-image: url("../../public/Design/fond_parametres.gif");
 }
 
 #container {
@@ -88,6 +91,7 @@ $content: #2f363c;
   justify-content: center;
   align-items: center;
   flex-direction: column;
+
 }
 
 .portrait {
@@ -142,19 +146,15 @@ $content: #2f363c;
 }
 
 #boutons {
-  width: 100%;
   padding: 20px 0px 0px 0px;
-  display: grid;
-  grid-template-columns: 1fr 2fr 1fr;
-  grid-gap: 10%;
-  vertical-align: middle;
-  justify-items: space-between;
-  align-self: center;
+  display: flex;
+  justify-content: space-around;
+  
+  /*justify-items; space;*/
+  //margin-left: auto;
+  //margin-right: auto; 
 }
 
-#back {
-  background-image: url("../../public/Design/retour.png");
-}
 
 #prev {
   background-image: url("../../public/Design/prev.png");
@@ -164,12 +164,33 @@ $content: #2f363c;
   background-image: url("../../public/Design/next.png");
 }
 
-#prev,#next,#back {
-  width: inherit;
-  height: 71px;
+#retour {
+  background-image: url("../../public/Design/retour.png");
+}
+
+#prev,
+#next {
+  width: 71px;
   background-size: contain;
 }
 
+#prev,
+#next,
+#retour {
+  height: 71px;
+}
+
+#retour {
+  width: 178px;
+  background-size: contain;
+}
+
+#cont {
+  width: 35vw;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
 
 </style>
 <style lang="css" src="../assets/scss/index.css"></style>
