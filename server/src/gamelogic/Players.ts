@@ -16,7 +16,6 @@ export class Player {
   socketId: string;
   species: Species;
   hand: Card[] = [];
-  removedIndices: number[] = [];
   base: GeneratorSlot[] = [];
 
   constructor(pseudo: string, species: number, id?: string) {
@@ -45,14 +44,13 @@ export class Player {
 
   /* Add a card to the player's hand */
   draw(card: Card) {
-    this.hand[this.removedIndices[0]] = card;
-    this.removedIndices.shift();
+    this.hand.push(card);
   }
 
   /* Discard a card of the player's hand */
   discardHand(i: number): Card {
     const oldHand = this.hand[i];
-    this.removedIndices.push(i);
+    this.hand.splice(i, 1);
     return oldHand;
   }
 
