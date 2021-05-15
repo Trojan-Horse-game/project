@@ -18,7 +18,6 @@ import {
   Species,
   specieToString
 } from "./GameNetworkDelegate";
-import { clear } from "node:console";
 
 export class GameScene extends ResponsiveScene {
   id: string;
@@ -182,8 +181,8 @@ export class GameScene extends ResponsiveScene {
     } else {
       for (const opponentSlot of this.opponentsSlots) {
         if (
-          opponentSlot.profilePicture.nameText.text ==
-          this.players[this.currentPlayer].name
+          opponentSlot.profilePicture.nameText.text.toUpperCase() ==
+          this.players[this.currentPlayer].name.toUpperCase()
         ) {
           opponentSlot.timerPercentage = 0;
           break;
@@ -194,14 +193,20 @@ export class GameScene extends ResponsiveScene {
     let nextPlayerProfilePicture: ProfilePicture;
 
     if (nextPlayer == this.playerIndex) {
+      console.log("Entered first condition");
       this.playerSlot.playerInteractive = true;
       nextPlayerProfilePicture = this.playerSlot.profilePicture;
     } else {
       for (const opponentSlot of this.opponentsSlots) {
-        if (
-          opponentSlot.profilePicture.nameText.text ==
+        console.log(
+          opponentSlot.profilePicture.nameText.text,
           this.players[nextPlayer].name
+        );
+        if (
+          opponentSlot.profilePicture.nameText.text.toUpperCase() ==
+          this.players[nextPlayer].name.toUpperCase()
         ) {
+          console.log("Entered loop");
           nextPlayerProfilePicture = opponentSlot.profilePicture;
           break;
         }
