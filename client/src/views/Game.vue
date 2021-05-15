@@ -179,7 +179,7 @@ export default {
         console.log("player :", playerIndex, pseudo[i], species[i]);
         playersList.push(new Player(pseudo[i], species[i]));
       }
-      this.playerIndex = playerIndex;
+      this.currentScene.currentPlayer = playerIndex;
       this.currentScene.updatePlayers(playersList, playerIndex);
     },
     hand: function(data) {
