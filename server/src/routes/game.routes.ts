@@ -32,11 +32,13 @@ export function findPlayer(socketId: string, thisgame: Game): Player {
   throw "ERROR: Could not find player !";
 }
 
-export function howManyGames(username: string, thisgame: Game): number {
+export function howManyGames(username: string, games: Game[]): number {
   let count = 0;
-  for (const player of thisgame.players) {
-    if (player.pseudo == username) {
-      count++;
+  for (const game of games) {
+    for (const player of game.players) {
+      if (player.pseudo == username) {
+        count++;
+      }
     }
   }
   return count;
@@ -164,7 +166,7 @@ module.exports = function (io: any) {
         if (thisgame.players.length == 6) {
           throw "Room is full !";
         }
-        const count = howManyGames(pseudo, thisgame);
+        const count = howManyGames(pseudo, games);
         if (count > 0) {
           socket.emit("closeTab");
           throw "Already in a game !";
