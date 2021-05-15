@@ -3,16 +3,23 @@
     <div id="background-image" />
     <div id="container">
       <logo title="Menu principal" />
-        <button id="lancer" @click="createGame()"/>
-      <router-link to="/rejoindrePartie"
-        ><button id="rejoindre"/></router-link>
+      <button id="lancer" @click="createGame()" />
+      <router-link to="/rejoindrePartie"><button id="rejoindre"/></router-link>
 
       <div id="buttons">
         <router-link to="/reglesDuJeu">
-          <img src="../../public/Design/regles.png" alt="Règles du jeu" title="Règles du jeu" />
+          <img
+            src="../../public/Design/regles.png"
+            alt="Règles du jeu"
+            title="Règles du jeu"
+          />
         </router-link>
         <router-link to="/Profil">
-          <img src="../../public/Design/profil.png" alt="Profil" title="Profil"/>
+          <img
+            src="../../public/Design/profil.png"
+            alt="Profil"
+            title="Profil"
+          />
         </router-link>
       </div>
     </div>
@@ -30,10 +37,10 @@ export default {
     }
     // this.$socket.emit("gameState");
   },
-  methods:{
+  methods: {
     async createGame() {
       try {
-        this.$socket.emit("create game", (localStorage.getItem("username")));
+        this.$socket.emit("create game", localStorage.getItem("username"));
         this.$router.push("/choixEspece");
       } catch (err) {
         console.log(err);
@@ -41,15 +48,17 @@ export default {
     }
   },
   sockets: {
-    oops : function(error) {
+    oops: function(error) {
       alert(error);
-    },
+    }
+    /*
     closeTab : function() {
       this.$router.push("/menuPrincipal");
     },
     inGame : function() {
       this.$router.push("/Jeu");
     }
+    */
   }
 };
 </script>

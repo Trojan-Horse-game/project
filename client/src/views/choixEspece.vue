@@ -249,8 +249,9 @@ export default {
     },
     oops: function(error) {
       alert(error);
-      this.$router.push("/choixEspece")
-    },
+      this.$router.push("/choixEspece");
+    }
+    /*
     closeTab: function() {
       this.$router.push("/menuPrincipal");
     },
@@ -260,6 +261,7 @@ export default {
     inGame: function() {
       this.$router.push("/Jeu");
     }
+    */
   }
 };
 </script>

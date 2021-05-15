@@ -154,9 +154,11 @@ export default {
     }
   },
   sockets: {
-    closeTab : function() {
+    /*
+    closeTab: function() {
       this.$router.push("/menuPrincipal");
     },
+    */
     gameId: function(gameId: string) {
       console.log(gameId);
     },
@@ -274,10 +276,12 @@ export default {
     },
     oopsGame: function(error) {
       this.currentScene.reactToDropAction(false);
-    },
+    }
+    /*
     restricted : function() {
       this.$router.push("/menuPrincipal");
     }
+    */
   }
 };
 </script>
