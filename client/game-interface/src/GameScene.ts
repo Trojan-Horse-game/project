@@ -18,6 +18,7 @@ import {
   Species,
   specieToString
 } from "./GameNetworkDelegate";
+import { clear } from "node:console";
 
 export class GameScene extends ResponsiveScene {
   id: string;
@@ -172,45 +173,41 @@ export class GameScene extends ResponsiveScene {
   }
 
   nextTurn(nextPlayer: number) {
-    console.log("nextPlayer index is", nextPlayer);
-    const nextOpponentSlotIndex =
-      nextPlayer > this.playerIndex ? nextPlayer - 1 : nextPlayer;
-    console.log("nextOpponentSlotIndex is:", nextOpponentSlotIndex);
+    clearInterval(this.timerUpdater);
+    clearInterval(this.timerTimeout);
 
-    if (this.timerUpdater != undefined) {
-      console.log("timerUpdater is defined");
-      clearInterval(this.timerUpdater);
-    }
-
-    if (this.timerTimeout != undefined) {
-      console.log("timerTimeout is defined");
-      clearTimeout(this.timerTimeout);
-    }
-
-    if (this.playerIndex == this.currentPlayer) {
-      console.log("this.playerIndex == this.currentPlayer");
-      this.playerSlot.profilePicture.timerPercentage = 0;
+    if (this.currentPlayer == this.playerIndex) {
       this.playerSlot.playerInteractive = false;
+      this.playerSlot.profilePicture.timerPercentage = 0;
     } else {
-      console.log("!(this.playerIndex == this.currentPlayer)");
-      const opponentSlotIndex =
-        this.currentPlayer > this.playerIndex
-          ? this.currentPlayer - 1
-          : this.currentPlayer;
-      console.log("opponentSlotIndex = ", opponentSlotIndex);
-      this.opponentsSlots[opponentSlotIndex].profilePicture.timerPercentage = 0;
+      for (const opponentSlot of this.opponentsSlots) {
+        if (
+          opponentSlot.profilePicture.nameText.text ==
+          this.players[this.currentPlayer].name
+        ) {
+          opponentSlot.timerPercentage = 0;
+          break;
+        }
+      }
     }
 
     let nextPlayerProfilePicture: ProfilePicture;
+
     if (nextPlayer == this.playerIndex) {
-      console.log("nextPlayer == this.playerIndex");
-      nextPlayerProfilePicture = this.playerSlot.profilePicture;
       this.playerSlot.playerInteractive = true;
+      nextPlayerProfilePicture = this.playerSlot.profilePicture;
     } else {
-      console.log("!(nextPlayer == this.playerIndex)");
-      nextPlayerProfilePicture = this.opponentsSlots[nextOpponentSlotIndex]
-        .profilePicture;
+      for (const opponentSlot of this.opponentsSlots) {
+        if (
+          opponentSlot.profilePicture.nameText.text ==
+          this.players[nextPlayer].name
+        ) {
+          nextPlayerProfilePicture = opponentSlot.profilePicture;
+          break;
+        }
+      }
     }
+
     nextPlayerProfilePicture.timerPercentage = 1;
     const duration = 20000;
     const fps = 30;
