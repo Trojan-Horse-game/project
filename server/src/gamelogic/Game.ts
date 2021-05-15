@@ -14,18 +14,7 @@ export class Game {
   winnerIdx: number = 0;
   deck: Card[] = [];
   roomId: string;
-  _currentPlayerIdx = 0;
-  get currentPlayerIdx(): number {
-    return this._currentPlayerIdx;
-  }
-  set currentPlayerIdx(newValue: number) {
-    if (newValue < 0 || newValue >= this.players.length) {
-      console.error("Invalid value set for currentPlayerIndex:", newValue)
-      console.error("Previous value was:", this._currentPlayerIdx);
-      console.trace();
-    }
-    this._currentPlayerIdx = newValue;
-  }
+  currentPlayerIdx = 0;
 
 
   inProgress = false;

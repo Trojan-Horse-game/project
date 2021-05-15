@@ -32,11 +32,13 @@ export function findPlayer(socketId: string, thisgame: Game): Player {
   throw "ERROR: Could not find player !";
 }
 
-export function howManyGames(username: string, thisgame: Game): number {
+export function howManyGames(username: string, games: Game[]): number {
   let count = 0;
-  for (const player of thisgame.players) {
-    if (player.pseudo == username) {
-      count++;
+  for (const game of games) {
+    for (const player of game.players) {
+      if (player.pseudo == username) {
+        count++;
+      }
     }
   }
   return count;
@@ -76,10 +78,6 @@ function forfeit(io: any, room: string, playerSocket: Socket) {
 
 // Envoie l'index du prochain joueur et gère le cas de la distraction nucléaire
 function nextTurn(io: any, thisGame: Game) {
-  
-  console.log("Calling next turn, current player is:", thisGame.currentPlayer.pseudo);
-  console.trace();
-  console.log("==================");
   clearTimeout(nextTurnTimeout);
   do {
     thisGame.endTurn();
@@ -95,13 +93,14 @@ function nextTurn(io: any, thisGame: Game) {
       });
     }
   } while (thisGame.currentPlayer.hand.length === 0);
-  nextTurnTimeout = setTimeout(() => {
-    console.log("nextTurn triggered by timeout, current player is:", thisGame.currentPlayer.pseudo);
-    console.trace();
-    console.log("==================");
-    nextTurn(io, thisGame);
-    
-  }, 20000);
+  if(thisGame.inProgress){
+    nextTurnTimeout = setTimeout(() => {
+      nextTurn(io, thisGame);
+    }, 20000);
+  }
+  else{
+    clearTimeout(nextTurnTimeout);
+  }
 }
 
 function cardsKinds(cards: Card[]): string[] {
@@ -129,14 +128,11 @@ module.exports = function (io: any) {
     // When creating a new game
     socket.on("create game", (pseudo: string) => {
       try {
-        let count = 0;
-        for (const game of games) {
-          count += howManyGames(pseudo, game);
+          let count = howManyGames(pseudo, games);
           if (count > 1) {
             socket.emit("closeTab");
             throw "Already in a game !";
           }
-        }
         const room = "ROOM-" + socket.id;
         socket.join(room);
         let game = new Game(room);
@@ -167,7 +163,7 @@ module.exports = function (io: any) {
         if (thisgame.players.length == 6) {
           throw "Room is full !";
         }
-        const count = howManyGames(pseudo, thisgame);
+        const count = howManyGames(pseudo, games);
         if (count > 0) {
           socket.emit("closeTab");
           throw "Already in a game !";
@@ -372,10 +368,7 @@ module.exports = function (io: any) {
     })
 
     socket.on("gameState", (pseudo: string) => {
-      let count = 0;
-      for (const game of games) {
-        count += howManyGames(pseudo, game);
-      }
+      let count = howManyGames(pseudo, games);
       if (socket.rooms.size >= 2 && count > 1) socket.emit("inGame");
       else if (socket.rooms.size < 2 && count == 0) socket.emit("restricted");
     });
