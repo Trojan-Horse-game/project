@@ -176,11 +176,13 @@ export default {
       const playersList: Player[] = [];
       console.log("players", pseudo, species);
       console.log("pseudo length",pseudo.length)
-      for (let i = 0; i < pseudo.length; i++) {
+      setTimeout(()=>{
+        for (let i = 0; i < pseudo.length; i++) {
         console.log("player :", playerIndex, pseudo[i], species[i]);
         playersList.push(new Player(pseudo[i], species[i]));
-      }
-      this.currentScene.updatePlayers(playersList, playerIndex);
+        }
+        this.currentScene.updatePlayers(playersList, playerIndex);
+      }, 2000)
     },
     hand: function(data) {
       const hand: NetworkCard[] = data.hand;
