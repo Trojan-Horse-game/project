@@ -5,6 +5,7 @@ export class GeneratorCard {
   }
   generator: GeneratorKind;
   kind: GeneratorCardKind;
+  gameLogicIdx: number;
 }
 
 export class ActionCard {
@@ -12,6 +13,7 @@ export class ActionCard {
     this.kind = kind;
   }
   kind: ActionCardKind;
+  gameLogicIdx: number;
 }
 
 export enum ActionCardKind {

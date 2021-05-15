@@ -306,7 +306,7 @@ export class CardSprite extends Phaser.GameObjects.Container {
               target.parentContainer.parentContainer.parentContainer.index;
           }
           scene.delegate.didDropCard(
-            this.parentContainer.cards.indexOf(this),
+            this.cardType.gameLogicIdx,
             targetPlayerIndex,
             target.index
           );
