@@ -176,12 +176,15 @@ export class Game {
      Make the player draw a valid number of cards
   */
   endTurn() {
-    const handLength = this.currentPlayer.hand.length;
-    if (handLength != 3) {
-      this.draw(3 - handLength);
+    try{
+      const handLength = this.currentPlayer.hand.length;
+      if (handLength != 3) {
+        this.draw(3 - handLength);
+      }
+      this.currentPlayerIdx = (this.currentPlayerIdx + 1) % this.players.length;
+    } catch(err) {
+      console.log(err)
     }
-
-    this.currentPlayerIdx = (this.currentPlayerIdx + 1) % this.players.length;
   }
 
   /* Check if someone won

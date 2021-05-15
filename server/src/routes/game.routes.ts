@@ -285,6 +285,7 @@ module.exports = function (io: any) {
               });
             });
 
+            console.log("in progress :",thisgame.inProgress);
             if (thisgame.inProgress) {
               nextTurn(io, thisgame);
             } else {
@@ -312,6 +313,7 @@ module.exports = function (io: any) {
             throw "Not your turn !";
           } else {
             thisgame.checkDiscard(indexDiscard);
+            socket.emit("valid")
 
             let index: number;
             let cards: Card[] = [];
