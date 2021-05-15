@@ -66,6 +66,7 @@ export class PlayerSlot extends Phaser.GameObjects.Container {
       generator.setGeneratorState(GeneratorState.Enabled);
       offset += increment;
       this.add(generator);
+      this.generators.push(generator);
       i++;
     }
   }
@@ -74,6 +75,7 @@ export class PlayerSlot extends Phaser.GameObjects.Container {
   private otherSelected: CardSprite[] = [];
   selectedCards: CardSprite[] = [];
   cards: CardSprite[] = [];
+  generators: Generator[] = [];
   discardedIndices: number[] = [];
   private _playerInteractive: boolean;
   get playerInteractive(): boolean {
