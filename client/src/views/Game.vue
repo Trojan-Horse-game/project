@@ -182,7 +182,7 @@ export default {
         playersList.push(new Player(pseudo[i], species[i]));
         }
         this.currentScene.updatePlayers(playersList, playerIndex);
-      }, 2000)
+      }, 1500)
     },
     hand: function(data) {
       const hand: NetworkCard[] = data.hand;
