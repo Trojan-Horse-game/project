@@ -174,6 +174,7 @@ module.exports = function (io: any) {
         socket.on("choose species", (species: Species) => {
           try {
             let player = new Player(pseudo, species, socket.id);
+            thisgame.addPlayer(player);
             socket.join(thisgame.roomId);
             socket.emit("gameId", thisgame.roomId);
 
@@ -188,11 +189,10 @@ module.exports = function (io: any) {
                 return value.socketId == socket.id;
               }),
             });
-            io.in(thisgame.roomId).emit("joinGame", {
+            socket.to(thisgame.roomId).emit("joinGame", {
               pseudo: player.pseudo,
               species: player.species,
             });
-            thisgame.addPlayer(player);
           } catch (err) {
             socket.emit("oops", err);
           }
