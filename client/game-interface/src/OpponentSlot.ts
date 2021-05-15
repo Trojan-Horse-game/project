@@ -13,7 +13,7 @@ export class OpponentSlot extends Phaser.GameObjects.Container {
     pictureName: string,
     index: number
   ) {
-    super(scene);
+    super({scene});
     this.index = index;
     const layoutInfo = new LayoutInfo(slotLayout);
     this.profilePicture = new ProfilePicture(

@@ -174,15 +174,13 @@ export default {
       const species: Species[] = data.species;
       const playerIndex: number = data.index;
       const playersList: Player[] = [];
-      console.log("players", pseudo, playersList);
+      console.log("players", pseudo, species);
+      console.log("pseudo length",pseudo.length)
       for (let i = 0; i < pseudo.length; i++) {
         console.log("player :", playerIndex, pseudo[i], species[i]);
         playersList.push(new Player(pseudo[i], species[i]));
       }
-      this.currentScene.currentPlayer = playerIndex;
       this.currentScene.updatePlayers(playersList, playerIndex);
-      this.currentScene.appendPlayer(new Player("removeMe",species[0]))
-      this.currentScene.removePlayer(this.currentScene.players.length-1);
     },
     hand: function(data) {
       const hand: NetworkCard[] = data.hand;
