@@ -181,6 +181,8 @@ export default {
       }
       this.currentScene.currentPlayer = playerIndex;
       this.currentScene.updatePlayers(playersList, playerIndex);
+      this.currentScene.appendPlayer(new Player("removeMe",species[0]))
+      this.currentScene.removePlayer(this.currentScene.players.length-1);
     },
     hand: function(data) {
       const hand: NetworkCard[] = data.hand;
