@@ -175,14 +175,14 @@ export default {
       const playerIndex: number = data.index;
       const playersList: Player[] = [];
       console.log("players", pseudo, species);
-      console.log("pseudo length",pseudo.length)
-      setTimeout(()=>{
+      console.log("pseudo length", pseudo.length);
+      setTimeout(() => {
         for (let i = 0; i < pseudo.length; i++) {
-        console.log("player :", playerIndex, pseudo[i], species[i]);
-        playersList.push(new Player(pseudo[i], species[i]));
+          console.log("player :", playerIndex, pseudo[i], species[i]);
+          playersList.push(new Player(pseudo[i], species[i]));
         }
         this.currentScene.updatePlayers(playersList, playerIndex);
-      }, 1500)
+      }, 1500);
     },
     hand: function(data) {
       const hand: NetworkCard[] = data.hand;
@@ -231,6 +231,7 @@ export default {
       const idx: number = data.idx;
       this.gameState = true;
       console.log("base", generators, idx);
+      this.currentScene.updateBase(generators, idx);
     },
     checkCard: function(data) {
       const action: Action = data.action;

@@ -29,11 +29,11 @@ export enum GeneratorCardKind {
 }
 
 export enum GeneratorKind {
-  Joker = "joker",
-  Shield = "shield",
-  Water = "water",
   Air = "air",
-  Electricity = "electricity"
+  Water = "water",
+  Electricity = "electricity",
+  Shield = "shield",
+  Joker = "joker"
 }
 
 export type Card = GeneratorCard | ActionCard;

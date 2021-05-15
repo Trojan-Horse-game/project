@@ -38,7 +38,7 @@ export class OpponentSlot extends Phaser.GameObjects.Container {
         i
       );
       generator.setGeneratorState(GeneratorState.Enabled);
-      this.generators.set(generatorKind, generator);
+      this.generators.push(generator);
       subPivot.setY(-1.642 * playerCircleRadius);
       basePivot.rotation = generatorAngle;
       subPivot.rotation = -generatorAngle;
@@ -50,7 +50,7 @@ export class OpponentSlot extends Phaser.GameObjects.Container {
   }
 
   profilePicture: ProfilePicture;
-  generators = new Map<string, Generator>();
+  generators: Generator[] = [];
   index: number;
   get timerPercentage(): number {
     return this.profilePicture.timerPercentage;

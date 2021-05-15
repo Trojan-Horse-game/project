@@ -15,9 +15,11 @@ import { ActionDropZone } from "./ActionDropZone";
 import { ResponsiveScene } from "./ResponsiveScene";
 import {
   GameNetworkDelegate,
+  GeneratorSlot,
   Species,
   specieToString
 } from "./GameNetworkDelegate";
+import { Generator } from "./Generator";
 
 export class GameScene extends ResponsiveScene {
   id: string;
@@ -292,6 +294,28 @@ export class GameScene extends ResponsiveScene {
     if (this.dropAction != undefined) {
       this.dropAction(isValid);
     }
+  }
+
+  updateBase(generatorSlots: GeneratorSlot[], idx: number) {
+    let generators: Generator[] = [];
+
+    if (idx == this.playerIndex) {
+      generators = this.playerSlot.generators;
+    } else {
+      const opponentIndex = this.opponentsSlots
+        .map(value => value.profilePicture.nameText.text.toUpperCase())
+        .indexOf(this.players[idx].name.toUpperCase());
+      generators = this.opponentsSlots[opponentIndex].generators;
+    }
+
+    generatorSlots
+      .map(value => value.state)
+      .forEach((state, index) => {
+        const rawValue: number = state;
+        const generator = generators[index];
+        console.log(index, generator, state);
+        generator.setGeneratorState(rawValue, false);
+      });
   }
 
   static slotsMappings = {
