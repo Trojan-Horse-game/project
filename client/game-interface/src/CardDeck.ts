@@ -24,6 +24,9 @@ export class CardDeck extends Phaser.GameObjects.Container {
       return;
     }
     const playerSlot = this.scene.playerSlot;
+    distributedCards = distributedCards.slice(
+      -playerSlot.discardedIndices.length
+    );
     distributedCards.forEach((value: Card, index: number) => {
       const discardedIndex = playerSlot.discardedIndices[index];
       const discardedCard = playerSlot.cards[discardedIndex];
