@@ -68,6 +68,7 @@ function forfeit(io: any, room: string, playerSocket: Socket) {
 
       if (!thisgame.inProgress) {
         io.in(room).emit("endGame", thisgame.winnerIdx);
+        clearTimeout(nextTurnTimeout)
         games.splice(games.indexOf(thisgame), 1);
       }
     }
@@ -289,6 +290,7 @@ module.exports = function (io: any) {
             if (thisgame.inProgress) {
               console.log("in progress :",thisgame.inProgress);
             } else {
+              clearTimeout(nextTurnTimeout)
               io.in(roomId).emit("endGame", thisgame.winnerIdx);
             }
           }
