@@ -91,9 +91,14 @@ function nextTurn(io: any, thisGame: Game) {
       });
     }
   } while (thisGame.currentPlayer.hand.length === 0);
-  nextTurnTimeout = setTimeout(() => {
-    nextTurn(io, thisGame);
-  }, 20000);
+  if(thisGame.inProgress){
+    nextTurnTimeout = setTimeout(() => {
+      nextTurn(io, thisGame);
+    }, 20000);
+  }
+  else{
+    clearTimeout(nextTurnTimeout);
+  }
 }
 
 function cardsKinds(cards: Card[]): string[] {
