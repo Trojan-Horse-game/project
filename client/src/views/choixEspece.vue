@@ -249,17 +249,14 @@ export default {
     },
     oops: function(error) {
       alert(error);
+      this.$router.push("/choixEspece")
     },
-    /*
     closeTab: function() {
       this.$router.push("/menuPrincipal");
     },
-    */
-    /*
     restricted : function() {
       this.$router.push("/menuPrincipal");
     },
-    */
     inGame: function() {
       this.$router.push("/Jeu");
     }

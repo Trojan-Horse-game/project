@@ -9,7 +9,6 @@ import {
   GeneratorCard
 } from "./Card";
 import { CardDeck } from "./CardDeck";
-import { GameSceneDelegate } from "./GameSceneDelegate";
 import { ProfilePicture } from "./ProfilePicture";
 import { CardSprite } from "./CardSprite";
 import { ActionDropZone } from "./ActionDropZone";
@@ -19,11 +18,9 @@ import {
   Species,
   specieToString
 } from "./GameNetworkDelegate";
-import { io, Socket } from "socket.io-client";
 
 export class GameScene extends ResponsiveScene {
   id: string;
-  // socket: Socket;
   players: Player[];
   playerIndex: number;
   currentPlayer: number;
@@ -46,8 +43,6 @@ export class GameScene extends ResponsiveScene {
     this.players = [currentPlayer];
     this.playerIndex = 0;
     this.currentPlayer = 0;
-    // this.socket = socket;
-    // this.delegate = new GameNetworkDelegate(this.socket)
   }
 
   preload() {
@@ -73,6 +68,7 @@ export class GameScene extends ResponsiveScene {
 
     // Cards
     this.load.image("carte_verso", "src/assets/carte_verso.png");
+
     // Action cards assets
     for (const actionName in ActionCardKind) {
       this.load.image(
@@ -80,6 +76,7 @@ export class GameScene extends ResponsiveScene {
         "src/assets/" + ActionCardKind[actionName] + ".jpg"
       );
     }
+
     // Generator card assets
     const suffixes = ["G", "P", "V"];
     for (const suffix of suffixes) {
@@ -107,14 +104,6 @@ export class GameScene extends ResponsiveScene {
       GeneratorKind.Water
     ];
 
-    // this.updatePlayers(
-    //   [
-    //     new Player("Foo", Species.Hutex),
-    //     new Player("Bar", Species.Sonyas),
-    //     new Player("Baz", Species.Totox)
-    //   ],
-    //   0
-    // );
     this.actionDropZone = new ActionDropZone(
       this,
       75 * window.devicePixelRatio
@@ -145,8 +134,6 @@ export class GameScene extends ResponsiveScene {
     const width = this.cameras.main.width;
     const height = this.cameras.main.height;
     this.resize(width, height);
-    // this.nextTurn(0);
-    // this.nextTurn(1);
   }
 
   resize(width: number, height: number) {
