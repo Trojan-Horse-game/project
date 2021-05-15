@@ -249,8 +249,11 @@ export default {
     },
     oops: function(error) {
       alert(error);
+      if(error == "ERROR: Could not find game !")
+        this.$router.push("/menuPrincipal");
+      else
       this.$router.push("/choixEspece");
-    }
+    },
     /*
     closeTab: function() {
       this.$router.push("/menuPrincipal");
@@ -262,6 +265,11 @@ export default {
       this.$router.push("/Jeu");
     }
     */
+  },
+    watch: {
+    $route(to,from){
+      this.$socket.leave(localStorage.getItem("gameId"));
+    }
   }
 };
 </script>

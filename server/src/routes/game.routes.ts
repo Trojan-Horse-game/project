@@ -141,7 +141,6 @@ module.exports = function (io: any) {
 
         socket.on("choose species", (species: Species) => {
           try {
-            console.log(species);
             let player = new Player(pseudo, species, socket.id);
             game.addPlayer(player);
             games.push(game);
@@ -278,6 +277,7 @@ module.exports = function (io: any) {
               hand: thisgame.currentPlayer.hand,
               kind: kinds,
             });
+
             thisgame.players.forEach((player, index) => {
               io.in(thisgame.roomId).emit("base", {
                 base: player.base,
@@ -285,9 +285,9 @@ module.exports = function (io: any) {
               });
             });
 
-            console.log("in progress :",thisgame.inProgress);
+            nextTurn(io, thisgame);
             if (thisgame.inProgress) {
-              nextTurn(io, thisgame);
+              console.log("in progress :",thisgame.inProgress);
             } else {
               io.in(roomId).emit("endGame", thisgame.winnerIdx);
             }
@@ -377,7 +377,6 @@ module.exports = function (io: any) {
 
     //When a user disconnects from the game
     socket.on("disconnecting", (_reason) => {
-      console.log(_reason);
       for (const room of socket.rooms) {
         if (room !== socket.id) {
           forfeit(io, room, socket);
