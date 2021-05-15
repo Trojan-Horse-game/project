@@ -128,14 +128,11 @@ module.exports = function (io: any) {
     // When creating a new game
     socket.on("create game", (pseudo: string) => {
       try {
-        let count = 0;
-        for (const game of games) {
-          count += howManyGames(pseudo, game);
+          let count = howManyGames(pseudo, games);
           if (count > 1) {
             socket.emit("closeTab");
             throw "Already in a game !";
           }
-        }
         const room = "ROOM-" + socket.id;
         socket.join(room);
         let game = new Game(room);
@@ -371,10 +368,7 @@ module.exports = function (io: any) {
     })
 
     socket.on("gameState", (pseudo: string) => {
-      let count = 0;
-      for (const game of games) {
-        count += howManyGames(pseudo, game);
-      }
+      let count = howManyGames(pseudo, games);
       if (socket.rooms.size >= 2 && count > 1) socket.emit("inGame");
       else if (socket.rooms.size < 2 && count == 0) socket.emit("restricted");
     });
