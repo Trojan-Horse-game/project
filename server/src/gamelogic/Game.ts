@@ -14,8 +14,18 @@ export class Game {
   winnerIdx: number = 0;
   deck: Card[] = [];
   roomId: string;
-  currentPlayerIdx = 0;
-
+  _currentPlayerIdx = 0;
+  get currentPlayerIdx(): number {
+    return this._currentPlayerIdx;
+  }
+  set currentPlayerIdx(newValue: number) {
+    if (!(newValue >= 0 && newValue < this.players.length)) {
+      console.error("Invalid value for currentPlayerIdx:", newValue);
+      console.error("Value used to be:", this._currentPlayerIdx);
+      console.trace();
+    }
+    this._currentPlayerIdx = newValue;
+  }
 
   inProgress = false;
   availableSpecies: Species[];
@@ -108,6 +118,7 @@ export class Game {
     const x = this.availableSpecies.indexOf(player.species);
     if (this.players.length <= 6 && x != -1) {
       this.availableSpecies.splice(x, 1);
+      console.log("Pushing new player", player);
       this.players.push(player);
     } else {
       throw "Espèce invalide";

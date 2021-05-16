@@ -79,6 +79,8 @@ function forfeit(io: any, room: string, playerSocket: Socket) {
 
 // Envoie l'index du prochain joueur et gère le cas de la distraction nucléaire
 function nextTurn(io: any, thisGame: Game) {
+  console.log("Players from nextTurn = ", thisGame.players.map((value)=>value.pseudo));
+  console.log("Current player index = ", thisGame.currentPlayerIdx);
   clearTimeout(nextTurnTimeout);
   do {
     thisGame.endTurn();
