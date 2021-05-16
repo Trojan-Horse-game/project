@@ -50,6 +50,8 @@ function forfeit(io: any, room: string, playerSocket: Socket) {
     let thisgame = findGame(room, games);
     let player = findPlayer(playerSocket.id, thisgame);
     let idx = thisgame.players.indexOf(player);
+    console.log("Player " + player.pseudo + " has forfeited");
+    console.log("Index in game array is", idx);
 
     if (idx == thisgame.currentPlayerIdx) {
       thisgame.resign();
@@ -80,6 +82,9 @@ function forfeit(io: any, room: string, playerSocket: Socket) {
 
 // Envoie l'index du prochain joueur et gère le cas de la distraction nucléaire
 function nextTurn(io: any, thisGame: Game) {
+  console.log("Players from nextTurn = ", thisGame.players.map((value)=>value.pseudo));
+  console.log("Current player index = ", thisGame.currentPlayerIdx);
+  console.trace();
   clearTimeout(nextTurnTimeout);
   do {
     thisGame.endTurn();
