@@ -68,6 +68,7 @@ function forfeit(io: any, room: string, playerSocket: Socket) {
 
       if (!thisgame.inProgress) {
         io.in(room).emit("endGame", thisgame.winnerIdx);
+        clearTimeout(nextTurnTimeout)
         games.splice(games.indexOf(thisgame), 1);
       }
     }
@@ -141,7 +142,6 @@ module.exports = function (io: any) {
 
         socket.on("choose species", (species: Species) => {
           try {
-            console.log(species);
             let player = new Player(pseudo, species, socket.id);
             game.addPlayer(player);
             games.push(game);
@@ -278,6 +278,7 @@ module.exports = function (io: any) {
               hand: thisgame.currentPlayer.hand,
               kind: kinds,
             });
+
             thisgame.players.forEach((player, index) => {
               io.in(thisgame.roomId).emit("base", {
                 base: player.base,
@@ -285,9 +286,11 @@ module.exports = function (io: any) {
               });
             });
 
+            nextTurn(io, thisgame);
             if (thisgame.inProgress) {
-              nextTurn(io, thisgame);
+              console.log("in progress :",thisgame.inProgress);
             } else {
+              clearTimeout(nextTurnTimeout)
               io.in(roomId).emit("endGame", thisgame.winnerIdx);
             }
           }
@@ -312,6 +315,7 @@ module.exports = function (io: any) {
             throw "Not your turn !";
           } else {
             thisgame.checkDiscard(indexDiscard);
+            socket.emit("valid")
 
             let index: number;
             let cards: Card[] = [];
@@ -375,7 +379,6 @@ module.exports = function (io: any) {
 
     //When a user disconnects from the game
     socket.on("disconnecting", (_reason) => {
-      console.log(_reason);
       for (const room of socket.rooms) {
         if (room !== socket.id) {
           forfeit(io, room, socket);

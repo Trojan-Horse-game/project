@@ -276,6 +276,8 @@ export default {
       this.gameState = false;
       this.endGame = false;
       alert(error);
+      if(error == "ERROR: Could not find game !")
+        this.$router.push("/menuPrincipal");
     },
     oopsGame: function(error) {
       this.currentScene.reactToDropAction(false);
@@ -285,6 +287,11 @@ export default {
       this.$router.push("/menuPrincipal");
     }
     */
+  },
+  watch: {
+    $route(to,from){
+      this.$socket.leave(this.gameId);
+    }
   }
 };
 </script>
