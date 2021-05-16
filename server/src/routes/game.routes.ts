@@ -59,6 +59,7 @@ function forfeit(io: any, room: string, playerSocket: Socket) {
       if (thisgame.inProgress) {
         nextTurn(io, thisgame);
       } else {
+        clearTimeout(nextTurnTimeout);
         io.in(room).emit("end game", thisgame.winnerIdx);
       }
     } else {
@@ -323,12 +324,12 @@ module.exports = function (io: any) {
             }
 
             thisgame.discardHand(indexDiscard);
-            const currentPlayerIdxCopy = thisgame.currentPlayerIdx;
             socket
-              .to(roomId)
-              .emit("discard", { indexDiscard: indexDiscard, cards: cards });
-
+            .to(roomId)
+            .emit("discard", { indexDiscard: indexDiscard, cards: cards });
+            
             if (thisgame.inProgress) {
+              const currentPlayerIdxCopy = thisgame.currentPlayerIdx;
               nextTurn(io, thisgame);
               const lastPlayer = thisgame.players[currentPlayerIdxCopy];
               io.to(lastPlayer.socketId).emit("hand", {
