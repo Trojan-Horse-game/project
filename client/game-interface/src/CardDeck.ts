@@ -12,7 +12,7 @@ export class CardDeck extends Phaser.GameObjects.Container {
   }
 
   addCard(card: CardSprite) {
-    this.cards.push(card);
+    this.deckCards.push(card);
     card.disableInteractive();
     card.cardAngle = (Math.random() - 0.5) * 10;
     card.setPosition(0, this.height / 2);
@@ -24,23 +24,28 @@ export class CardDeck extends Phaser.GameObjects.Container {
       return;
     }
     const playerSlot = this.scene.playerSlot;
+    distributedCards.forEach((value, index) => {
+      value.gameLogicIdx = index;
+    });
+
     distributedCards = distributedCards.slice(
       -playerSlot.discardedIndices.length
     );
+
     distributedCards.forEach((value: Card, index: number) => {
       const discardedIndex = playerSlot.discardedIndices[index];
       const discardedCard = playerSlot.cards[discardedIndex];
-      const replacingCard = this.cards.pop();
-      playerSlot.cards[discardedIndex] = replacingCard;
+      const replacingDeckCard = this.deckCards.pop();
+      playerSlot.cards[discardedIndex] = replacingDeckCard;
       const newPoint = playerSlot.getLocalPoint(
-        replacingCard.x + this.x,
-        replacingCard.y + this.y
+        replacingDeckCard.x + this.x,
+        replacingDeckCard.y + this.y
       );
       const timeline = this.scene.tweens.createTimeline();
 
       // Move card to replace
       timeline.add({
-        targets: replacingCard,
+        targets: replacingDeckCard,
         delay: 250 * index,
         x: discardedCard.startX,
         y: discardedCard.startY,
@@ -48,24 +53,24 @@ export class CardDeck extends Phaser.GameObjects.Container {
         duration: 600,
         ease: "power4",
         onStart: () => {
-          this.remove(replacingCard);
-          playerSlot.add(replacingCard);
-          replacingCard.setPosition(newPoint.x, newPoint.y);
+          this.remove(replacingDeckCard);
+          playerSlot.add(replacingDeckCard);
+          replacingDeckCard.setPosition(newPoint.x, newPoint.y);
         }
       });
 
       timeline.add({
-        targets: replacingCard,
+        targets: replacingDeckCard,
         scaleX: 0,
         scaleY: 1.2,
         duration: 150,
         yoyo: true,
         onYoyo: () => {
-          replacingCard.cardType = value;
+          replacingDeckCard.cardType = value;
         },
         onComplete: () => {
-          replacingCard.setInteractive();
-          playerSlot.configureCardInteraction(replacingCard);
+          replacingDeckCard.setInteractive();
+          playerSlot.configureCardInteraction(replacingDeckCard);
         }
       });
 
@@ -77,5 +82,5 @@ export class CardDeck extends Phaser.GameObjects.Container {
     });
   }
 
-  cards: CardSprite[] = [];
+  deckCards: CardSprite[] = [];
 }
