@@ -28,6 +28,19 @@ export class CardDeck extends Phaser.GameObjects.Container {
       value.gameLogicIdx = index;
     });
 
+    const cardsArrayCopy = [...playerSlot.cards];
+    const discardedCopy = [...playerSlot.discardedIndices];
+    for (const index of discardedCopy.sort((a, b) => b - a)) {
+      cardsArrayCopy.splice(index, 1);
+    }
+
+    cardsArrayCopy.sort(
+      (lhs, rhs) => lhs.cardType.gameLogicIdx - rhs.cardType.gameLogicIdx
+    );
+    cardsArrayCopy.forEach((card, index) => {
+      card.cardType.gameLogicIdx = index;
+    });
+
     distributedCards = distributedCards.slice(
       -playerSlot.discardedIndices.length
     );
