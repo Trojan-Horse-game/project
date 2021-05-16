@@ -224,6 +224,7 @@ export class Game {
      Put it back at the bottom of the deck
   */
   discardHand(indices: number[], player = this.currentPlayer) {
+    indices = indices.sort();
     let i: number;
     let padd = 0;
     for (i of indices) {
