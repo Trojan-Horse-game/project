@@ -68,7 +68,6 @@ export default {
       gameState: false,
       endGame: false,
       winner: false,
-      playersIndex: 0,
       gameId: localStorage.getItem("gameId"),
       initialize: false,
       game: {
@@ -267,7 +266,7 @@ export default {
     endGame: function(winner) {
       this.gameState = false;
       this.endGame = true;
-      if (winner == this.playerIndex) this.winner = true;
+      if (winner == this.currentScene.playerIndex) this.winner = true;
       else this.winner = false;
       localStorage.removeItem("gameId")
     },
