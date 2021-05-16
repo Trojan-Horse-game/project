@@ -151,6 +151,7 @@ export default {
     abandon() {
       this.$socket.emit("abbandon", this.gameId);
       this.$router.push("/menuPrincipal");
+      localStorage.removeItem("gameId")
     }
   },
   sockets: {
@@ -268,6 +269,7 @@ export default {
       this.endGame = true;
       if (winner == this.playerIndex) this.winner = true;
       else this.winner = false;
+      localStorage.removeItem("gameId")
     },
     valid: function() {
       this.currentScene.reactToDropAction(true);

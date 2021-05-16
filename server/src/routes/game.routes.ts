@@ -286,9 +286,9 @@ module.exports = function (io: any) {
               });
             });
 
-            nextTurn(io, thisgame);
+            console.log("in progress", thisgame.inProgress)
             if (thisgame.inProgress) {
-              console.log("in progress :",thisgame.inProgress);
+              nextTurn(io, thisgame);
             } else {
               clearTimeout(nextTurnTimeout)
               io.in(roomId).emit("endGame", thisgame.winnerIdx);
