@@ -2,12 +2,7 @@
 import "phaser";
 import { OpponentSlot, SlotLayout } from "./OpponentSlot";
 import { PlayerSlot } from "./PlayerSlot";
-import {
-  ActionCardKind,
-  GeneratorKind,
-  GeneratorCardKind,
-  GeneratorCard
-} from "./Card";
+import { ActionCardKind, GeneratorKind } from "./Card";
 import { CardDeck } from "./CardDeck";
 import { ProfilePicture } from "./ProfilePicture";
 import { CardSprite } from "./CardSprite";
@@ -92,20 +87,6 @@ export class GameScene extends ResponsiveScene {
   }
 
   create() {
-    const kinds = [
-      GeneratorCardKind.Generator,
-      GeneratorCardKind.Medicine,
-      GeneratorCardKind.Virus
-    ];
-
-    const generatorKinds = [
-      GeneratorKind.Air,
-      GeneratorKind.Electricity,
-      GeneratorKind.Joker,
-      GeneratorKind.Shield,
-      GeneratorKind.Water
-    ];
-
     this.actionDropZone = new ActionDropZone(
       this,
       75 * window.devicePixelRatio

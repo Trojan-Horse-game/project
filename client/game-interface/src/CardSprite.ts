@@ -170,7 +170,8 @@ export class CardSprite extends Phaser.GameObjects.Container {
         }
         const playerSlot = scene.playerSlot;
         if (target instanceof CardDeck) {
-          const discarded: number[] = [];
+          const uiDiscarded: number[] = [];
+          const glDiscarded: number[] = [];
           scene.tweens.add({
             targets: playerSlot.selectedCards,
             alpha: 0,
@@ -180,12 +181,13 @@ export class CardSprite extends Phaser.GameObjects.Container {
           });
           for (const selectedCard of playerSlot.selectedCards) {
             selectedCard.dropped = true;
-            discarded.push(playerSlot.cards.indexOf(selectedCard));
+            uiDiscarded.push(playerSlot.cards.indexOf(selectedCard));
+            glDiscarded.push(selectedCard.cardType.gameLogicIdx);
           }
-          playerSlot.discardedIndices = discarded;
+          playerSlot.discardedIndices = uiDiscarded;
           playerSlot.selectedCards = [];
           if (scene.delegate != null) {
-            scene.delegate.didDiscard(discarded);
+            scene.delegate.didDiscard(glDiscarded);
           }
         } else if (target instanceof ActionDropZone) {
           this.dropped = true;
