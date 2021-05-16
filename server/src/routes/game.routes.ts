@@ -272,11 +272,6 @@ module.exports = function (io: any) {
             socket.to(roomId).emit("playCard", action);
 
             thisgame.playAction(action);
-            const kinds = cardsKinds(thisgame.currentPlayer.hand);
-            socket.emit("hand", {
-              hand: thisgame.currentPlayer.hand,
-              kind: kinds,
-            });
 
             thisgame.players.forEach((player, index) => {
               io.in(thisgame.roomId).emit("base", {
@@ -285,9 +280,14 @@ module.exports = function (io: any) {
               });
             });
 
-            console.log("in progress", thisgame.inProgress);
             if (thisgame.inProgress) {
+              const currentPlayerIdxCopy = thisgame.currentPlayerIdx;
               nextTurn(io, thisgame);
+              const lastPlayer = thisgame.players[currentPlayerIdxCopy];
+              io.to(lastPlayer.socketId).emit("hand", {
+                hand: lastPlayer.hand,
+                kind: cardsKinds(lastPlayer.hand),
+              });
             } else {
               clearTimeout(nextTurnTimeout);
               io.in(roomId).emit("endGame", thisgame.winnerIdx);
