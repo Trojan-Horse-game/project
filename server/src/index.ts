@@ -19,11 +19,9 @@ var whitelist = [
 
 var origin = {
   origin: function (origin: any, callback: any) {
-    console.log("CORS", origin, callback);
     if (whitelist.indexOf(origin) !== -1) {
       callback(null, true);
     } else {
-      console.log("origin:", origin);
       callback(new Error("Not allowed by CORS"));
     }
   },

@@ -285,7 +285,7 @@ module.exports = function (io: any) {
                 idx: index,
               });
             });
-
+            
             console.log("in progress", thisgame.inProgress)
             if (thisgame.inProgress) {
               nextTurn(io, thisgame);
