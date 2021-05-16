@@ -59,6 +59,7 @@ function forfeit(io: any, room: string, playerSocket: Socket) {
       playerSocket.leave(room);
 
       if (thisgame.inProgress) {
+        clearTimeout(nextTurnTimeout);
         nextTurn(io, thisgame);
       } else {
         clearTimeout(nextTurnTimeout);
