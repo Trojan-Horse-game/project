@@ -127,8 +127,9 @@ export default {
     },
     abandon() {
       this.$socket.emit("abbandon", this.gameId);
+      localStorage.removeItem("gameId");
+      this.setLoss();
       this.$router.push("/menuPrincipal");
-      localStorage.removeItem("gameId")
     },
     async setWin() {
       const userId = localStorage.getItem("userId");
@@ -170,7 +171,7 @@ export default {
           playersList.push(new Player(pseudo[i], species[i]));
         }
         this.currentScene.updatePlayers(playersList, playerIndex);
-      }, 1500);
+      }, 2000);
     },
     hand: function(data) {
       const hand: NetworkCard[] = data.hand;

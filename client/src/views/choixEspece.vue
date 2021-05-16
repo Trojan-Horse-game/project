@@ -248,11 +248,14 @@ export default {
       localStorage.setItem("gameId", gameId);
     },
     oops: function(error) {
-      alert(error);
-      if(error == "ERROR: Could not find game !")
+      if(error == "ERROR: Could not find game !"){
+        alert(error)
         this.$router.push("/menuPrincipal");
-      else
-      this.$router.push("/choixEspece");
+      }
+      else {
+        this.$router.push("/choixEspece");
+        alert(error);
+      }
     },
     /*
     closeTab: function() {

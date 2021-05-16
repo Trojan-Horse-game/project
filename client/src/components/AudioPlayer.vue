@@ -34,7 +34,7 @@
 export default {
   components: {},
 
-  data: () => ({ showSlider: false, volume: 0.5, playing: true }),
+  data: () => ({ showSlider: false, volume: 0.5, playing: false }),
 
   mounted: function() {
     this.$watch("audioFile", () => {
