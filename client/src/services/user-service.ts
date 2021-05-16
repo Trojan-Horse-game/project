@@ -25,33 +25,6 @@ class userService {
       user2_id: friendUserId
     });
   }
-  /*login(user) {
-    return axios
-      .post(API_URL + "/api/users/signin", {
-        email: user.username,
-        password: user.password
-      })
-      .then(response => {
-        if (response.data.accessToken) {
-          localStorage.setItem("userId", response.data.userId);
-          localStorage.setItem("token", response.data.token);
-        }
-
-        return response.data;
-      });
-  }
-
-  logout() {
-    localStorage.removeItem("userId");
-    localStorage.removeItem("token");
-  }
-
-  signup(user) {
-    return axios.post(API_URL + "/api/users/signup", {
-      email: user.email,
-      password: user.password
-    });
-  }*/
 }
 
 export default new userService();

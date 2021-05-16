@@ -60,15 +60,16 @@ import {
   GeneratorCard,
   GeneratorCardKind
 } from "../../game-interface/src/Card";
+import axios from 'axios';
 
 export default {
   name: "Jeu",
   data: () => {
     return {
+      apiUrl : "https://api.trojanhorse.cc/users",
       gameState: false,
       endGame: false,
       winner: false,
-      playersIndex: 0,
       gameId: localStorage.getItem("gameId"),
       initialize: false,
       game: {
@@ -116,30 +117,6 @@ export default {
     }
   },
   methods: {
-    didDropCard(
-      cardIndex: number,
-      playerIndex: number,
-      generatorIndex: number
-    ) {
-      try {
-        console.log("didDropCard", cardIndex, playerIndex, generatorIndex);
-        const action = new Action(cardIndex);
-        action.addTarget(playerIndex);
-        action.addSlotTarget(generatorIndex);
-        action.addTarget(playerIndex);
-        this.$socket.emit("play card", this.gameId, action);
-      } catch (err) {
-        console.error(err);
-      }
-    },
-    didDiscard(cardsIndices: number[]) {
-      console.log("Did discard", cardsIndices);
-      try {
-        this.$socket.emit("discard", this.gameId, cardsIndices);
-      } catch (err) {
-        console.error(err);
-      }
-    },
     launchGame() {
       try {
         this.$socket.emit("launch game", this.gameId);
@@ -150,9 +127,20 @@ export default {
     },
     abandon() {
       this.$socket.emit("abbandon", this.gameId);
+      localStorage.removeItem("gameId");
+      this.setLoss();
       this.$router.push("/menuPrincipal");
-      localStorage.removeItem("gameId")
-    }
+    },
+    async setWin() {
+      const userId = localStorage.getItem("userId");
+      const url = `${this.apiUrl}/wins/${userId}`;
+      axios.put(url);
+    },
+    async setLoss() {
+      const userId = localStorage.getItem("userId");
+      const url = `${this.apiUrl}/looses/${userId}`;
+      axios.put(url);
+    },
   },
   sockets: {
     /*
@@ -183,7 +171,7 @@ export default {
           playersList.push(new Player(pseudo[i], species[i]));
         }
         this.currentScene.updatePlayers(playersList, playerIndex);
-      }, 1500);
+      }, 2000);
     },
     hand: function(data) {
       const hand: NetworkCard[] = data.hand;
@@ -267,9 +255,15 @@ export default {
     endGame: function(winner) {
       this.gameState = false;
       this.endGame = true;
-      if (winner == this.playerIndex) this.winner = true;
-      else this.winner = false;
-      localStorage.removeItem("gameId")
+      if (winner == this.currentScene.playerIndex) {
+        this.winner = true;
+        this.setWin();
+      }
+      else {
+        this.winner = false;
+        this.setLoss();
+      }
+      localStorage.removeItem("gameId");
     },
     valid: function() {
       this.currentScene.reactToDropAction(true);
