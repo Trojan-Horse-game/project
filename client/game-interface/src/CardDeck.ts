@@ -23,7 +23,6 @@ export class CardDeck extends Phaser.GameObjects.Container {
     if (!(this.scene instanceof GameScene)) {
       return;
     }
-    console.log("distributeCards:", distributedCards);
     const playerSlot = this.scene.playerSlot;
     distributedCards.forEach((value, index) => {
       value.gameLogicIdx = index;
@@ -34,42 +33,21 @@ export class CardDeck extends Phaser.GameObjects.Container {
     for (const index of discardedCopy.sort((a, b) => b - a)) {
       cardsArrayCopy.splice(index, 1);
     }
-    console.log(
-      "Removed discarded cards, array is now",
-      cardsArrayCopy.map(value => value.cardType)
+
+    cardsArrayCopy.sort(
+      (lhs, rhs) => lhs.cardType.gameLogicIdx - rhs.cardType.gameLogicIdx
     );
-
-    console.log("Removed discarded cards, array is now:");
-    cardsArrayCopy.forEach((element, index) => {
-      console.log(
-        "[" + index + "]",
-        element.cardType.kind,
-        element.cardType.gameLogicIdx
-      );
-    });
-
     cardsArrayCopy.forEach((card, index) => {
-      console.log("Rassigning index for", card.cardType);
-      console.log("Old index was", card.cardType.gameLogicIdx);
       card.cardType.gameLogicIdx = index;
-      console.log("New index is", card.cardType.gameLogicIdx);
     });
 
     distributedCards = distributedCards.slice(
       -playerSlot.discardedIndices.length
     );
-    console.log("Sliced:", distributedCards);
 
     distributedCards.forEach((value: Card, index: number) => {
       const discardedIndex = playerSlot.discardedIndices[index];
-      console.log(
-        index,
-        "In distributedCards with distributed card (value):",
-        value
-      );
-      console.log("Discarded index is:", discardedIndex);
       const discardedCard = playerSlot.cards[discardedIndex];
-      console.log("Discarded card is", discardedCard.cardType);
       const replacingDeckCard = this.deckCards.pop();
       playerSlot.cards[discardedIndex] = replacingDeckCard;
       const newPoint = playerSlot.getLocalPoint(
