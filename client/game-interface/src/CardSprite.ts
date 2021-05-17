@@ -67,7 +67,7 @@ export class CardSprite extends Phaser.GameObjects.Container {
 
       if (
         this.cardType instanceof ActionCard &&
-        this.parentContainer.selectedCards.length == 1
+        this.parentContainer.selectedCards.length <= 1
       ) {
         this.scene.tweens.add({
           targets: this.scene.deck,
@@ -103,7 +103,7 @@ export class CardSprite extends Phaser.GameObjects.Container {
 
       if (
         this.cardType instanceof ActionCard &&
-        this.parentContainer.selectedCards.length == 1
+        this.parentContainer.selectedCards.length <= 1
       ) {
         this.scene.tweens.add({
           targets: this.scene.deck,
