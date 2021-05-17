@@ -57,12 +57,11 @@ function forfeit(io: any, room: string, playerSocket: Socket) {
       thisgame.resign();
       playerSocket.to(room).emit("leaveGame", idx);
       playerSocket.leave(room);
+      clearTimeout(nextTurnTimeout);
 
       if (thisgame.inProgress) {
-        clearTimeout(nextTurnTimeout);
         nextTurn(io, thisgame);
       } else {
-        clearTimeout(nextTurnTimeout);
         io.in(room).emit("end game", thisgame.winnerIdx);
       }
     } else {
@@ -103,7 +102,8 @@ function nextTurn(io: any, thisGame: Game) {
   } while (thisGame.currentPlayer.hand.length === 0);
   if (thisGame.inProgress) {
     nextTurnTimeout = setTimeout(() => {
-      nextTurn(io, thisGame);
+      if(thisGame.inProgress)
+        nextTurn(io, thisGame);
     }, 20000);
   } else {
     clearTimeout(nextTurnTimeout);
