@@ -1,7 +1,7 @@
 // Required External Modules and Interfaces
 import { Socket } from "socket.io";
 import { Action } from "../gamelogic/Action";
-import { Card } from "../gamelogic/Card";
+import { Card, Color } from "../gamelogic/Card";
 import { FirewallCard } from "../gamelogic/FirewallCard";
 import { GeneratorCard } from "../gamelogic/GeneratorCard";
 import { SpecialCard } from "../gamelogic/SpecialCard";
@@ -226,7 +226,10 @@ module.exports = function (io: any) {
             kind: cardsKinds(player.hand),
           });
           io.in(thisgame.roomId).emit("base", {
-            base: player.base,
+            base: player.base.map((value)=>{
+              value.isSuper = value.cards.findIndex((card)=>card.color == Color.Joker) != -1
+              return value;
+            }),
             idx: index,
           });
         });
@@ -282,7 +285,10 @@ module.exports = function (io: any) {
 
             thisgame.players.forEach((player, index) => {
               io.in(thisgame.roomId).emit("base", {
-                base: player.base,
+                base: player.base.map((value)=>{
+                  value.isSuper = value.cards.findIndex((card)=>card.color == Color.Joker) != -1
+                  return value;
+                }),
                 idx: index,
               });
             });

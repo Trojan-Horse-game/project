@@ -117,6 +117,7 @@ export interface NetworkCard {
 export class GeneratorSlot {
   state: NetworkState;
   color: NetworkColor;
+  isSuper: boolean;
   // cards: Card[] = [];
 }
 
