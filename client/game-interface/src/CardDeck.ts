@@ -66,6 +66,8 @@ export class CardDeck extends Phaser.GameObjects.Container {
         discardedCard != undefined,
         "Discarded card is undefined, index is: " + discardedIndex
       );
+      console.log("Discarded card is", discardedCard);
+      console.log("Destination", discardedCard.startX, discardedCard.startY);
       // Move card to replace
       timeline.add({
         targets: replacingDeckCard,

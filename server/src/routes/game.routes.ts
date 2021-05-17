@@ -345,7 +345,7 @@ module.exports = function (io: any) {
             thisgame.discardHand(indexDiscard);
             socket
             .to(roomId)
-            .emit("discard", { indexDiscard: indexDiscard, cards: cards });
+            .emit("discard", { pseudo: player.pseudo, indexDiscard: indexDiscard, cards: cards, kinds: cardsKinds(cards) });
             
             if (thisgame.inProgress) {
               const currentPlayerIdxCopy = thisgame.currentPlayerIdx;

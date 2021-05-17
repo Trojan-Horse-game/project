@@ -2,7 +2,12 @@
 import "phaser";
 import { OpponentSlot, SlotLayout } from "./OpponentSlot";
 import { PlayerSlot } from "./PlayerSlot";
-import { ActionCardKind, GeneratorKind } from "./Card";
+import {
+  ActionCardKind,
+  GeneratorCard,
+  GeneratorCardKind,
+  GeneratorKind
+} from "./Card";
 import { CardDeck } from "./CardDeck";
 import { ProfilePicture } from "./ProfilePicture";
 import { CardSprite } from "./CardSprite";
@@ -87,6 +92,22 @@ export class GameScene extends ResponsiveScene {
   }
 
   create() {
+    const distributed = [
+      new GeneratorCard(GeneratorCardKind.Medicine, GeneratorKind.Joker),
+      new GeneratorCard(GeneratorCardKind.Medicine, GeneratorKind.Joker),
+      new GeneratorCard(GeneratorCardKind.Medicine, GeneratorKind.Joker)
+    ];
+    document.addEventListener("keydown", event => {
+      if (event.key == "b") {
+        console.log("Detected keydown b");
+        this.playerSlot.discardAll();
+      } else if (event.key == "d") {
+        this.deck.distributeCards(distributed);
+      } else if (event.key == "o") {
+        this.opponentsSlots[0].discardCards(distributed);
+      }
+    });
+
     this.actionDropZone = new ActionDropZone(
       this,
       75 * window.devicePixelRatio
@@ -289,6 +310,10 @@ export class GameScene extends ResponsiveScene {
         const generator = generators[index];
         generator.setGeneratorState(rawValue, value.isSuper);
       });
+  }
+
+  discard(pseudo: string, cards: Card[]) {
+    console.log("CALLED DISCARD", pseudo, cards);
   }
 
   static slotsMappings = {

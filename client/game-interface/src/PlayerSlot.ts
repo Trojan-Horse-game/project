@@ -3,6 +3,7 @@ import { ProfilePicture, TextPosition } from "./ProfilePicture";
 import { Generator, GeneratorState } from "./Generator";
 import { GeneratorKind, GeneratorCard, GeneratorCardKind } from "./Card";
 import { CardSprite } from "./CardSprite";
+import { GameScene } from "./GameScene";
 
 export class PlayerSlot extends Phaser.GameObjects.Container {
   constructor(
@@ -146,6 +147,29 @@ export class PlayerSlot extends Phaser.GameObjects.Container {
         }
       }
     );
+  }
+
+  discardAll() {
+    this.cards.forEach((card, index) => {
+      if (!(this.scene instanceof GameScene)) {
+        return;
+      }
+      card.startX = card.x;
+      card.startY = card.y;
+      card.x += this.x;
+      card.y += this.y;
+      card.setDepth(-100);
+      this.discardedIndices.push(index);
+      this.remove(card);
+      this.scene.add.existing(card);
+      this.scene.tweens.add({
+        targets: card,
+        duration: 700,
+        ease: "power4",
+        x: this.scene.deck.x,
+        y: this.scene.deck.y + card.sprite.displayHeight / 2
+      });
+    });
   }
 
   static animateDropBack(scene: Phaser.Scene, selectedCard: CardSprite) {
