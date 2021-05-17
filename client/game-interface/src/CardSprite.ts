@@ -16,6 +16,9 @@ export class CardSprite extends Phaser.GameObjects.Container {
     height: number
   ) {
     super(scene);
+    if (!(scene instanceof GameScene)) {
+      return;
+    }
     this.eventFSM = new MouseEventFSM();
     this.sprite = scene.add.sprite(0, -height / 2, "carte_verso");
     this.sprite.setDisplaySize(width, height);
@@ -270,6 +273,12 @@ export class CardSprite extends Phaser.GameObjects.Container {
               scene.deck.add(this);
               scene.deck.sendToBack(this);
               this.setPosition(newPosition.x, newPosition.y);
+            })
+            .on("start", () => {
+              if (scene.delegate != undefined) {
+                console.log("Calling did drop card for action");
+                scene.delegate.didDropCard(this.cardType.gameLogicIdx, 0, 0);
+              }
             });
           this.scene.tweens.add({
             targets: this,
