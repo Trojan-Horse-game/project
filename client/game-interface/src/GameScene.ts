@@ -283,11 +283,11 @@ export class GameScene extends ResponsiveScene {
     }
 
     generatorSlots
-      .map(value => value.state)
-      .forEach((state, index) => {
-        const rawValue: number = state;
+      .map(value => value)
+      .forEach((value, index) => {
+        const rawValue: number = value.state;
         const generator = generators[index];
-        generator.setGeneratorState(rawValue, false);
+        generator.setGeneratorState(rawValue, value.isSuper);
       });
   }
 

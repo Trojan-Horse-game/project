@@ -16,6 +16,7 @@ export enum State {
 export class GeneratorSlot {
   state: State;
   color: Color;
+  isSuper: boolean;
   cards: Card[] = [];
 
   constructor(state: State, color: number) {
