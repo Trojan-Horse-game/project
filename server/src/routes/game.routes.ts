@@ -281,6 +281,11 @@ module.exports = function (io: any) {
             socket.emit("valid");
             const currCard = player.hand[action.indexInHand];
             if(currCard instanceof SpecialCard && currCard.color == Color.Air){
+              for (const player of thisgame.players) {
+                if (player.socketId != socket.id) {
+                  io.in(roomId).emit("discard", {pseudo: player.pseudo, indexDiscard: [0, 1, 2], cards: player.hand, kinds: cardsKinds(player.hand) })
+                }
+              }
               clearTimeout(nextTurnTimeout);
                 setTimeout(() => {nextTurn(io, thisgame)}, 2000);
             } else {

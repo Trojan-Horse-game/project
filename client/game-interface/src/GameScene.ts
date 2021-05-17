@@ -314,14 +314,20 @@ export class GameScene extends ResponsiveScene {
   }
 
   discard(pseudo: string, cards: Card[]) {
-    console.log("CALLED DISCARD", pseudo, cards);
-    for (const opponent of this.opponentsSlots) {
-      if (
-        opponent.profilePicture.nameText.text.toUpperCase() ==
-        pseudo.toUpperCase()
-      ) {
-        opponent.discardCards(cards);
-        return;
+    if (
+      pseudo.toUpperCase() ==
+      this.playerSlot.profilePicture.nameText.text.toUpperCase()
+    ) {
+      this.playerSlot.discardAll();
+    } else {
+      for (const opponent of this.opponentsSlots) {
+        if (
+          opponent.profilePicture.nameText.text.toUpperCase() ==
+          pseudo.toUpperCase()
+        ) {
+          opponent.discardCards(cards);
+          return;
+        }
       }
     }
   }
