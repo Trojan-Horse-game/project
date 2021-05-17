@@ -4,6 +4,7 @@ import { OpponentSlot, SlotLayout } from "./OpponentSlot";
 import { PlayerSlot } from "./PlayerSlot";
 import {
   ActionCardKind,
+  Card,
   GeneratorCard,
   GeneratorCardKind,
   GeneratorKind
@@ -314,6 +315,15 @@ export class GameScene extends ResponsiveScene {
 
   discard(pseudo: string, cards: Card[]) {
     console.log("CALLED DISCARD", pseudo, cards);
+    for (const opponent of this.opponentsSlots) {
+      if (
+        opponent.profilePicture.nameText.text.toUpperCase() ==
+        pseudo.toUpperCase()
+      ) {
+        opponent.discardCards(cards);
+        return;
+      }
+    }
   }
 
   static slotsMappings = {
