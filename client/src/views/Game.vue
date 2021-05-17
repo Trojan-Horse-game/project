@@ -60,13 +60,13 @@ import {
   GeneratorCard,
   GeneratorCardKind
 } from "../../game-interface/src/Card";
-import axios from 'axios';
+import axios from "axios";
 
 export default {
   name: "Jeu",
   data: () => {
     return {
-      apiUrl : "https://api.trojanhorse.cc/users",
+      apiUrl: "https://api.trojanhorse.cc/users",
       gameState: false,
       endGame: false,
       winner: false,
@@ -140,7 +140,7 @@ export default {
       const userId = localStorage.getItem("userId");
       const url = `${this.apiUrl}/looses/${userId}`;
       axios.put(url);
-    },
+    }
   },
   sockets: {
     /*
@@ -258,8 +258,7 @@ export default {
       if (winner == this.currentScene.playerIndex) {
         this.winner = true;
         this.setWin();
-      }
-      else {
+      } else {
         this.winner = false;
         this.setLoss();
       }
@@ -272,7 +271,7 @@ export default {
       this.gameState = false;
       this.endGame = false;
       alert(error);
-      if(error == "ERROR: Could not find game !")
+      if (error == "ERROR: Could not find game !")
         this.$router.push("/menuPrincipal");
     },
     oopsGame: function(error) {
@@ -285,9 +284,12 @@ export default {
     */
   },
   watch: {
-    $route(to,from){
+    $route(to, from) {
+      // this.$socket.emit("abbandon", localStorage.getItem("gameId"));
+      /*
       if(to == "/choixEspece")
         this.$socket.emit("abbandon", localStorage.getItem("gameId"));
+        */
     }
   }
 };
