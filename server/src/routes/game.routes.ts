@@ -279,8 +279,10 @@ module.exports = function (io: any) {
           } else {
             thisgame.checkAction(action);
             socket.emit("valid");
-            if(player.hand[action.indexInHand].color == Color.Joker){
-
+            const currCard = player.hand[action.indexInHand];
+            if(currCard instanceof SpecialCard && currCard.color == Color.Air){
+              clearTimeout(nextTurnTimeout);
+                setTimeout(() => {nextTurn(io, thisgame)}, 2000);
             } else {
               socket.to(roomId).emit("playCard", action);
   
