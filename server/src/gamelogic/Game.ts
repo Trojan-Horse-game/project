@@ -85,6 +85,7 @@ export class Game {
     this.addSerieToDeck(construct, 4, Color.Radiation);
     this.addSerieToDeck(construct, 4, Color.Joker);
 
+    /*
     construct = (color: Color) => {
       return new SpecialCard(color);
     };
@@ -94,6 +95,7 @@ export class Game {
     this.addSerieToDeck(construct, 3, Color.Energy); // Forced exchange
     this.addSerieToDeck(construct, 3, Color.Radiation); // Indefinite term loan
     this.addSerieToDeck(construct, 2, Color.Joker); // System cleaning
+    */
   }
 
   /* Add a type of cards to the deck
