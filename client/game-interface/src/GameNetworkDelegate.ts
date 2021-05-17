@@ -20,7 +20,6 @@ export class GameNetworkDelegate implements GameSceneDelegate {
 
   didDropCard(cardIndex: number, playerIndex: number, generatorIndex: number) {
     try {
-      console.log("didDropCard new", cardIndex, playerIndex, generatorIndex);
       const action = new Action(cardIndex);
       action.addTarget(playerIndex);
       action.addSlotTarget(generatorIndex);
@@ -31,7 +30,6 @@ export class GameNetworkDelegate implements GameSceneDelegate {
   }
 
   didDiscard(cardsIndices: number[]) {
-    console.log("Did discard", cardsIndices);
     try {
       this.socket.emit("discard", {
         roomId: this.room,

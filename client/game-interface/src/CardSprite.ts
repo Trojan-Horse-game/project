@@ -60,25 +60,25 @@ export class CardSprite extends Phaser.GameObjects.Container {
       if (!(this.scene instanceof GameScene)) {
         return;
       }
-      /*
-      this.scene.tweens.add({
-        targets: this.scene.deck,
-        delay: 0,
-        x: this.scene.deck.x + 100 * window.devicePixelRatio,
-        duration: 1000,
-        ease: "power4"
-      });
 
-      
-      this.scene.tweens.add({
-        targets: this.scene.actionDropZone,
-        delay: 0,
-        alpha: 1,
-        scale: 1,
-        duration: 1000,
-        ease: "power4"
-      });
-      */
+      if (this.cardType instanceof ActionCard) {
+        this.scene.tweens.add({
+          targets: this.scene.deck,
+          delay: 0,
+          x: this.scene.deck.x + 100 * window.devicePixelRatio,
+          duration: 1000,
+          ease: "power4"
+        });
+
+        this.scene.tweens.add({
+          targets: this.scene.actionDropZone,
+          delay: 0,
+          alpha: 1,
+          scale: 1,
+          duration: 1000,
+          ease: "power4"
+        });
+      }
     };
 
     this.eventFSM.dragEnd = () => {
@@ -89,24 +89,25 @@ export class CardSprite extends Phaser.GameObjects.Container {
       if (!(this.scene instanceof GameScene)) {
         return;
       }
-      /*
-      this.scene.tweens.add({
-        targets: this.scene.deck,
-        delay: 300,
-        x: this.scene.deck.x - 100 * window.devicePixelRatio,
-        duration: 1000,
-        ease: "power4"
-      });
 
-      this.scene.tweens.add({
-        targets: this.scene.actionDropZone,
-        delay: 300,
-        alpha: 0,
-        scale: 0.5,
-        duration: 1000,
-        ease: "power4"
-      });
-      */
+      if (this.cardType instanceof ActionCard) {
+        this.scene.tweens.add({
+          targets: this.scene.deck,
+          delay: 300,
+          x: this.scene.deck.x - 100 * window.devicePixelRatio,
+          duration: 1000,
+          ease: "power4"
+        });
+
+        this.scene.tweens.add({
+          targets: this.scene.actionDropZone,
+          delay: 300,
+          alpha: 0,
+          scale: 0.5,
+          duration: 1000,
+          ease: "power4"
+        });
+      }
     };
 
     this.eventFSM.pointerUp = () => {
@@ -278,11 +279,22 @@ export class CardSprite extends Phaser.GameObjects.Container {
           this.parentContainer instanceof PlayerSlot &&
           this.scene instanceof GameScene
         ) {
-          console.log("Dropped card");
+          const uiDiscarded: number[] = [];
+          const glDiscarded: number[] = [];
+          console.log(
+            "SELECTED CARDS",
+            playerSlot.selectedCards.map(element => element.cardType)
+          );
+          for (const selectedCard of playerSlot.selectedCards) {
+            selectedCard.dropped = true;
+            uiDiscarded.push(playerSlot.cards.indexOf(selectedCard));
+            glDiscarded.push(selectedCard.cardType.gameLogicIdx);
+          }
+          playerSlot.discardedIndices = uiDiscarded;
           this.dropped = true;
           this.scene.dropAction = (isValid: boolean) => {
             if (isValid) {
-              console.log("Running valid animation");
+              playerSlot.selectedCards = [];
               scene.tweens.add({
                 targets: this,
                 alpha: 0,
@@ -291,12 +303,9 @@ export class CardSprite extends Phaser.GameObjects.Container {
                 ease: "power4"
               });
             } else {
-              console.log("Running invalid animation");
               PlayerSlot.animateDropBack(this.scene, this);
             }
           };
-          const cardIndex = this.parentContainer.selectedCards.indexOf(this);
-          this.parentContainer.discardedIndices.push(cardIndex);
           let targetPlayerIndex;
           if (target.parentContainer instanceof PlayerSlot) {
             targetPlayerIndex = scene.playerIndex;

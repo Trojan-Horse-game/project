@@ -45,6 +45,8 @@ export class CardDeck extends Phaser.GameObjects.Container {
       -playerSlot.discardedIndices.length
     );
 
+    console.log("Discarded indices", playerSlot.discardedIndices);
+
     distributedCards.forEach((value: Card, index: number) => {
       const discardedIndex = playerSlot.discardedIndices[index];
       const discardedCard = playerSlot.cards[discardedIndex];
@@ -56,6 +58,14 @@ export class CardDeck extends Phaser.GameObjects.Container {
       );
       const timeline = this.scene.tweens.createTimeline();
 
+      console.assert(
+        replacingDeckCard != undefined,
+        "Replacing deck card is undefined"
+      );
+      console.assert(
+        discardedCard != undefined,
+        "Discarded card is undefined, index is: " + discardedIndex
+      );
       // Move card to replace
       timeline.add({
         targets: replacingDeckCard,
@@ -82,7 +92,9 @@ export class CardDeck extends Phaser.GameObjects.Container {
           replacingDeckCard.cardType = value;
         },
         onComplete: () => {
-          replacingDeckCard.setInteractive();
+          if (playerSlot.playerInteractive) {
+            replacingDeckCard.setInteractive();
+          }
           playerSlot.configureCardInteraction(replacingDeckCard);
         }
       });

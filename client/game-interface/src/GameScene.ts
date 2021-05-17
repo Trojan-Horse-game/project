@@ -120,7 +120,6 @@ export class GameScene extends ResponsiveScene {
   }
 
   resize(width: number, height: number) {
-    console.log("Called resize", width, height);
     this.updateSlotsPositions(width, height);
     for (let i = 0; i < this.opponentsSlots.length; i++) {
       const position = this.playerPosition(i);
@@ -131,8 +130,8 @@ export class GameScene extends ResponsiveScene {
       height - 15 * window.devicePixelRatio
     );
 
-    this.deck.setPosition(width / 2, height / 2 - 200);
-    this.actionDropZone.setPosition(width / 2 - 150, height / 2 - 200);
+    this.deck.setPosition(width / 2, height / 2 - 50);
+    this.actionDropZone.setPosition(width / 2 - 150, height / 2 - 50);
   }
 
   updatePlayers(newValue: Player[], playerIndex: number) {
@@ -176,20 +175,14 @@ export class GameScene extends ResponsiveScene {
     let nextPlayerProfilePicture: ProfilePicture;
 
     if (nextPlayer == this.playerIndex) {
-      console.log("Entered first condition");
       this.playerSlot.playerInteractive = true;
       nextPlayerProfilePicture = this.playerSlot.profilePicture;
     } else {
       for (const opponentSlot of this.opponentsSlots) {
-        console.log(
-          opponentSlot.profilePicture.nameText.text,
-          this.players[nextPlayer].name
-        );
         if (
           opponentSlot.profilePicture.nameText.text.toUpperCase() ==
           this.players[nextPlayer].name.toUpperCase()
         ) {
-          console.log("Entered loop");
           nextPlayerProfilePicture = opponentSlot.profilePicture;
           break;
         }
@@ -294,7 +287,6 @@ export class GameScene extends ResponsiveScene {
       .forEach((state, index) => {
         const rawValue: number = state;
         const generator = generators[index];
-        console.log(index, generator, state);
         generator.setGeneratorState(rawValue, false);
       });
   }
