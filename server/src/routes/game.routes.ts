@@ -233,7 +233,7 @@ module.exports = function (io: any) {
             idx: index,
           });
         });
-        io.in(thisgame.roomId).emit("nextTurn", thisgame.currentPlayerIdx);
+        nextTurn(io, thisgame);
       } catch (err) {
         socket.emit("oops", err);
       }
@@ -279,31 +279,36 @@ module.exports = function (io: any) {
           } else {
             thisgame.checkAction(action);
             socket.emit("valid");
-            socket.to(roomId).emit("playCard", action);
+            if(player.hand[action.indexInHand].color == Color.Joker){
 
-            thisgame.playAction(action);
-
-            thisgame.players.forEach((player, index) => {
-              io.in(thisgame.roomId).emit("base", {
-                base: player.base.map((value)=>{
-                  value.isSuper = value.cards.findIndex((card)=>card.color == Color.Joker) != -1
-                  return value;
-                }),
-                idx: index,
-              });
-            });
-
-            if (thisgame.inProgress) {
-              const currentPlayerIdxCopy = thisgame.currentPlayerIdx;
-              nextTurn(io, thisgame);
-              const lastPlayer = thisgame.players[currentPlayerIdxCopy];
-              io.to(lastPlayer.socketId).emit("hand", {
-                hand: lastPlayer.hand,
-                kind: cardsKinds(lastPlayer.hand),
-              });
             } else {
-              clearTimeout(nextTurnTimeout);
-              io.in(roomId).emit("endGame", thisgame.winnerIdx);
+              socket.to(roomId).emit("playCard", action);
+  
+              thisgame.playAction(action);
+  
+              thisgame.players.forEach((player, index) => {
+                io.in(thisgame.roomId).emit("base", {
+                  base: player.base.map((value)=>{
+                    value.isSuper = value.cards.findIndex((card)=>card.color == Color.Joker) != -1
+                    return value;
+                  }),
+                  idx: index,
+                });
+              });
+  
+              if (thisgame.inProgress) {
+                const currentPlayerIdxCopy = thisgame.currentPlayerIdx;
+                nextTurn(io, thisgame);
+                const lastPlayer = thisgame.players[currentPlayerIdxCopy];
+                io.to(lastPlayer.socketId).emit("hand", {
+                  hand: lastPlayer.hand,
+                  kind: cardsKinds(lastPlayer.hand),
+                });
+              } else {
+                clearTimeout(nextTurnTimeout);
+                io.in(roomId).emit("endGame", thisgame.winnerIdx);
+              }
+
             }
           }
         } catch (err) {
