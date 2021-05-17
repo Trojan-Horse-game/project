@@ -57,11 +57,18 @@ export class CardSprite extends Phaser.GameObjects.Container {
     };
 
     this.eventFSM.dragStart = () => {
+      if (!(this.parentContainer instanceof PlayerSlot)) {
+        return;
+      }
+
       if (!(this.scene instanceof GameScene)) {
         return;
       }
 
-      if (this.cardType instanceof ActionCard) {
+      if (
+        this.cardType instanceof ActionCard &&
+        this.parentContainer.selectedCards.length == 1
+      ) {
         this.scene.tweens.add({
           targets: this.scene.deck,
           delay: 0,
@@ -82,6 +89,10 @@ export class CardSprite extends Phaser.GameObjects.Container {
     };
 
     this.eventFSM.dragEnd = () => {
+      if (!(this.parentContainer instanceof PlayerSlot)) {
+        return;
+      }
+
       if (this.dropped) {
         return;
       }
@@ -90,7 +101,10 @@ export class CardSprite extends Phaser.GameObjects.Container {
         return;
       }
 
-      if (this.cardType instanceof ActionCard) {
+      if (
+        this.cardType instanceof ActionCard &&
+        this.parentContainer.selectedCards.length == 1
+      ) {
         this.scene.tweens.add({
           targets: this.scene.deck,
           delay: 300,
