@@ -98,6 +98,8 @@ export class GameScene extends ResponsiveScene {
       new GeneratorCard(GeneratorCardKind.Medicine, GeneratorKind.Joker),
       new GeneratorCard(GeneratorCardKind.Medicine, GeneratorKind.Joker)
     ];
+
+    /*
     document.addEventListener("keydown", event => {
       if (event.key == "b") {
         console.log("Detected keydown b");
@@ -108,6 +110,7 @@ export class GameScene extends ResponsiveScene {
         this.opponentsSlots[0].discardCards(distributed);
       }
     });
+    */
 
     this.actionDropZone = new ActionDropZone(
       this,
