@@ -286,7 +286,7 @@ export default {
   },
   watch: {
     $route(to,from){
-      this.$socket.leave(this.gameId);
+      this.$socket.emit("abbandon", localStorage.getItem("gameId"));
     }
   }
 };
