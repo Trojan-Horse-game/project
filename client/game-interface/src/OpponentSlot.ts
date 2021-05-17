@@ -85,15 +85,19 @@ export class OpponentSlot extends Phaser.GameObjects.Container {
       cardSprite.setY(this.y);
       cardSprite.setDepth(-100);
       this.scene.add.existing(cardSprite);
-      this.scene.tweens.add({
-        targets: cardSprite,
-        delay: index * 250,
-        x: this.scene.deck.x,
-        y: this.scene.deck.y + finalCardHeight / 2,
-        scale: scaleAmount,
-        duration: 900,
-        ease: "power4"
-      });
+      this.scene.tweens
+        .add({
+          targets: cardSprite,
+          delay: index * 250,
+          x: this.scene.deck.x,
+          y: this.scene.deck.y + finalCardHeight / 2,
+          scale: scaleAmount,
+          duration: 900,
+          ease: "power4"
+        })
+        .on("complete", () => {
+          cardSprite.destroy();
+        });
     });
   }
 }

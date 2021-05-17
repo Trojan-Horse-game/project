@@ -130,7 +130,7 @@ export class GameScene extends ResponsiveScene {
     const cardWidth = cardHeight * ratio;
 
     this.deck = new CardDeck(this, cardWidth, cardHeight);
-    for (let i = 0; i < 50; i++) {
+    for (let i = 0; i < 100; i++) {
       const cardSprite = new CardSprite(this, null, cardWidth, cardHeight);
       this.deck.addCard(cardSprite);
     }

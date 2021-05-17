@@ -162,13 +162,17 @@ export class PlayerSlot extends Phaser.GameObjects.Container {
       this.discardedIndices.push(index);
       this.remove(card);
       this.scene.add.existing(card);
-      this.scene.tweens.add({
-        targets: card,
-        duration: 700,
-        ease: "power4",
-        x: this.scene.deck.x,
-        y: this.scene.deck.y + card.sprite.displayHeight / 2
-      });
+      this.scene.tweens
+        .add({
+          targets: card,
+          duration: 700,
+          ease: "power4",
+          x: this.scene.deck.x,
+          y: this.scene.deck.y + card.sprite.displayHeight / 2
+        })
+        .on("complete", () => {
+          card.destroy();
+        });
     });
   }
 
