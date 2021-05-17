@@ -271,7 +271,8 @@ export default {
   },
     watch: {
     $route(to,from){
-      this.$socket.leave(localStorage.getItem("gameId"));
+      if(to == "/menuPrincipal")
+        this.$socket.emit("abbandon", localStorage.getItem("gameId"))
     }
   }
 };
