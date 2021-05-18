@@ -37,12 +37,14 @@ export default {
   methods: {
     async joinGame() {
       if (this.id.length > 0) {
+        if (!this.id.startsWith("ROOM-")) {
+          this.id = "ROOM-" + this.id;
+        }
         console.log(this.id);
-        this.$socket.emit(
-          "join game",
-          {pseudo: localStorage.getItem("username"),
-          roomId: this.id}
-        );
+        this.$socket.emit("join game", {
+          pseudo: localStorage.getItem("username"),
+          roomId: this.id
+        });
       } else {
         alert("Id de la partie requis");
       }
@@ -52,8 +54,8 @@ export default {
     oops: function(error) {
       alert(error);
     },
-    valid: function(){
-      localStorage.setItem("gameId", this.id)
+    valid: function() {
+      localStorage.setItem("gameId", this.id);
       this.$router.push("/choixEspece");
     }
   }
