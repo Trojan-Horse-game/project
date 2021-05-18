@@ -10,7 +10,6 @@ import { Game } from "../gamelogic/Game";
 import { Player, Species } from "../gamelogic/Players";
 
 let games: Game[] = [];
-let nextTurnTimeout: any;
 
 // Finds a game from a roomId
 export function findGame(roomId: string, games: Game[]): Game {
@@ -50,14 +49,12 @@ function forfeit(io: any, room: string, playerSocket: Socket) {
     let thisgame = findGame(room, games);
     let player = findPlayer(playerSocket.id, thisgame);
     let idx = thisgame.players.indexOf(player);
-    console.log("Player " + player.pseudo + " has forfeited");
-    console.log("Index in game array is", idx);
 
     if (idx == thisgame.currentPlayerIdx) {
       thisgame.resign();
       playerSocket.to(room).emit("leaveGame", idx);
       playerSocket.leave(room);
-      clearTimeout(nextTurnTimeout);
+      clearTimeout(thisgame.timer);
 
       if (thisgame.inProgress) {
         nextTurn(io, thisgame);
@@ -71,7 +68,7 @@ function forfeit(io: any, room: string, playerSocket: Socket) {
 
       if (!thisgame.inProgress) {
         io.in(room).emit("endGame", thisgame.winnerIdx);
-        clearTimeout(nextTurnTimeout);
+        clearTimeout(thisgame.timer);
         games.splice(games.indexOf(thisgame), 1);
       }
     }
@@ -82,10 +79,7 @@ function forfeit(io: any, room: string, playerSocket: Socket) {
 
 // Envoie l'index du prochain joueur et gère le cas de la distraction nucléaire
 function nextTurn(io: any, thisGame: Game) {
-  console.log("Players from nextTurn = ", thisGame.players.map((value)=>value.pseudo));
-  console.log("Current player index = ", thisGame.currentPlayerIdx);
-  console.trace();
-  clearTimeout(nextTurnTimeout);
+  clearTimeout(thisGame.timer);
   do {
     thisGame.endTurn();
 
@@ -101,12 +95,12 @@ function nextTurn(io: any, thisGame: Game) {
     }
   } while (thisGame.currentPlayer.hand.length === 0);
   if (thisGame.inProgress) {
-    nextTurnTimeout = setTimeout(() => {
+    thisGame.timer = setTimeout(() => {
       if(thisGame.inProgress)
         nextTurn(io, thisGame);
     }, 20000);
   } else {
-    clearTimeout(nextTurnTimeout);
+    clearTimeout(thisGame.timer);
   }
 }
 
@@ -286,8 +280,10 @@ module.exports = function (io: any) {
                   io.in(roomId).emit("discard", {pseudo: player.pseudo, indexDiscard: [0, 1, 2], cards: player.hand, kinds: cardsKinds(player.hand) })
                 }
               }
-              clearTimeout(nextTurnTimeout);
-                setTimeout(() => {nextTurn(io, thisgame)}, 2000);
+              clearTimeout(thisgame.timer);
+              thisgame.timer = setTimeout(() => {
+                nextTurn(io, thisgame);
+              }, 2000);
             } else {
               socket.to(roomId).emit("playCard", action);
   
@@ -312,7 +308,7 @@ module.exports = function (io: any) {
                   kind: cardsKinds(lastPlayer.hand),
                 });
               } else {
-                clearTimeout(nextTurnTimeout);
+                clearTimeout(thisgame.timer);
                 io.in(roomId).emit("endGame", thisgame.winnerIdx);
               }
 
@@ -361,7 +357,7 @@ module.exports = function (io: any) {
                 kind: cardsKinds(lastPlayer.hand),
               });
             } else {
-              clearTimeout(nextTurnTimeout);
+              clearTimeout(thisgame.timer);
               io.in(roomId).emit("endGame", thisgame.winnerIdx);
             }
           }
