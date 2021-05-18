@@ -14,6 +14,7 @@ export class Game {
   winnerIdx: number = 0;
   deck: Card[] = [];
   roomId: string;
+  timer: any;
   _currentPlayerIdx = 0;
   get currentPlayerIdx(): number {
     return this._currentPlayerIdx;
