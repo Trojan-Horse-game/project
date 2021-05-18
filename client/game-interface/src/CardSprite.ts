@@ -183,6 +183,7 @@ export class CardSprite extends Phaser.GameObjects.Container {
         pointer: Phaser.Input.Pointer,
         target: Phaser.GameObjects.GameObject
       ) => {
+        console.log("Phaser DROP event");
         if (!(scene instanceof GameScene)) {
           return;
         }
@@ -326,7 +327,10 @@ export class CardSprite extends Phaser.GameObjects.Container {
                 ease: "power4"
               });
             } else {
-              PlayerSlot.animateDropBack(this.scene, this);
+              for (const card of playerSlot.selectedCards) {
+                card.dropped = false;
+                PlayerSlot.animateDropBack(this.scene, card);
+              }
             }
           };
           let targetPlayerIndex;
@@ -339,11 +343,16 @@ export class CardSprite extends Phaser.GameObjects.Container {
             targetPlayerIndex =
               target.parentContainer.parentContainer.parentContainer.index;
           }
+          console.log("Calling did drop card");
           scene.delegate.didDropCard(
-            this.cardType.gameLogicIdx,
+            playerSlot.selectedCards.length == 1
+              ? this.cardType.gameLogicIdx
+              : -1,
             targetPlayerIndex,
             target.index
           );
+        } else {
+          console.error("Unexpected drop zone", target);
         }
       }
     );
