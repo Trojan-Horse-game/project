@@ -2,7 +2,9 @@
 import "phaser";
 import { ProfilePicture, TextPosition } from "./ProfilePicture";
 import { Generator, GeneratorState } from "./Generator";
-import { GeneratorKind } from "./Card";
+import { Card, GeneratorKind } from "./Card";
+import { CardSprite } from "./CardSprite";
+import { GameScene } from "./GameScene";
 
 export class OpponentSlot extends Phaser.GameObjects.Container {
   constructor(
@@ -58,6 +60,45 @@ export class OpponentSlot extends Phaser.GameObjects.Container {
 
   set timerPercentage(newValue: number) {
     this.profilePicture.timerPercentage = newValue;
+  }
+
+  discardCards(cards: Card[]) {
+    if (!(this.scene instanceof GameScene)) {
+      return;
+    }
+    const ratio = 0.7069;
+    const cardHeight = window.devicePixelRatio * 60;
+    const cardWidth = cardHeight * ratio;
+
+    const cardSprites = cards.map(
+      value => new CardSprite(this.scene, value, cardWidth, cardHeight)
+    );
+
+    const finalCardHeight = this.scene.deck.deckCards[0].sprite.displayHeight;
+    const scaleAmount = finalCardHeight / cardHeight;
+
+    cardSprites.forEach((cardSprite, index) => {
+      if (!(this.scene instanceof GameScene)) {
+        return;
+      }
+      cardSprite.setX(this.x);
+      cardSprite.setY(this.y);
+      cardSprite.setDepth(-100);
+      this.scene.add.existing(cardSprite);
+      this.scene.tweens
+        .add({
+          targets: cardSprite,
+          delay: index * 250,
+          x: this.scene.deck.x,
+          y: this.scene.deck.y + finalCardHeight / 2,
+          scale: scaleAmount,
+          duration: 900,
+          ease: "power4"
+        })
+        .on("complete", () => {
+          cardSprite.destroy();
+        });
+    });
   }
 }
 

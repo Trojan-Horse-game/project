@@ -140,6 +140,27 @@ export default {
       const userId = localStorage.getItem("userId");
       const url = `${this.apiUrl}/looses/${userId}`;
       axios.put(url);
+    },
+    networkToCard(kind: string, color: NetworkColor): Card {
+      switch (kind) {
+        case "firewall":
+          return new GeneratorCard(
+            GeneratorCardKind.Medicine,
+            colorToGenerator(color)
+          );
+        case "generator":
+          return new GeneratorCard(
+            GeneratorCardKind.Generator,
+            colorToGenerator(color)
+          );
+        case "virus":
+          return new GeneratorCard(
+            GeneratorCardKind.Virus,
+            colorToGenerator(color)
+          );
+        case "action":
+          return new ActionCard(colorToAction(color));
+      }
     }
   },
   sockets: {
@@ -181,35 +202,7 @@ export default {
       });
       const cards: Card[] = [];
       for (let i = 0; i < hand.length; i++) {
-        switch (kind[i]) {
-          case "firewall":
-            cards.push(
-              new GeneratorCard(
-                GeneratorCardKind.Medicine,
-                colorToGenerator(colors[i])
-              )
-            );
-            break;
-          case "generator":
-            cards.push(
-              new GeneratorCard(
-                GeneratorCardKind.Generator,
-                colorToGenerator(colors[i])
-              )
-            );
-            break;
-          case "virus":
-            cards.push(
-              new GeneratorCard(
-                GeneratorCardKind.Virus,
-                colorToGenerator(colors[i])
-              )
-            );
-            break;
-          case "action":
-            cards.push(new ActionCard(colorToAction(colors[i])));
-            break;
-        }
+        cards.push(this.networkToCard(kind[i], colors[i]));
       }
       this.currentScene.deck.distributeCards(cards);
       this.gameState = true;
@@ -244,8 +237,17 @@ export default {
       this.currentScene.nextTurn(playerIdx);
     },
     discard: function(data) {
+      const pseudo: string = data.pseudo;
       const indexDiscard: number = data.indexDiscard;
-      const cards: NetworkCard[] = data.cards;
+      const networkCards: NetworkCard[] = data.cards;
+      const colors = networkCards.map(value => value.color);
+      const kinds: string[] = data.kinds;
+      const cards: Card[] = colors.map((color, index) => {
+        const kind = kinds[index];
+        return this.networkToCard(kind, color);
+      });
+      this.currentScene.discard(pseudo, cards);
+
       console.log("discard", indexDiscard, cards);
     },
     leaveGame: function(playerIdx) {
@@ -282,15 +284,6 @@ export default {
       this.$router.push("/menuPrincipal");
     }
     */
-  },
-  watch: {
-    $route(to, from) {
-      // this.$socket.emit("abbandon", localStorage.getItem("gameId"));
-      /*
-      if(to == "/choixEspece")
-        this.$socket.emit("abbandon", localStorage.getItem("gameId"));
-        */
-    }
   }
 };
 </script>

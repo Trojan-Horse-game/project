@@ -275,8 +275,15 @@ module.exports = function (io: any) {
             socket.emit("valid");
             const currCard = player.hand[action.indexInHand];
             if(currCard instanceof SpecialCard && currCard.color == Color.Air){
+              for (const player of thisgame.players) {
+                if (player.socketId != socket.id) {
+                  io.in(roomId).emit("discard", {pseudo: player.pseudo, indexDiscard: [0, 1, 2], cards: player.hand, kinds: cardsKinds(player.hand) })
+                }
+              }
               clearTimeout(thisgame.timer);
-              thisgame.timer = setTimeout(() => {nextTurn(io, thisgame)}, 2000);
+              thisgame.timer = setTimeout(() => {
+                nextTurn(io, thisgame);
+              }, 2000);
             } else {
               socket.to(roomId).emit("playCard", action);
   
@@ -339,7 +346,7 @@ module.exports = function (io: any) {
             thisgame.discardHand(indexDiscard);
             socket
             .to(roomId)
-            .emit("discard", { indexDiscard: indexDiscard, cards: cards });
+            .emit("discard", { pseudo: player.pseudo, indexDiscard: indexDiscard, cards: cards, kinds: cardsKinds(cards) });
             
             if (thisgame.inProgress) {
               const currentPlayerIdxCopy = thisgame.currentPlayerIdx;
