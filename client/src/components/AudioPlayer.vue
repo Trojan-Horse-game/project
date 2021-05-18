@@ -34,11 +34,12 @@
 export default {
   components: {},
 
-  data: () => ({ showSlider: false, volume: 0.5, playing: false }),
+  data: () => ({ showSlider: false, volume: 0.15, playing: false }),
 
   mounted: function() {
     this.$watch("audioFile", () => {
       this.$refs.player.load();
+      this.$refs.player.volume = 0.15;
       this.$refs.player.play();
     });
 
@@ -74,12 +75,12 @@ export default {
 <style lang="scss" scoped>
 #audioplay {
   position: fixed;
-  right:0;
+  right: 0;
   z-index: 50;
 }
 
-.bottom{
-  bottom:0;
+.bottom {
+  bottom: 0;
 }
 
 .bottom > #controls {
