@@ -4,7 +4,7 @@
       <button
         id="launch"
         @click="launchGame()"
-        v-if="gameId == 'ROOM-' + this.$socket.id"
+        v-if="isOwner"
       >
         Lancer la partie
       </button>
@@ -12,7 +12,7 @@
         id="launch"
         disabled
         @click="launchGame()"
-        v-if="gameId != 'ROOM-' + this.$socket.id"
+        v-if="!isOwner"
       >
         En attente de lancement
       </button>
@@ -88,7 +88,8 @@ export default {
             stringToSpecie(localStorage.getItem("specie"))
           )
         )
-      }
+      },
+      isOwner: false
     };
   },
   mounted() {
@@ -172,6 +173,9 @@ export default {
     gameId: function(gameId: string) {
       console.log(gameId);
     },
+    owner: function() {
+      this.isOwner = true;
+    }
     joinGame: function(data) {
       console.log(this.currentScene);
       const pseudo: string = data.pseudo;
