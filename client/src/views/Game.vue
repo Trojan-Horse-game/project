@@ -164,7 +164,8 @@ export default {
     gameId: function(gameId: string) {
       console.log(gameId);
     },
-    owner: function() {
+    youAreOwner: function(value: boolean) {
+      console.log("YOU ARE OWNER");
       this.isOwner = true;
     },
     joinGame: function(data) {
