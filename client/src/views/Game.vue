@@ -1,19 +1,10 @@
 <template>
   <div id="jeu">
     <div id="filter" v-if="gameState == false && endGame == false">
-      <button
-        id="launch"
-        @click="launchGame()"
-        v-if="isOwner"
-      >
+      <button id="launch" @click="launchGame()" v-if="isOwner">
         Lancer la partie
       </button>
-      <button
-        id="launch"
-        disabled
-        @click="launchGame()"
-        v-if="!isOwner"
-      >
+      <button id="launch" disabled @click="launchGame()" v-if="!isOwner">
         En attente de lancement
       </button>
     </div>
@@ -175,7 +166,7 @@ export default {
     },
     owner: function() {
       this.isOwner = true;
-    }
+    },
     joinGame: function(data) {
       console.log(this.currentScene);
       const pseudo: string = data.pseudo;
