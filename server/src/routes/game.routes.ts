@@ -10,22 +10,6 @@ import { Game } from "../gamelogic/Game";
 import { Player, Species } from "../gamelogic/Players";
 
 let games: Game[] = [];
-let ids: Set<string> = new Set();
-
-export function nextGameID(): string {
-  let candidate: string;
-  do {
-    var result = [];
-    var characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
-    for ( var i = 0; i < 6; i++ ) {
-      result.push(characters.charAt(Math.floor(Math.random() * 
-      characters.length)));
-    }
-    candidate = result.join('');
-  } while (ids.has(candidate))
-  ids.add(candidate);
-  return candidate;
-}
 
 // Finds a game from a roomId
 export function findGame(roomId: string, games: Game[]): Game {
@@ -150,11 +134,10 @@ module.exports = function (io: any) {
           socket.emit("closeTab");
           throw "Already in a game !";
         }
-        const room = "ROOM-" + nextGameID();
+        const room = "ROOM-" + socket.id;
         socket.join(room);
         let game = new Game(room);
         socket.emit("gameId", game.roomId);
-        socket.emit("youAreOwner", true);
         socket.emit("availableSpecies", game.availableSpecies);
 
         socket.on("choose species", (species: Species) => {

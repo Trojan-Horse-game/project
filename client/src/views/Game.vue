@@ -1,10 +1,19 @@
 <template>
   <div id="jeu">
     <div id="filter" v-if="gameState == false && endGame == false">
-      <button id="launch" @click="launchGame()" v-if="isOwner">
+      <button
+        id="launch"
+        @click="launchGame()"
+        v-if="gameId == 'ROOM-' + this.$socket.id"
+      >
         Lancer la partie
       </button>
-      <button id="launch" disabled @click="launchGame()" v-if="!isOwner">
+      <button
+        id="launch"
+        disabled
+        @click="launchGame()"
+        v-if="gameId != 'ROOM-' + this.$socket.id"
+      >
         En attente de lancement
       </button>
     </div>
@@ -79,8 +88,7 @@ export default {
             stringToSpecie(localStorage.getItem("specie"))
           )
         )
-      },
-      isOwner: false
+      }
     };
   },
   mounted() {
@@ -163,10 +171,6 @@ export default {
     */
     gameId: function(gameId: string) {
       console.log(gameId);
-    },
-    youAreOwner: function(value: boolean) {
-      console.log("YOU ARE OWNER");
-      this.isOwner = true;
     },
     joinGame: function(data) {
       console.log(this.currentScene);
